@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
 import type { Dispatch, FC, SetStateAction } from 'react';
 import type { User } from '@/types/UserTypes';

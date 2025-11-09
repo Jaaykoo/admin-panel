@@ -10,6 +10,7 @@ import { Env } from './Env';
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   if (config.headers) {
     config.headers.Accept = 'application/json';
+    config.headers['Content-Type'] = 'application/json';
   }
 
   config.withCredentials = true;
@@ -17,7 +18,7 @@ function authRequestInterceptor(config: InternalAxiosRequestConfig) {
 }
 
 export const api = Axios.create({
-  baseURL: Env.API_URL,
+  baseURL: Env.NEXT_PUBLIC_API_URL,
 });
 
 api.interceptors.request.use(authRequestInterceptor);
@@ -26,12 +27,17 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    const message = error.response?.data?.message || error.message;
-    useNotifications.getState().addNotification({
-      type: 'error',
-      title: 'Error',
-      message,
-    });
+    // Ne pas traiter les erreurs réseau qui n'ont pas de réponse
+    if (!error.response) {
+      useNotifications.getState().addNotification({
+        type: 'error',
+        title: 'Erreur réseau',
+        message: 'Impossible de se connecter au serveur. Vérifiez votre connexion.',
+      });
+      return Promise.reject(error);
+    }
+
+    // Ne pas afficher de notification ici, laisser le composant gérer avec get400ErrorMessage
 
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {

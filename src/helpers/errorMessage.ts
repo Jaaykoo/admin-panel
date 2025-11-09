@@ -36,6 +36,10 @@ export class ApiError extends Error {
   isServerError(): boolean {
     return this.statusCode >= 500;
   }
+
+  isNetworkError(): boolean {
+    return this.statusCode === 0;
+  }
 }
 
 /**
@@ -103,7 +107,7 @@ export const getFieldError = (
 ): string | null => {
   const flatErrors = flattenFieldErrors(fieldErrors);
   const errors = flatErrors[fieldName];
-  return errors && errors.length > 0 ? errors[0] : null;
+  return errors && errors.length > 0 ? errors[0] ?? null : null;
 };
 
 /**
@@ -121,6 +125,16 @@ export const getFieldErrors = (
  * Parse la réponse d'erreur et crée un objet ApiError
  */
 export const parseApiError = (error: any): ApiError => {
+  // Si pas de réponse du tout (erreur réseau)
+  if (!error.response) {
+    return new ApiError(
+      'Erreur de connexion au serveur',
+      0,
+      {},
+      {},
+    );
+  }
+
   const statusCode = error?.response?.status || 500;
   const responseData = error?.response?.data;
 
@@ -132,23 +146,6 @@ export const parseApiError = (error: any): ApiError => {
       responseData.extra.fields,
       responseData.extra,
     );
-  }
-
-  // Cas 2: Structure directe avec champs imbriqués (ex: { og: { plaintes: [...] }, od: { plaintes: [...] } })
-  if (responseData && typeof responseData === 'object' && !responseData.message && !responseData.detail) {
-    // Vérifier si ça ressemble à des erreurs de champs
-    const hasFieldErrors = Object.values(responseData).some(
-      value => typeof value === 'object' || Array.isArray(value),
-    );
-
-    if (hasFieldErrors) {
-      return new ApiError(
-        'Erreur de validation',
-        statusCode,
-        responseData,
-        {},
-      );
-    }
   }
 
   // Cas 3: Structure avec detail (ancien format ou erreurs serveur)
@@ -197,7 +194,12 @@ export const parseApiError = (error: any): ApiError => {
  * Affiche les erreurs avec des toasts intelligents
  */
 export const displayApiError = (apiError: ApiError): void => {
-  if (apiError.isValidationError()) {
+  if (apiError.isNetworkError()) {
+    toast.error('Erreur de connexion', {
+      description: 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.',
+      duration: 5000,
+    });
+  } else if (apiError.isValidationError()) {
     const flatErrors = flattenFieldErrors(apiError.fieldErrors);
     const errorCount = Object.keys(flatErrors).length;
 
@@ -209,7 +211,7 @@ export const displayApiError = (apiError: ApiError): void => {
         const cleanMsg = msg.includes('violates not-null constraint')
           ? 'Un champ obligatoire est manquant. Veuillez vérifier le formulaire.'
           : msg.includes('DETAIL:')
-            ? msg.split('DETAIL:')[0].trim()
+            ? (msg.split('DETAIL:')[0] || msg).trim()
             : msg;
 
         toast.error(cleanMsg, { duration: 6000 });
@@ -271,7 +273,7 @@ export const toReactHookFormErrors = (fieldErrors: Record<string, any>) => {
 
     rhfErrors[field] = {
       type: 'server',
-      message: messages[0],
+      message: messages[0] || 'Erreur de validation',
     };
   });
 
