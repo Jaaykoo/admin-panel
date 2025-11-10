@@ -1,6 +1,6 @@
 import type React from "react"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+import { Sidebar } from "@/components/layouts/sidebar"
+import { Header } from "@/components/layouts/header"
 
 export default function UsersLayout({ children }: { children: React.ReactNode }) {
   return (

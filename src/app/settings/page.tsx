@@ -1,7 +1,7 @@
 "use client"
 
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+import { Sidebar } from "@/components/layouts/sidebar"
+import { Header } from "@/components/layouts/header"
 import { PageHeader } from "@/components/page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

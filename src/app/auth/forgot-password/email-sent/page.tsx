@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,7 @@ function EmailSentContent() {
   const email = searchParams.get('email') || 'votre email';
 
   const handleResend = () => {
-    console.log('[v0] Resending email to:', email);
+    console.warn('[v0] Resending email to:', email);
     // Handle resend logic
   };
 
@@ -20,9 +21,10 @@ function EmailSentContent() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl bg-white px-8 py-12 text-center shadow-sm">
+        {/* Content */}
+        <div className="space-y-6 text-center">
           {/* Illustration */}
           <div className="mb-8 flex justify-center">
             <div className="relative h-48 w-48">
@@ -64,29 +66,36 @@ function EmailSentContent() {
             </div>
           </div>
 
-          {/* Content */}
-          <h1 className="mb-4 text-2xl font-bold text-gray-900">Vérifiez votre email</h1>
-          <p className="mb-2 text-sm text-gray-600">
-            Veuillez cliquer sur le lien envoyé à votre email
-            {' '}
-            <span className="font-semibold text-gray-900">{email}</span>
-          </p>
-          <p className="mb-8 text-sm text-gray-600">pour réinitialiser votre mot de passe. Merci</p>
+          <div className="mb-6">
+            <h1 className="mb-4 text-2xl font-bold text-gray-900">Vérifiez votre email</h1>
+            <p className="mb-2 text-sm text-gray-600">
+              Veuillez cliquer sur le lien envoyé à votre email
+              {' '}
+              <span className="font-semibold text-gray-900">{email}</span>
+            </p>
+            <p className="mb-8 text-sm text-gray-600">pour réinitialiser votre mot de passe. Merci</p>
+          </div>
 
           <Button
             onClick={handleSkip}
-            className="mb-6 h-12 w-full max-w-xs bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]"
+            className="h-12 w-full bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]"
           >
             Passer pour le moment
           </Button>
 
-          <p className="text-sm text-gray-600">
-            Vous n'avez pas reçu d'email ?
-            {' '}
-            <button onClick={handleResend} className="font-semibold text-gray-900 hover:underline">
-              Renvoyer
+          <div>
+            <button type="button" onClick={handleResend} className="text-sm text-gray-600 hover:text-gray-900">
+              Vous n'avez pas reçu l'email ?
+              {' '}
+              <span className="font-semibold text-[#009ef7] hover:underline">Renvoyer</span>
             </button>
-          </p>
+          </div>
+
+          <div className="text-center">
+            <Link href="/auth/login" className="text-sm font-medium text-[#009ef7] hover:underline">
+              Retour à la connexion
+            </Link>
+          </div>
         </div>
       </div>
     </div>

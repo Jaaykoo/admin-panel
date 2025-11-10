@@ -29,6 +29,10 @@ export class ApiError extends Error {
     return this.statusCode === 403;
   }
 
+  isAuthenticationError(): boolean {
+    return this.statusCode === 401;
+  }
+
   isNotFoundError(): boolean {
     return this.statusCode === 404;
   }
@@ -78,16 +82,28 @@ const extractErrorMessages = (obj: any, prefix = ''): string[] => {
 
   Object.entries(obj).forEach(([key, value]) => {
     const fieldName = prefix ? `${prefix}.${key}` : key;
-    const displayName = fieldName.replace(/_/g, ' ');
+
+    // Ne pas préfixer les non_field_errors, afficher directement le message
+    const isNonFieldError = key === 'non_field_errors' || fieldName === 'non_field_errors';
+    const displayName = isNonFieldError ? '' : fieldName.replace(/_/g, ' ');
 
     if (Array.isArray(value)) {
       // Si c'est un tableau de messages d'erreur
       value.forEach((errorMsg: string) => {
-        messages.push(`${displayName}: ${errorMsg}`);
+        // Pour non_field_errors, afficher juste le message sans préfixe
+        if (isNonFieldError) {
+          messages.push(errorMsg);
+        } else {
+          messages.push(`${displayName}: ${errorMsg}`);
+        }
       });
     } else if (typeof value === 'string') {
       // Si c'est un message d'erreur simple
-      messages.push(`${displayName}: ${value}`);
+      if (isNonFieldError) {
+        messages.push(value);
+      } else {
+        messages.push(`${displayName}: ${value}`);
+      }
     } else if (typeof value === 'object' && value !== null) {
       // Si c'est un objet imbriqué, on descend récursivement
       const nestedMessages = extractErrorMessages(value, fieldName);
@@ -150,27 +166,44 @@ export const parseApiError = (error: any): ApiError => {
 
   // Cas 3: Structure avec detail (ancien format ou erreurs serveur)
   if (responseData?.detail) {
+    // Si detail est un tableau (ex: ["Email ou mot de passe incorrect."])
+    if (Array.isArray(responseData.detail)) {
+      // Prendre le premier message comme message principal
+      const message = responseData.detail[0] || 'Une erreur est survenue';
+      return new ApiError(
+        message,
+        statusCode,
+        {},
+        {},
+      );
+    }
+
     // Si detail est un objet avec des champs
     if (typeof responseData.detail === 'object' && !Array.isArray(responseData.detail)) {
       // Vérifier si c'est des erreurs de champs ou non_field_errors
       if (responseData.detail.non_field_errors) {
+        const firstError = Array.isArray(responseData.detail.non_field_errors)
+          ? responseData.detail.non_field_errors[0]
+          : responseData.detail.non_field_errors;
+
         return new ApiError(
-          'Erreur de validation',
+          firstError || 'Erreur de validation',
           statusCode,
           { non_field_errors: responseData.detail.non_field_errors },
           {},
         );
       }
 
+      // Si c'est un objet avec d'autres champs d'erreur
       return new ApiError(
-        'Erreur lors de l\'opération',
+        'Erreur de validation',
         statusCode,
         responseData.detail,
         {},
       );
     }
 
-    // Si detail est une string
+    // Si detail est une string simple
     if (typeof responseData.detail === 'string') {
       return new ApiError(
         responseData.detail,
@@ -179,6 +212,20 @@ export const parseApiError = (error: any): ApiError => {
         {},
       );
     }
+  }
+
+  // Cas 2: Structure directe avec non_field_errors au niveau racine
+  if (responseData?.non_field_errors) {
+    const firstError = Array.isArray(responseData.non_field_errors)
+      ? responseData.non_field_errors[0]
+      : responseData.non_field_errors;
+
+    return new ApiError(
+      firstError || 'Erreur de validation',
+      statusCode,
+      { non_field_errors: responseData.non_field_errors },
+      {},
+    );
   }
 
   // Cas 4: Erreur générique
@@ -205,7 +252,13 @@ export const displayApiError = (apiError: ApiError): void => {
 
     // Gérer les non_field_errors séparément
     if (flatErrors.non_field_errors) {
-      // Afficher chaque non_field_error
+      // Si on a seulement des non_field_errors, afficher le message principal qui contient déjà le premier message
+      if (errorCount === 1) {
+        toast.error(apiError.message, { duration: 5000 });
+        return;
+      }
+
+      // Sinon, afficher chaque non_field_error
       flatErrors.non_field_errors.forEach((msg) => {
         // Nettoyer les messages d'erreur SQL trop verbeux
         const cleanMsg = msg.includes('violates not-null constraint')
@@ -216,28 +269,28 @@ export const displayApiError = (apiError: ApiError): void => {
 
         toast.error(cleanMsg, { duration: 6000 });
       });
-
-      // Ne pas afficher le résumé si on a déjà affiché les non_field_errors
-      if (errorCount === 1) {
-        return;
-      }
     }
 
     // Extraire tous les messages pour affichage
     const allMessages = extractErrorMessages(apiError.fieldErrors);
 
     // Si peu d'erreurs (≤ 3), afficher chacune
-    if (allMessages.length <= 3 && allMessages.length > 0) {
+    if (allMessages.length <= 3 && allMessages.length > 0 && !flatErrors.non_field_errors) {
       allMessages.forEach((msg) => {
         toast.error(msg, { duration: 5000 });
       });
-    } else if (allMessages.length > 3) {
+    } else if (allMessages.length > 3 && !flatErrors.non_field_errors) {
       // Sinon, afficher un résumé
       toast.error(`${errorCount} erreur(s) de validation détectée(s)`, {
         description: 'Veuillez corriger les champs en erreur ci-dessous',
         duration: 6000,
       });
     }
+  } else if (apiError.isAuthenticationError()) {
+    toast.error(apiError.message, {
+      description: 'Vérifiez vos identifiants et réessayez',
+      duration: 5000,
+    });
   } else if (apiError.isPermissionError()) {
     toast.error('Permission refusée', {
       description: 'Vous n\'avez pas les droits nécessaires pour effectuer cette action',

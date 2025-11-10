@@ -1,5 +1,5 @@
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+import { Sidebar } from "@/components/layouts/sidebar"
+import { Header } from "@/components/layouts/header"
 import { RevenueChart } from "@/components/revenue-chart"
 import { CategoryChart } from "@/components/category-chart"
 import { TopProducts } from "@/components/top-products"

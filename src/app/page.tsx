@@ -1,8 +1,8 @@
 import { DollarSign, ShoppingCart, TrendingUp, Users } from 'lucide-react';
-import { Header } from '@/components/header';
+import { Header } from '@/components/layouts/header';
 import { RecentOrders } from '@/components/recent-orders';
 import { SalesChart } from '@/components/sales-chart';
-import { Sidebar } from '@/components/sidebar';
+import { Sidebar } from '@/components/layouts/sidebar';
 import { StatCard } from '@/components/stat-card';
 
 export default function DashboardPage() {

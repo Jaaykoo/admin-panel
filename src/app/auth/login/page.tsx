@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -23,6 +23,7 @@ const loginInputSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginInputSchema),
@@ -37,7 +38,7 @@ export default function LoginPage() {
       onSuccess: () => {
         // Handle successful login
         toast.success('Connexion réussie !');
-        redirect('/dashboard');
+        router.push('/');
       },
       onError: (error) => {
         // Handle login error

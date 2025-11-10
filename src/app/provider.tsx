@@ -12,7 +12,7 @@ import { Notifications } from '@/components/ui/notifications';
 import { MetronicSplashScreenProvider } from '@/components/ui/splash-screen';
 import { ListViewProvider } from '@/hooks/_ListViewProvider';
 import { QueryRequestProvider } from '@/hooks/_QueryRequestProvider';
-import { AuthInit } from '@/hooks/auth/Auth';
+import { AuthInit, AuthProvider } from '@/hooks/auth/Auth';
 import { queryConfig } from '@/libs/react-query';
 
 type AppProviderProps = {
@@ -46,12 +46,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
                     </>
                   )
                 : (
-                    <AuthInit>
-                      {process.env.DEV && <ReactQueryDevtools />}
-                      <Notifications />
-                      {children}
-                      <Toaster richColors />
-                    </AuthInit>
+                    <AuthProvider>
+                      <AuthInit>
+                        {process.env.DEV && <ReactQueryDevtools />}
+                        <Notifications />
+                        {children}
+                        <Toaster richColors />
+                      </AuthInit>
+                    </AuthProvider>
                   )}
             </ListViewProvider>
           </QueryRequestProvider>

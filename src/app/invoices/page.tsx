@@ -1,5 +1,5 @@
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+import { Sidebar } from "@/components/layouts/sidebar"
+import { Header } from "@/components/layouts/header"
 import { InvoiceTable } from "@/components/invoice-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

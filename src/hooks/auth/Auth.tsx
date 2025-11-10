@@ -1,9 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
 import type { Dispatch, FC, SetStateAction } from 'react';
 import type { User } from '@/types/UserTypes';
 import type { WithChildren } from '@/utils/react18MigrationHelpers';
 import { useMutation } from '@tanstack/react-query';
+
 import { createContext, use, useEffect, useState } from 'react';
 import { LayoutSplashScreen } from '@/components/ui/splash-screen';
 import { QUERIES } from '@/helpers/crud-helper/consts';
@@ -31,7 +31,7 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
 
   const logout = useMutation({
-    mutationKey: [QUERIES, 'logout'],
+    mutationKey: [QUERIES.LOGOUT],
     mutationFn: () => logoutService(),
     onSuccess: () => {
       window.location.href = '/auth/login';
@@ -47,30 +47,34 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
 };
 
 const AuthInit: FC<WithChildren> = ({ children }) => {
-  const { currentUser, logout, setCurrentUser } = useAuth();
+  const { logout, setCurrentUser } = useAuth();
   const [showSplashScreen, setShowSplashScreen] = useState(true);
 
+  /*
+  const { data: user, isLoading, isError } = useQuery({
+    queryKey: [QUERIES.USER_ME],
+    queryFn: getUser,
+    retry: false,
+  });
+  */
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        if (!currentUser) {
-          const data = await getUser();
-          if (data) {
-            setCurrentUser(data);
-          }
+        const data = await getUser();
+        if (data) {
+          // eslint-disable-next-line ts/ban-ts-comment
+          setCurrentUser(data);
         }
       } catch (error) {
-        console.error(error);
-        if (currentUser) {
-          logout();
-        }
+        console.error('Auth error:', error);
+        logout();
       } finally {
         setShowSplashScreen(false);
       }
     };
 
     checkAuth();
-  }, []);
+  }, [setCurrentUser, logout]);
 
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>;
 };

@@ -41,10 +41,13 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        const searchParams = new URLSearchParams();
-        const redirectTo
-          = searchParams.get('redirectTo') || window.location.pathname;
-        window.location.href = `/auth/login?redirectTo=${redirectTo}`;
+        const pathname: string = window.location.pathname;
+        if (!pathname.includes('auth/login')) {
+          const searchParams = new URLSearchParams();
+          const redirectTo
+            = searchParams.get('redirectTo') || window.location.pathname;
+          window.location.href = `/auth/login?redirectTo=${redirectTo}`;
+        }
       }
     }
 

@@ -1,7 +1,7 @@
 "use client"
 
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+import { Sidebar } from "@/components/layouts/sidebar"
+import { Header } from "@/components/layouts/header"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
