@@ -142,20 +142,6 @@ export function Sidebar() {
             );
           })}
         </nav>
-
-        {/* User Profile */}
-        <div className="border-t border-gray-300 p-4">
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-gray-100">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#009ef7] text-white">
-              <span className="text-sm font-medium">JD</span>
-            </div>
-            <div className="flex-1 text-left">
-              <p className="text-sm font-medium text-gray-900">John Doe</p>
-              <p className="text-xs text-gray-500">Administrateur</p>
-            </div>
-            <ChevronDown className="h-4 w-4 text-gray-500" />
-          </button>
-        </div>
       </div>
     </aside>
   );

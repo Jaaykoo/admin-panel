@@ -1,9 +1,8 @@
 'use client';
 
-import { Search, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/auth/Auth';
 
 export function Header() {
@@ -13,16 +12,8 @@ export function Header() {
     logout();
   };
   return (
-    <header className="fixed top-0 right-0 left-64 z-30 h-16 border-b border-gray-300 bg-white">
-      <div className="flex h-full items-center justify-between px-6">
-        {/* Search */}
-        <div className="flex flex-1 items-center gap-4">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
-            <Input type="search" placeholder="Rechercher..." className="border-gray-300 pl-10" />
-          </div>
-        </div>
-
+    <header className="fixed top-0 right-0 left-64 z-30 h-16 border-b border-gray-300 bg-white py-2">
+      <div className="flex h-full items-center justify-end px-6">
         {/* Profile dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
