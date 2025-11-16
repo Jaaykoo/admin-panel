@@ -1,6 +1,6 @@
-import type React from "react"
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
+import type React from 'react';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
 
 export default function DevisLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,5 +11,5 @@ export default function DevisLayout({ children }: { children: React.ReactNode })
         {children}
       </div>
     </div>
-  )
+  );
 }

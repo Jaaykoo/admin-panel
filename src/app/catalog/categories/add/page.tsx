@@ -1,11 +1,11 @@
-"use client"
-import { Upload } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+'use client';
+import { Upload } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function AddCategoryPage() {
   return (
@@ -42,15 +42,15 @@ export default function AddCategoryPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Left Sidebar */}
         <div className="space-y-6">
           {/* Thumbnail */}
-          <Card className="p-6 bg-white shadow-sm">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Thumbnail</h3>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#009ef7] transition-colors cursor-pointer">
+          <Card className="bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-base font-semibold text-gray-900">Thumbnail</h3>
+            <div className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-8 text-center transition-colors hover:border-[#009ef7]">
               <div className="flex flex-col items-center gap-3">
-                <div className="h-20 w-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-100">
                   <svg className="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -63,14 +63,14 @@ export default function AddCategoryPage() {
                 <Upload className="h-5 w-5 text-gray-400" />
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-3 text-center">
+            <p className="mt-3 text-center text-xs text-gray-500">
               Set the category thumbnail image. Only *.png, *.jpg and *.jpeg image files are accepted
             </p>
           </Card>
 
           {/* Status */}
-          <Card className="p-6 bg-white shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
               <h3 className="text-base font-semibold text-gray-900">Status</h3>
               <div className="h-2 w-2 rounded-full bg-[#50cd89]"></div>
             </div>
@@ -84,13 +84,13 @@ export default function AddCategoryPage() {
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500 mt-2">Set the category status.</p>
+            <p className="mt-2 text-xs text-gray-500">Set the category status.</p>
           </Card>
 
           {/* Store Template */}
-          <Card className="p-6 bg-white shadow-sm">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Store Template</h3>
-            <Label className="text-sm text-gray-700 mb-2 block">Select a store template</Label>
+          <Card className="bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-base font-semibold text-gray-900">Store Template</h3>
+            <Label className="mb-2 block text-sm text-gray-700">Select a store template</Label>
             <Select defaultValue="default">
               <SelectTrigger>
                 <SelectValue />
@@ -101,33 +101,35 @@ export default function AddCategoryPage() {
                 <SelectItem value="classic">Classic template</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="mt-2 text-xs text-gray-500">
               Assign a template from your current theme to define how the category products are displayed.
             </p>
           </Card>
         </div>
 
         {/* Main Content */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="space-y-6 lg:col-span-3">
           {/* General */}
-          <Card className="p-6 bg-white shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">General</h3>
+          <Card className="bg-white p-6 shadow-sm">
+            <h3 className="mb-6 text-lg font-semibold text-gray-900">General</h3>
 
             <div className="space-y-6">
               <div>
-                <Label htmlFor="categoryName" className="text-sm font-medium text-gray-700 mb-2 block">
-                  Category Name <span className="text-[#f1416c]">*</span>
+                <Label htmlFor="categoryName" className="mb-2 block text-sm font-medium text-gray-700">
+                  Category Name
+                  {' '}
+                  <span className="text-[#f1416c]">*</span>
                 </Label>
                 <Input id="categoryName" placeholder="Product name" className="w-full" />
-                <p className="text-xs text-gray-500 mt-2">A category name is required and recommended to be unique.</p>
+                <p className="mt-2 text-xs text-gray-500">A category name is required and recommended to be unique.</p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">Description</Label>
-                <div className="border border-gray-300 rounded-lg">
-                  <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 bg-gray-50">
+                <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                <div className="rounded-lg border border-gray-300">
+                  <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2">
                     <Select defaultValue="normal">
-                      <SelectTrigger className="w-32 h-8 text-sm">
+                      <SelectTrigger className="h-8 w-32 text-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -147,7 +149,7 @@ export default function AddCategoryPage() {
                         <span className="underline">U</span>
                       </Button>
                     </div>
-                    <div className="flex gap-1 ml-2">
+                    <div className="ml-2 flex gap-1">
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
@@ -171,36 +173,36 @@ export default function AddCategoryPage() {
                     </div>
                   </div>
                   <textarea
-                    className="w-full p-3 min-h-[120px] focus:outline-none"
+                    className="min-h-[120px] w-full p-3 focus:outline-none"
                     placeholder="Type your text here..."
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Set a description to the category for better visibility.</p>
+                <p className="mt-2 text-xs text-gray-500">Set a description to the category for better visibility.</p>
               </div>
             </div>
           </Card>
 
           {/* Meta Options */}
-          <Card className="p-6 bg-white shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Meta Options</h3>
+          <Card className="bg-white p-6 shadow-sm">
+            <h3 className="mb-6 text-lg font-semibold text-gray-900">Meta Options</h3>
 
             <div className="space-y-6">
               <div>
-                <Label htmlFor="metaTitle" className="text-sm font-medium text-gray-700 mb-2 block">
+                <Label htmlFor="metaTitle" className="mb-2 block text-sm font-medium text-gray-700">
                   Meta Tag Title
                 </Label>
                 <Input id="metaTitle" placeholder="Meta tag name" className="w-full" />
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="mt-2 text-xs text-gray-500">
                   Set a meta tag title. Recommended to be simple and precise keywords.
                 </p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">Meta Tag Description</Label>
-                <div className="border border-gray-300 rounded-lg">
-                  <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 bg-gray-50">
+                <Label className="mb-2 block text-sm font-medium text-gray-700">Meta Tag Description</Label>
+                <div className="rounded-lg border border-gray-300">
+                  <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2">
                     <Select defaultValue="normal">
-                      <SelectTrigger className="w-32 h-8 text-sm">
+                      <SelectTrigger className="h-8 w-32 text-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -220,7 +222,7 @@ export default function AddCategoryPage() {
                         <span className="underline">U</span>
                       </Button>
                     </div>
-                    <div className="flex gap-1 ml-2">
+                    <div className="ml-2 flex gap-1">
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
@@ -244,23 +246,26 @@ export default function AddCategoryPage() {
                     </div>
                   </div>
                   <textarea
-                    className="w-full p-3 min-h-[120px] focus:outline-none"
+                    className="min-h-[120px] w-full p-3 focus:outline-none"
                     placeholder="Type your text here..."
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="mt-2 text-xs text-gray-500">
                   Set a meta tag description to the category for increased SEO ranking.
                 </p>
               </div>
 
               <div>
-                <Label htmlFor="metaKeywords" className="text-sm font-medium text-gray-700 mb-2 block">
+                <Label htmlFor="metaKeywords" className="mb-2 block text-sm font-medium text-gray-700">
                   Meta Tag Keywords
                 </Label>
                 <Input id="metaKeywords" className="w-full" />
-                <p className="text-xs text-gray-500 mt-2">
-                  Set a list of keywords that the category is related to. Separate the keywords by adding a comma{" "}
-                  <span className="font-mono">,</span> between each keyword.
+                <p className="mt-2 text-xs text-gray-500">
+                  Set a list of keywords that the category is related to. Separate the keywords by adding a comma
+                  {' '}
+                  <span className="font-mono">,</span>
+                  {' '}
+                  between each keyword.
                 </p>
               </div>
             </div>
@@ -274,5 +279,5 @@ export default function AddCategoryPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

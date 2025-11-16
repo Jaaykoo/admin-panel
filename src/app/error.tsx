@@ -1,19 +1,19 @@
-"use client"
+'use client';
 
-import { useEffect } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
-  reset: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[v0] Error occurred:", error)
-  }, [error])
+    console.error('[v0] Error occurred:', error);
+  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
@@ -73,10 +73,12 @@ export default function Error({
           </div>
           <h1 className="mb-4 text-4xl font-bold text-gray-900">Internal Server Error</h1>
           <p className="text-gray-600">
-            Server error occurred. Please try again later or{" "}
+            Server error occurred. Please try again later or
+            {' '}
             <Link href="/contact" className="font-medium text-[#009ef7] hover:underline">
               Contact Us
-            </Link>{" "}
+            </Link>
+            {' '}
             for assistance.
           </p>
         </div>
@@ -86,7 +88,7 @@ export default function Error({
           <Button
             onClick={reset}
             variant="outline"
-            className="h-12 border-gray-300 px-6 hover:bg-gray-50 bg-transparent"
+            className="h-12 border-gray-300 bg-transparent px-6 hover:bg-gray-50"
           >
             Try Again
           </Button>
@@ -96,5 +98,5 @@ export default function Error({
         </div>
       </div>
     </div>
-  )
+  );
 }

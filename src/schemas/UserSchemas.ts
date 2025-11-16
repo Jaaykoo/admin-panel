@@ -12,7 +12,7 @@ export const UserRoleSchema = z.enum([
 // ✅ GET USER
 export const UserSchema = z.object({
   id: z.number(),
-  email: z.string().email(),
+  email: z.email(),
   phone_number: z.string(),
   role: UserRoleSchema,
   is_active: z.boolean(),
@@ -25,7 +25,7 @@ export const UserSchema = z.object({
 
 // ✅ POST ENTREPRISE
 export const CreateEntrepriseUserSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   phone_number: z.string(),
   password: z.string(),
   role: z.literal('ENTREPRISE'),
@@ -48,7 +48,7 @@ export const CreateEntrepriseUserSchema = z.object({
 
 // ✅ POST ADMIN | PERSONNEL | PARTICULIER
 export const CreateSimpleUserSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   phone_number: z.string(),
   password: z.string().optional(),
   role: z.enum(['ADMIN', 'PERSONNEL', 'PARTICULIER']),
@@ -73,7 +73,7 @@ export const CreateUserSchema = z.union([
 
 // ✅ UPDATE USER (PATCH)
 export const UpdateUserSchema = z.object({
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   phone_number: z.string().optional(),
   role: UserRoleSchema.optional(),
   is_active: z.boolean().optional(),

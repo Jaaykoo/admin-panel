@@ -3,7 +3,9 @@ export type ErrorProps = {
 };
 
 export const Error = ({ errorMessage }: ErrorProps) => {
-  if (!errorMessage) return null;
+  if (!errorMessage) {
+    return null;
+  }
 
   return (
     <div

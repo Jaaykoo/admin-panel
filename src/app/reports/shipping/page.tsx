@@ -1,28 +1,29 @@
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { PageHeader } from "@/components/page-header"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Truck, Package, CheckCircle, XCircle, Calendar } from "lucide-react"
+import { Calendar, CheckCircle, Package, Truck, XCircle } from 'lucide-react';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { MainContent } from '@/components/layouts/main-content';
+import { PageHeader } from '@/components/page-header';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function ShippingPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
             <PageHeader
               title="Shipping Report"
-              breadcrumbs={[{ label: "Home", href: "/" }, { label: "Reports" }, { label: "Shipping" }]}
-              actions={
+              breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Reports' }, { label: 'Shipping' }]}
+              actions={(
                 <Button variant="outline">
                   <Calendar className="mr-2 h-4 w-4" />
                   Last 30 Days
                 </Button>
-              }
+              )}
             />
 
             <div className="mb-6 grid gap-6 md:grid-cols-4">
@@ -93,22 +94,22 @@ export default function ShippingPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                           Order
                         </th>
-                        <th className="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                           Customer
                         </th>
-                        <th className="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                           Courier
                         </th>
-                        <th className="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                           Method
                         </th>
-                        <th className="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                           Tracking
                         </th>
-                        <th className="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                           Status
                         </th>
                       </tr>
@@ -116,44 +117,44 @@ export default function ShippingPage() {
                     <tbody className="divide-y divide-gray-200">
                       {[
                         {
-                          order: "#ORD-1234",
-                          customer: "John Doe",
-                          courier: "FedEx",
-                          method: "Express",
-                          tracking: "FX123456789",
-                          status: "Delivered",
+                          order: '#ORD-1234',
+                          customer: 'John Doe',
+                          courier: 'FedEx',
+                          method: 'Express',
+                          tracking: 'FX123456789',
+                          status: 'Delivered',
                         },
                         {
-                          order: "#ORD-1235",
-                          customer: "Jane Smith",
-                          courier: "UPS",
-                          method: "Standard",
-                          tracking: "UP987654321",
-                          status: "In Transit",
+                          order: '#ORD-1235',
+                          customer: 'Jane Smith',
+                          courier: 'UPS',
+                          method: 'Standard',
+                          tracking: 'UP987654321',
+                          status: 'In Transit',
                         },
                         {
-                          order: "#ORD-1236",
-                          customer: "Bob Johnson",
-                          courier: "DHL",
-                          method: "Express",
-                          tracking: "DH456789123",
-                          status: "In Transit",
+                          order: '#ORD-1236',
+                          customer: 'Bob Johnson',
+                          courier: 'DHL',
+                          method: 'Express',
+                          tracking: 'DH456789123',
+                          status: 'In Transit',
                         },
                         {
-                          order: "#ORD-1237",
-                          customer: "Alice Brown",
-                          courier: "USPS",
-                          method: "Standard",
-                          tracking: "US789123456",
-                          status: "Pending",
+                          order: '#ORD-1237',
+                          customer: 'Alice Brown',
+                          courier: 'USPS',
+                          method: 'Standard',
+                          tracking: 'US789123456',
+                          status: 'Pending',
                         },
                         {
-                          order: "#ORD-1238",
-                          customer: "Charlie Wilson",
-                          courier: "FedEx",
-                          method: "Express",
-                          tracking: "FX321654987",
-                          status: "Delivered",
+                          order: '#ORD-1238',
+                          customer: 'Charlie Wilson',
+                          courier: 'FedEx',
+                          method: 'Express',
+                          tracking: 'FX321654987',
+                          status: 'Delivered',
                         },
                       ].map((shipment, idx) => (
                         <tr key={idx} className="hover:bg-gray-50">
@@ -161,16 +162,16 @@ export default function ShippingPage() {
                           <td className="py-4 text-sm text-gray-900">{shipment.customer}</td>
                           <td className="py-4 text-sm text-gray-600">{shipment.courier}</td>
                           <td className="py-4 text-sm text-gray-600">{shipment.method}</td>
-                          <td className="py-4 text-sm font-mono text-gray-600">{shipment.tracking}</td>
+                          <td className="py-4 font-mono text-sm text-gray-600">{shipment.tracking}</td>
                           <td className="py-4">
                             <Badge
                               variant="secondary"
                               className={
-                                shipment.status === "Delivered"
-                                  ? "bg-[#e8fff3] text-[#50cd89]"
-                                  : shipment.status === "In Transit"
-                                    ? "bg-[#e1f0ff] text-[#009ef7]"
-                                    : "bg-[#fff8dd] text-[#ffc700]"
+                                shipment.status === 'Delivered'
+                                  ? 'bg-[#e8fff3] text-[#50cd89]'
+                                  : shipment.status === 'In Transit'
+                                    ? 'bg-[#e1f0ff] text-[#009ef7]'
+                                    : 'bg-[#fff8dd] text-[#ffc700]'
                               }
                             >
                               {shipment.status}
@@ -187,5 +188,5 @@ export default function ShippingPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

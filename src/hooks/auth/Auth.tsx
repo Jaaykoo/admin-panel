@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { createContext, use, useEffect, useState } from 'react';
 import { LayoutSplashScreen } from '@/components/ui/splash-screen';
 import { QUERIES } from '@/helpers/crud-helper/consts';
-import { getUser, logout as logoutService } from '@/services/authService';
+import { getUser, logout as logoutService } from '@/services/AuthService';
 
 type AuthContextProps = {
   currentUser: User | undefined;
@@ -62,7 +62,6 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
       try {
         const data = await getUser();
         if (data) {
-          // eslint-disable-next-line ts/ban-ts-comment
           setCurrentUser(data);
         }
       } catch (error) {

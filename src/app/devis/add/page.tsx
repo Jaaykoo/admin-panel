@@ -1,21 +1,21 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Plus, X, Settings, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { useRouter } from "next/navigation"
+import { ArrowLeft, Plus, Settings, X } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function AddDevisPage() {
-  const router = useRouter()
+  const router = useRouter();
   const [products, setProducts] = useState([
-    { name: "Savon", quantity: 1, unit: "Pcs", rate: "500 CFA", tax: 18, amount: "1 000 CFA" },
-    { name: "", quantity: 0, unit: "Unit", rate: 0, tax: 0, amount: 0 },
-  ])
+    { name: 'Savon', quantity: 1, unit: 'Pcs', rate: '500 CFA', tax: 18, amount: '1 000 CFA' },
+    { name: '', quantity: 0, unit: 'Unit', rate: 0, tax: 0, amount: 0 },
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -76,7 +76,7 @@ export default function AddDevisPage() {
                   <Label className="mb-2 block text-sm font-medium text-gray-900">Nom du client*</Label>
                   <div className="relative">
                     <Input placeholder="Sélectionner ou ajouter un client" className="border-gray-300 pr-10" />
-                    <Settings className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Settings className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   </div>
                 </div>
                 <div>
@@ -183,8 +183,7 @@ export default function AddDevisPage() {
                 variant="link"
                 className="mb-8 h-auto p-0 text-[#50cd89] hover:text-[#47b881]"
                 onClick={() =>
-                  setProducts([...products, { name: "", quantity: 0, unit: "Unit", rate: 0, tax: 0, amount: 0 }])
-                }
+                  setProducts([...products, { name: '', quantity: 0, unit: 'Unit', rate: 0, tax: 0, amount: 0 }])}
               >
                 <Plus className="mr-1 h-4 w-4" />
                 Ajouter un nouveau
@@ -241,7 +240,7 @@ export default function AddDevisPage() {
 
               <div className="mt-8 flex gap-3">
                 <Button className="bg-[#50cd89] text-white hover:bg-[#47b881]">Enregistrer comme brouillon</Button>
-                <Button className="bg-[#009ef7] text-white hover:bg-[#0086d6]" onClick={() => router.push("/devis")}>
+                <Button className="bg-[#009ef7] text-white hover:bg-[#0086d6]" onClick={() => router.push('/devis')}>
                   Ajouter
                 </Button>
                 <Link href="/devis">
@@ -255,5 +254,5 @@ export default function AddDevisPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

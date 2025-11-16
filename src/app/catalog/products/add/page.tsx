@@ -1,21 +1,21 @@
-"use client"
+'use client';
 
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { PageHeader } from "@/components/page-header"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Upload, X } from "lucide-react"
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Upload, X } from 'lucide-react';
+import { useState } from 'react';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { PageHeader } from '@/components/page-header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function AddProductPage() {
-  const [images, setImages] = useState<string[]>([])
-  const [activeTab, setActiveTab] = useState("general")
+  const [images, setImages] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState('general');
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -26,8 +26,8 @@ export default function AddProductPage() {
           <div className="p-6">
             <PageHeader
               title="Product Form"
-              breadcrumbs={[{ label: "Home", href: "/" }, { label: "eCommerce" }, { label: "Catalog" }]}
-              actions={
+              breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'eCommerce' }, { label: 'Catalog' }]}
+              actions={(
                 <div className="flex gap-3">
                   <Button variant="outline" className="gap-2 bg-transparent">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@ export default function AddProductPage() {
                   </Button>
                   <Button className="bg-[#009ef7] hover:bg-[#0077b6]">Create</Button>
                 </div>
-              }
+              )}
             />
 
             <div className="grid gap-6 lg:grid-cols-4">
@@ -54,9 +54,9 @@ export default function AddProductPage() {
                     <CardTitle className="text-base font-semibold text-gray-900">Thumbnail</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#009ef7] transition-colors cursor-pointer">
+                    <div className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-8 text-center transition-colors hover:border-[#009ef7]">
                       <div className="flex flex-col items-center gap-3">
-                        <div className="h-20 w-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-100">
                           <svg
                             className="h-10 w-10 text-gray-400"
                             fill="none"
@@ -74,7 +74,7 @@ export default function AddProductPage() {
                         <Upload className="h-5 w-5 text-gray-400" />
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-3 text-center">
+                    <p className="mt-3 text-center text-xs text-gray-500">
                       Set the product thumbnail image. Only *.png, *.jpg and *.jpeg image files are accepted
                     </p>
                   </CardContent>
@@ -99,7 +99,7 @@ export default function AddProductPage() {
                         <SelectItem value="scheduled">Scheduled</SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-xs text-gray-500 mt-2">Set the product status.</p>
+                    <p className="mt-2 text-xs text-gray-500">Set the product status.</p>
                   </CardContent>
                 </Card>
 
@@ -110,7 +110,7 @@ export default function AddProductPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Categories</Label>
+                      <Label className="mb-2 block text-sm font-medium text-gray-700">Categories</Label>
                       <Select>
                         <SelectTrigger>
                           <SelectValue placeholder="Select an option" />
@@ -121,15 +121,15 @@ export default function AddProductPage() {
                           <SelectItem value="accessories">Accessories</SelectItem>
                         </SelectContent>
                       </Select>
-                      <p className="text-xs text-gray-500 mt-2">Add product to a category.</p>
-                      <Button variant="link" className="text-[#009ef7] p-0 h-auto mt-2 text-sm">
+                      <p className="mt-2 text-xs text-gray-500">Add product to a category.</p>
+                      <Button variant="link" className="mt-2 h-auto p-0 text-sm text-[#009ef7]">
                         + Create new category
                       </Button>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Tags</Label>
+                      <Label className="mb-2 block text-sm font-medium text-gray-700">Tags</Label>
                       <Input placeholder="" />
-                      <p className="text-xs text-gray-500 mt-2">Add tags to a product.</p>
+                      <p className="mt-2 text-xs text-gray-500">Add tags to a product.</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -152,7 +152,7 @@ export default function AddProductPage() {
                     <CardTitle className="text-base font-semibold text-gray-900">Product Template</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Select a product template</Label>
+                    <Label className="mb-2 block text-sm font-medium text-gray-700">Select a product template</Label>
                     <Select defaultValue="default">
                       <SelectTrigger>
                         <SelectValue />
@@ -162,7 +162,7 @@ export default function AddProductPage() {
                         <SelectItem value="modern">Modern template</SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="mt-2 text-xs text-gray-500">
                       Assign a template from your current theme to define how a single product is displayed.
                     </p>
                   </CardContent>
@@ -173,16 +173,16 @@ export default function AddProductPage() {
               <div className="lg:col-span-3">
                 {/* Tabs for General and Advanced */}
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="bg-white border-b border-gray-200 rounded-none h-auto p-0 mb-6">
+                  <TabsList className="mb-6 h-auto rounded-none border-b border-gray-200 bg-white p-0">
                     <TabsTrigger
                       value="general"
-                      className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7] px-6 py-3"
+                      className="rounded-none border-b-2 border-transparent px-6 py-3 data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7]"
                     >
                       General
                     </TabsTrigger>
                     <TabsTrigger
                       value="advanced"
-                      className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7] px-6 py-3"
+                      className="rounded-none border-b-2 border-transparent px-6 py-3 data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7]"
                     >
                       Advanced
                     </TabsTrigger>
@@ -196,20 +196,22 @@ export default function AddProductPage() {
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div>
-                          <Label htmlFor="productName" className="text-sm font-medium text-gray-700 mb-2 block">
-                            Product Name <span className="text-[#f1416c]">*</span>
+                          <Label htmlFor="productName" className="mb-2 block text-sm font-medium text-gray-700">
+                            Product Name
+                            {' '}
+                            <span className="text-[#f1416c]">*</span>
                           </Label>
                           <Input id="productName" placeholder="Product name" />
-                          <p className="text-xs text-gray-500 mt-2">
+                          <p className="mt-2 text-xs text-gray-500">
                             A product name is required and recommended to be unique.
                           </p>
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 mb-2 block">Description</Label>
-                          <div className="border border-gray-300 rounded-lg">
-                            <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 bg-gray-50">
+                          <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                          <div className="rounded-lg border border-gray-300">
+                            <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2">
                               <Select defaultValue="normal">
-                                <SelectTrigger className="w-32 h-8 text-sm">
+                                <SelectTrigger className="h-8 w-32 text-sm">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -230,11 +232,11 @@ export default function AddProductPage() {
                               </div>
                             </div>
                             <textarea
-                              className="w-full p-3 min-h-[120px] focus:outline-none"
+                              className="min-h-[120px] w-full p-3 focus:outline-none"
                               placeholder="Type your text here..."
                             />
                           </div>
-                          <p className="text-xs text-gray-500 mt-2">
+                          <p className="mt-2 text-xs text-gray-500">
                             Set a description to the product for better visibility.
                           </p>
                         </div>
@@ -247,18 +249,18 @@ export default function AddProductPage() {
                         <CardTitle className="text-lg font-semibold text-gray-900">Media</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-[#009ef7] transition-colors cursor-pointer">
+                        <div className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-12 text-center transition-colors hover:border-[#009ef7]">
                           <div className="flex flex-col items-center gap-3">
-                            <div className="h-16 w-16 rounded-full bg-[#e1f0ff] flex items-center justify-center">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#e1f0ff]">
                               <Upload className="h-8 w-8 text-[#009ef7]" />
                             </div>
                             <div>
                               <p className="text-sm font-medium text-gray-900">Drop files here or click to upload.</p>
-                              <p className="text-xs text-gray-500 mt-1">Upload up to 10 files</p>
+                              <p className="mt-1 text-xs text-gray-500">Upload up to 10 files</p>
                             </div>
                           </div>
                         </div>
-                        <p className="text-xs text-gray-500 mt-3">Set the product media gallery.</p>
+                        <p className="mt-3 text-xs text-gray-500">Set the product media gallery.</p>
                       </CardContent>
                     </Card>
 
@@ -269,15 +271,18 @@ export default function AddProductPage() {
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div>
-                          <Label htmlFor="basePrice" className="text-sm font-medium text-gray-700 mb-2 block">
-                            Base Price <span className="text-[#f1416c]">*</span>
+                          <Label htmlFor="basePrice" className="mb-2 block text-sm font-medium text-gray-700">
+                            Base Price
+                            {' '}
+                            <span className="text-[#f1416c]">*</span>
                           </Label>
                           <Input id="basePrice" placeholder="Product price" />
-                          <p className="text-xs text-gray-500 mt-2">Set the product price.</p>
+                          <p className="mt-2 text-xs text-gray-500">Set the product price.</p>
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Discount Type{" "}
+                          <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            Discount Type
+                            {' '}
                             <svg
                               className="inline h-4 w-4 text-gray-400"
                               fill="none"
@@ -293,21 +298,21 @@ export default function AddProductPage() {
                             </svg>
                           </Label>
                           <div className="grid grid-cols-3 gap-4">
-                            <div className="border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-[#009ef7] bg-[#e1f0ff] border-[#009ef7]">
+                            <div className="cursor-pointer rounded-lg border border-[#009ef7] border-gray-300 bg-[#e1f0ff] p-4 hover:border-[#009ef7]">
                               <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border-2 border-[#009ef7] flex items-center justify-center">
+                                <div className="flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#009ef7]">
                                   <div className="h-2 w-2 rounded-full bg-[#009ef7]"></div>
                                 </div>
                                 <span className="text-sm font-medium text-gray-900">No Discount</span>
                               </div>
                             </div>
-                            <div className="border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-[#009ef7]">
+                            <div className="cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-[#009ef7]">
                               <div className="flex items-center gap-2">
                                 <div className="h-4 w-4 rounded-full border-2 border-gray-300"></div>
                                 <span className="text-sm font-medium text-gray-900">Percentage %</span>
                               </div>
                             </div>
-                            <div className="border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-[#009ef7]">
+                            <div className="cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-[#009ef7]">
                               <div className="flex items-center gap-2">
                                 <div className="h-4 w-4 rounded-full border-2 border-gray-300"></div>
                                 <span className="text-sm font-medium text-gray-900">Fixed Price</span>
@@ -317,8 +322,10 @@ export default function AddProductPage() {
                         </div>
                         <div className="grid gap-4 md:grid-cols-2">
                           <div>
-                            <Label htmlFor="taxClass" className="text-sm font-medium text-gray-700 mb-2 block">
-                              Tax Class <span className="text-[#f1416c]">*</span>
+                            <Label htmlFor="taxClass" className="mb-2 block text-sm font-medium text-gray-700">
+                              Tax Class
+                              {' '}
+                              <span className="text-[#f1416c]">*</span>
                             </Label>
                             <Select>
                               <SelectTrigger>
@@ -329,14 +336,14 @@ export default function AddProductPage() {
                                 <SelectItem value="reduced">Reduced</SelectItem>
                               </SelectContent>
                             </Select>
-                            <p className="text-xs text-gray-500 mt-2">Set the product tax class.</p>
+                            <p className="mt-2 text-xs text-gray-500">Set the product tax class.</p>
                           </div>
                           <div>
-                            <Label htmlFor="vat" className="text-sm font-medium text-gray-700 mb-2 block">
+                            <Label htmlFor="vat" className="mb-2 block text-sm font-medium text-gray-700">
                               VAT Amount (%)
                             </Label>
                             <Input id="vat" placeholder="0" />
-                            <p className="text-xs text-gray-500 mt-2">Set the product VAT about.</p>
+                            <p className="mt-2 text-xs text-gray-500">Set the product VAT about.</p>
                           </div>
                         </div>
                       </CardContent>
@@ -358,38 +365,44 @@ export default function AddProductPage() {
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div>
-                          <Label htmlFor="sku" className="text-sm font-medium text-gray-700 mb-2 block">
-                            SKU <span className="text-[#f1416c]">*</span>
+                          <Label htmlFor="sku" className="mb-2 block text-sm font-medium text-gray-700">
+                            SKU
+                            {' '}
+                            <span className="text-[#f1416c]">*</span>
                           </Label>
                           <Input id="sku" placeholder="SKU Number" />
-                          <p className="text-xs text-gray-500 mt-2">Enter the product SKU.</p>
+                          <p className="mt-2 text-xs text-gray-500">Enter the product SKU.</p>
                         </div>
                         <div>
-                          <Label htmlFor="barcode" className="text-sm font-medium text-gray-700 mb-2 block">
-                            Barcode <span className="text-[#f1416c]">*</span>
+                          <Label htmlFor="barcode" className="mb-2 block text-sm font-medium text-gray-700">
+                            Barcode
+                            {' '}
+                            <span className="text-[#f1416c]">*</span>
                           </Label>
                           <Input id="barcode" placeholder="Barcode Number" />
-                          <p className="text-xs text-gray-500 mt-2">Enter the product barcode number.</p>
+                          <p className="mt-2 text-xs text-gray-500">Enter the product barcode number.</p>
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Quantity <span className="text-[#f1416c]">*</span>
+                          <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            Quantity
+                            {' '}
+                            <span className="text-[#f1416c]">*</span>
                           </Label>
                           <div className="grid gap-4 md:grid-cols-2">
                             <Input placeholder="On shelf" />
                             <Input placeholder="In warehouse" />
                           </div>
-                          <p className="text-xs text-gray-500 mt-2">Enter the product quantity.</p>
+                          <p className="mt-2 text-xs text-gray-500">Enter the product quantity.</p>
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 mb-2 block">Allow Backorders</Label>
+                          <Label className="mb-2 block text-sm font-medium text-gray-700">Allow Backorders</Label>
                           <div className="flex items-center gap-2">
                             <Checkbox id="backorders" />
-                            <Label htmlFor="backorders" className="text-sm text-gray-700 cursor-pointer">
+                            <Label htmlFor="backorders" className="cursor-pointer text-sm text-gray-700">
                               Yes
                             </Label>
                           </div>
-                          <p className="text-xs text-gray-500 mt-2">
+                          <p className="mt-2 text-xs text-gray-500">
                             Allow customers to purchase products that are out of stock.
                           </p>
                         </div>
@@ -403,7 +416,7 @@ export default function AddProductPage() {
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 mb-2 block">Add Product Variations</Label>
+                          <Label className="mb-2 block text-sm font-medium text-gray-700">Add Product Variations</Label>
                           <div className="flex gap-3">
                             <Select>
                               <SelectTrigger className="flex-1">
@@ -419,7 +432,7 @@ export default function AddProductPage() {
                               <X className="h-4 w-4" />
                             </Button>
                           </div>
-                          <Button variant="link" className="text-[#009ef7] p-0 h-auto mt-3 text-sm">
+                          <Button variant="link" className="mt-3 h-auto p-0 text-sm text-[#009ef7]">
                             + Add another variation
                           </Button>
                         </div>
@@ -434,11 +447,11 @@ export default function AddProductPage() {
                       <CardContent>
                         <div className="flex items-center gap-2">
                           <Checkbox id="physical" />
-                          <Label htmlFor="physical" className="text-sm text-gray-700 cursor-pointer">
+                          <Label htmlFor="physical" className="cursor-pointer text-sm text-gray-700">
                             This is a physical product
                           </Label>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="mt-2 text-xs text-gray-500">
                           Set if the product is a physical or digital item. Physical products may require shipping.
                         </p>
                       </CardContent>
@@ -451,20 +464,20 @@ export default function AddProductPage() {
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div>
-                          <Label htmlFor="metaTitle" className="text-sm font-medium text-gray-700 mb-2 block">
+                          <Label htmlFor="metaTitle" className="mb-2 block text-sm font-medium text-gray-700">
                             Meta tag name
                           </Label>
                           <Input id="metaTitle" />
-                          <p className="text-xs text-gray-500 mt-2">
+                          <p className="mt-2 text-xs text-gray-500">
                             Set a meta tag title. Recommended to be simple and precise keywords.
                           </p>
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 mb-2 block">Meta Tag Description</Label>
-                          <div className="border border-gray-300 rounded-lg">
-                            <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 bg-gray-50">
+                          <Label className="mb-2 block text-sm font-medium text-gray-700">Meta Tag Description</Label>
+                          <div className="rounded-lg border border-gray-300">
+                            <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2">
                               <Select defaultValue="normal">
-                                <SelectTrigger className="w-32 h-8 text-sm">
+                                <SelectTrigger className="h-8 w-32 text-sm">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -484,22 +497,26 @@ export default function AddProductPage() {
                               </div>
                             </div>
                             <textarea
-                              className="w-full p-3 min-h-[120px] focus:outline-none"
+                              className="min-h-[120px] w-full p-3 focus:outline-none"
                               placeholder="Type your text here..."
                             />
                           </div>
-                          <p className="text-xs text-gray-500 mt-2">
+                          <p className="mt-2 text-xs text-gray-500">
                             Set a meta tag description to the product for increased SEO ranking.
                           </p>
                         </div>
                         <div>
-                          <Label htmlFor="metaKeywords" className="text-sm font-medium text-gray-700 mb-2 block">
+                          <Label htmlFor="metaKeywords" className="mb-2 block text-sm font-medium text-gray-700">
                             Meta Tag Keywords
                           </Label>
                           <Input id="metaKeywords" />
-                          <p className="text-xs text-gray-500 mt-2">
+                          <p className="mt-2 text-xs text-gray-500">
                             Set a list of keywords that the product is related to. Separate the keywords by adding a
-                            comma <span className="font-mono">,</span> between each keyword.
+                            comma
+                            {' '}
+                            <span className="font-mono">,</span>
+                            {' '}
+                            between each keyword.
                           </p>
                         </div>
                       </CardContent>
@@ -518,5 +535,5 @@ export default function AddProductPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

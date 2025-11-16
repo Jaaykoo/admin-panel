@@ -1,18 +1,19 @@
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { RevenueChart } from "@/components/revenue-chart"
-import { CategoryChart } from "@/components/category-chart"
-import { TopProducts } from "@/components/top-products"
-import { Card } from "@/components/ui/card"
-import { TrendingUp, TrendingDown, DollarSign, ShoppingBag } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Download } from "lucide-react"
+import { DollarSign, Download, ShoppingBag, TrendingDown, TrendingUp } from 'lucide-react';
+
+import { CategoryChart } from '@/components/catalogue/categories/category-chart';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { MainContent } from '@/components/layouts/main-content';
+import { RevenueChart } from '@/components/revenue-chart';
+import { TopProducts } from '@/components/top-products';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 export default function ReportsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
@@ -111,5 +112,5 @@ export default function ReportsPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

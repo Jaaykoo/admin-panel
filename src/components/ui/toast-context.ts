@@ -1,16 +1,16 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
-export interface Toast {
+export type Toast = {
   id: string;
   title: string;
   description?: string;
-  variant?: "default" | "destructive";
-}
+  variant?: 'default' | 'destructive';
+};
 
-export interface ToastContextType {
+export type ToastContextType = {
   toasts: Toast[];
-  toast: (toast: Omit<Toast, "id">) => void;
+  toast: (toast: Omit<Toast, 'id'>) => void;
   dismissToast: (id: string) => void;
-}
+};
 
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);

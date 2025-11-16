@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function DevisDetailPage() {
   return (
@@ -24,13 +24,19 @@ export default function DevisDetailPage() {
               <h3 className="mb-3 text-sm font-semibold text-gray-900">Devis</h3>
               <div className="space-y-2 text-sm">
                 <p className="text-gray-600">
-                  Numéro de devis : <span className="font-medium text-gray-900">DEV2025-001</span>
+                  Numéro de devis :
+                  {' '}
+                  <span className="font-medium text-gray-900">DEV2025-001</span>
                 </p>
                 <p className="text-gray-600">
-                  Date de facture : <span className="font-medium text-gray-900">25 Jan 2025</span>
+                  Date de facture :
+                  {' '}
+                  <span className="font-medium text-gray-900">25 Jan 2025</span>
                 </p>
                 <p className="text-gray-600">
-                  Date d'échéance : <span className="font-medium text-gray-900">31 Jan 2025</span>
+                  Date d'échéance :
+                  {' '}
+                  <span className="font-medium text-gray-900">31 Jan 2025</span>
                 </p>
                 <div className="inline-block rounded bg-[#f1416c] px-2 py-1 text-xs text-white">
                   Validité du devis : 30 jours
@@ -165,7 +171,7 @@ export default function DevisDetailPage() {
           {/* Signature */}
           <div className="mb-8 flex justify-end border-t border-gray-200 pt-6">
             <div className="text-right">
-              <div className="mb-2 text-2xl font-script text-gray-700">Badette dieng</div>
+              <div className="font-script mb-2 text-2xl text-gray-700">Badette dieng</div>
               <p className="text-sm font-medium text-gray-900">Badette dieng</p>
               <p className="text-sm text-gray-600">CEO JABA</p>
             </div>
@@ -187,5 +193,5 @@ export default function DevisDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

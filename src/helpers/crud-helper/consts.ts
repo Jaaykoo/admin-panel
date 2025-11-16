@@ -6,6 +6,8 @@ const QUERIES = {
   RESET_PASSWORD: 'reset-password',
   VERIFY_OTP: 'verify-otp',
   RESET_PASSWORD_WITH_CODE: 'reset-password-with-code',
+  CATEGORIES_LIST: 'categories-list',
+  CATEGORY_DETAIL: 'category-detail',
 };
 
 export { QUERIES };

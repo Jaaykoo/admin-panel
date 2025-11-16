@@ -1,16 +1,16 @@
-"use client"
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const data = [
-  { name: "Defective", value: 45 },
-  { name: "Wrong Item", value: 28 },
-  { name: "Not as Described", value: 32 },
-  { name: "Changed Mind", value: 22 },
-]
+  { name: 'Defective', value: 45 },
+  { name: 'Wrong Item', value: 28 },
+  { name: 'Not as Described', value: 32 },
+  { name: 'Changed Mind', value: 22 },
+];
 
-const COLORS = ["#f1416c", "#ffc700", "#009ef7", "#50cd89"]
+const COLORS = ['#f1416c', '#ffc700', '#009ef7', '#50cd89'];
 
 export function ReturnsChart() {
   return (
@@ -42,5 +42,5 @@ export function ReturnsChart() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

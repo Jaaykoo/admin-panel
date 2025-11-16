@@ -1,302 +1,230 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Search, Filter, Download, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import Image from "next/image"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-
-const users = [
-  {
-    name: "Emma Smith",
-    email: "smith@kpmg.com",
-    role: "Administrator",
-    lastLogin: "Yesterday",
-    twoStep: false,
-    joined: "10 Nov 2025, 10:10 pm",
-  },
-  {
-    name: "Melody Macy",
-    email: "melody@altbox.com",
-    role: "Analyst",
-    lastLogin: "20 mins ago",
-    twoStep: true,
-    joined: "25 Jul 2025, 11:30 am",
-  },
-  {
-    name: "Max Smith",
-    email: "max@kt.com",
-    role: "Developer",
-    lastLogin: "3 days ago",
-    twoStep: false,
-    joined: "15 Apr 2025, 9:23 pm",
-  },
-  {
-    name: "Sean Bean",
-    email: "sean@dellito.com",
-    role: "Support",
-    lastLogin: "2 weeks ago",
-    twoStep: false,
-    joined: "21 Feb 2025, 5:20 pm",
-  },
-  {
-    name: "Brian Cox",
-    email: "brian@exchange.com",
-    role: "Developer",
-    lastLogin: "2 days ago",
-    twoStep: true,
-    joined: "25 Jul 2025, 6:43 am",
-  },
-  {
-    name: "Mikaela Collins",
-    email: "mik@pex.com",
-    role: "Administrator",
-    lastLogin: "5 days ago",
-    twoStep: false,
-    joined: "05 May 2025, 10:10 pm",
-  },
-  {
-    name: "Francis Mitcham",
-    email: "f.mit@kpmg.com",
-    role: "Trial",
-    lastLogin: "3 weeks ago",
-    twoStep: false,
-    joined: "10 Mar 2025, 5:30 pm",
-  },
-  {
-    name: "Olivia Wild",
-    email: "olivia@corpmail.com",
-    role: "Administrator",
-    lastLogin: "Yesterday",
-    twoStep: false,
-    joined: "20 Dec 2025, 8:43 pm",
-  },
-  {
-    name: "Neil Owen",
-    email: "owen.neil@gmail.com",
-    role: "Analyst",
-    lastLogin: "20 mins ago",
-    twoStep: true,
-    joined: "15 Apr 2025, 6:05 pm",
-  },
-  {
-    name: "Dan Wilson",
-    email: "dam@consilting.com",
-    role: "Developer",
-    lastLogin: "3 days ago",
-    twoStep: false,
-    joined: "20 Dec 2025, 5:20 pm",
-  },
-]
+import { Download, Plus, Search, Shield, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { CustomerPagination } from '@/components/customers/tables/customer-pagination';
+import { Header } from '@/components/layouts/header';
+import { MainContent } from '@/components/layouts/main-content';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { UsersTable } from '@/components/users/users-table';
+import { useQueryRequest } from '@/hooks/_QueryRequestProvider';
+import { useQueryResponseData, useQueryResponseLoading, useQueryResponsePagination } from '@/hooks/user/UserQueryResponseProvider';
 
 export default function UsersPage() {
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false)
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const { state, updateState } = useQueryRequest();
+  const users = useQueryResponseData();
+  const isLoading = useQueryResponseLoading();
+  const paginationData = useQueryResponsePagination();
+
+  // Initialiser sans filtre restrictif
+  useEffect(() => {
+    updateState({
+      offset: 0,
+    });
+  }, []);
+
+  // Recherche en temps réel avec debounce
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      updateState({ search: searchQuery, offset: 0 });
+    }, 300); // Délai de 300ms
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // La recherche se fait automatiquement via useEffect
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilter(value);
+    const currentFilter = state.filter || {};
+
+    if (value === 'all') {
+      const { role, ...restFilter } = currentFilter as any;
+      updateState({ filter: restFilter, offset: 0 });
+    } else {
+      updateState({
+        filter: {
+          ...currentFilter,
+          role: value,
+        },
+        offset: 0,
+      });
+    }
+  };
+
+  const handleActiveFilterChange = (value: string) => {
+    setActiveFilter(value);
+    const currentFilter = state.filter || {};
+
+    if (value === 'all') {
+      const { is_active, ...restFilter } = currentFilter as any;
+      updateState({ filter: restFilter, offset: 0 });
+    } else {
+      updateState({
+        filter: {
+          ...currentFilter,
+          is_active: value === 'active',
+        },
+        offset: 0,
+      });
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setRoleFilter('all');
+    setActiveFilter('all');
+    updateState({
+      search: '',
+      filter: {},
+      offset: 0,
+    });
+  };
+
+  const handlePageChange = (page: number) => {
+    const newOffset = (page - 1) * (state.limit || 10);
+    updateState({ offset: newOffset });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    updateState({ limit: size as 10 | 20 | 50 | 100, offset: 0 });
+  };
+
+  const totalPages = Math.ceil((paginationData.count || 0) / (state.limit || 10));
+  const currentPage = Math.floor((state.offset || 0) / (state.limit || 10)) + 1;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      <div className="p-8">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="mb-2 flex items-center gap-2 text-sm text-gray-500">
-            <span>Home</span>
-            <span>-</span>
-            <span>User Management</span>
-            <span>-</span>
-            <span>Users</span>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Users List</h1>
-        </div>
-
-        {/* Actions Bar */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input placeholder="Search user" className="pl-10 border-gray-300" />
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" className="gap-2 bg-white border-gray-300">
-              <Filter className="h-4 w-4" />
-              Filter
-            </Button>
-            <Button variant="outline" className="gap-2 bg-white border-gray-300">
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
-            <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2 bg-[#009ef7] text-white hover:bg-[#0086d6]">
-                  <Plus className="h-4 w-4" />
-                  Add User
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold">Add User</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-6 py-4">
-                  {/* Avatar */}
-                  <div>
-                    <Label className="mb-3 block text-base font-semibold">Avatar</Label>
-                    <div className="flex items-center gap-4">
-                      <div className="relative h-32 w-32 overflow-hidden rounded-lg">
-                        <Image
-                          src="/diverse-avatars.png"
-                          alt="Avatar"
-                          width={128}
-                          height={128}
-                          className="h-full w-full object-cover"
-                        />
-                        <button className="absolute right-2 top-2 rounded-full bg-white p-1 shadow-sm">
-                          <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                            />
-                          </svg>
-                        </button>
-                        <button className="absolute bottom-2 right-2 rounded-full bg-white p-1 shadow-sm">
-                          <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    <p className="mt-2 text-xs text-gray-500">Allowed file types: png, jpg, jpeg.</p>
-                  </div>
-
-                  {/* Full Name */}
-                  <div>
-                    <Label htmlFor="fullName" className="mb-2 block">
-                      Full Name <span className="text-red-500">*</span>
-                    </Label>
-                    <Input id="fullName" defaultValue="Emma Smith" className="bg-gray-50 border-gray-300" />
-                  </div>
-
-                  {/* Email */}
-                  <div>
-                    <Label htmlFor="email" className="mb-2 block">
-                      Email <span className="text-red-500">*</span>
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      defaultValue="smith@kpmg.com"
-                      className="bg-gray-50 border-gray-300"
-                    />
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex justify-end gap-3 pt-4">
-                    <Button
-                      variant="outline"
-                      className="border-gray-300 bg-transparent"
-                      onClick={() => setIsAddUserOpen(false)}
-                    >
-                      Discard
-                    </Button>
-                    <Button className="bg-[#009ef7] text-white hover:bg-[#0086d6]">Submit</Button>
-                  </div>
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
+      <MainContent>
+        <Header />
+        <main className="pt-16">
+          <div className="space-y-6 p-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#009ef7] to-[#0077b6] text-white shadow-lg">
+                  <Shield className="h-6 w-6" />
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="rounded-lg bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="px-6 py-4 text-left">
-                    <input type="checkbox" className="rounded border-gray-300" />
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500">User</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500">Role</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500">Last Login</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500">Two-Step</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500">Joined Date</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {users.map((user, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <input type="checkbox" className="rounded border-gray-300" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#009ef7] text-white">
-                          <span className="text-sm font-medium">
-                            {user.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{user.name}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{user.role}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{user.lastLogin}</td>
-                    <td className="px-6 py-4">
-                      {user.twoStep && <Badge className="bg-[#50cd89] text-white hover:bg-[#47b881]">Enabled</Badge>}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{user.joined}</td>
-                    <td className="px-6 py-4">
-                      <Button variant="ghost" size="sm" className="gap-2 text-gray-700 hover:text-[#009ef7]">
-                        Actions
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
-            <Button variant="ghost" size="sm" className="text-gray-700">
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Button>
-            <div className="flex gap-2">
-              <Button size="sm" className="bg-[#009ef7] text-white hover:bg-[#0086d6]">
-                1
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-700">
-                2
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-700">
-                3
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Gestion des utilisateurs</h1>
+                  <p className="text-sm text-gray-500">Tous les utilisateurs de la plateforme</p>
+                </div>
+              </div>
+              <Button
+                onClick={() => router.push('/users/create')}
+                className="bg-[#009ef7] shadow-md hover:bg-[#0077b6]"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Nouvel utilisateur
               </Button>
             </div>
-            <Button variant="ghost" size="sm" className="text-gray-700">
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Button>
+            {/* Filters and Search */}
+            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center gap-4">
+                <form onSubmit={handleSearch} className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Input
+                      type="search"
+                      placeholder="Rechercher par nom, email..."
+                      className="border-gray-300 pl-10"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </form>
+
+                <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
+                  <SelectTrigger className="w-[180px] border-gray-300">
+                    <SelectValue placeholder="Filtrer par rôle" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tous les rôles</SelectItem>
+                    <SelectItem value="ADMIN">Administrateurs</SelectItem>
+                    <SelectItem value="PERSONNEL">Personnel</SelectItem>
+                    <SelectItem value="PARTICULIER">Particuliers</SelectItem>
+                    <SelectItem value="ENTREPRISE">Entreprises</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={activeFilter} onValueChange={handleActiveFilterChange}>
+                  <SelectTrigger className="w-[180px] border-gray-300">
+                    <SelectValue placeholder="Filtrer par statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tous les statuts</SelectItem>
+                    <SelectItem value="active">Actifs uniquement</SelectItem>
+                    <SelectItem value="inactive">Inactifs uniquement</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {(searchQuery || roleFilter !== 'all' || activeFilter !== 'all') && (
+                  <Button
+                    variant="outline"
+                    onClick={clearFilters}
+                    className="border-gray-300 bg-white shadow-sm"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Réinitialiser
+                  </Button>
+                )}
+
+                <Button variant="outline" className="border-gray-300 bg-white shadow-sm">
+                  <Download className="mr-2 h-4 w-4" />
+                  Exporter
+                </Button>
+              </div>
+            </div>
+
+            {/* Table */}
+            {isLoading
+              ? (
+                  <div className="flex items-center justify-center rounded-lg border border-gray-200 bg-white py-16 shadow-sm">
+                    <div className="text-center">
+                      <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#009ef7] border-t-transparent" />
+                      <p className="mt-4 text-sm text-gray-600">Chargement des données...</p>
+                    </div>
+                  </div>
+                )
+              : (
+                  <>
+                    <UsersTable users={users} />
+
+                    {/* Pagination */}
+                    {users.length > 0 && (
+                      <CustomerPagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        pageSize={state.limit || 10}
+                        totalItems={paginationData.count || 0}
+                        onPageChangeAction={handlePageChange}
+                        onPageSizeChangeAction={handlePageSizeChange}
+                      />
+                    )}
+                  </>
+                )}
           </div>
-        </div>
-      </div>
+        </main>
+      </MainContent>
     </div>
-  )
+  );
 }

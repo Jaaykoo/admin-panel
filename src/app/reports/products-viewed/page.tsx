@@ -1,29 +1,30 @@
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { PageHeader } from "@/components/page-header"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Eye, TrendingUp, Calendar } from "lucide-react"
-import { ProductViewsChart } from "@/components/product-views-chart"
-import { ProductViewsTable } from "@/components/product-views-table"
+import { Calendar, Eye, TrendingUp } from 'lucide-react';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { MainContent } from '@/components/layouts/main-content';
+import { PageHeader } from '@/components/page-header';
+import { ProductViewsChart } from '@/components/product-views-chart';
+import { ProductViewsTable } from '@/components/product-views-table';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function ProductsViewedPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
             <PageHeader
               title="Products Viewed"
-              breadcrumbs={[{ label: "Home", href: "/" }, { label: "Reports" }, { label: "Products Viewed" }]}
-              actions={
+              breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Reports' }, { label: 'Products Viewed' }]}
+              actions={(
                 <Button variant="outline">
                   <Calendar className="mr-2 h-4 w-4" />
                   Last 30 Days
                 </Button>
-              }
+              )}
             />
 
             <div className="mb-6 grid gap-6 md:grid-cols-3">
@@ -85,5 +86,5 @@ export default function ProductsViewedPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

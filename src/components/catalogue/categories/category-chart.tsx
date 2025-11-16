@@ -1,14 +1,14 @@
-"use client"
+'use client';
 
-import { Card } from "@/components/ui/card"
-import { Pie, PieChart, ResponsiveContainer, Cell, Legend, Tooltip } from "recharts"
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Card } from '@/components/ui/card';
 
 const data = [
-  { name: "Widgets", value: 45, color: "#009ef7" },
-  { name: "Packages", value: 30, color: "#50cd89" },
-  { name: "Bundles", value: 15, color: "#ffc700" },
-  { name: "Services", value: 10, color: "#7239ea" },
-]
+  { name: 'Widgets', value: 45, color: '#009ef7' },
+  { name: 'Packages', value: 30, color: '#50cd89' },
+  { name: 'Bundles', value: 15, color: '#ffc700' },
+  { name: 'Services', value: 10, color: '#7239ea' },
+];
 
 export function CategoryChart() {
   return (
@@ -24,10 +24,10 @@ export function CategoryChart() {
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => [`${value}%`, "Share"]} />
+          <Tooltip formatter={value => [`${value}%`, 'Share']} />
           <Legend />
         </PieChart>
       </ResponsiveContainer>
     </Card>
-  )
+  );
 }

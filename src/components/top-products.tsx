@@ -1,12 +1,12 @@
-import { Card } from "@/components/ui/card"
+import { Card } from '@/components/ui/card';
 
 const products = [
-  { name: "Premium Widget Set", sales: 245, revenue: 73255.0, trend: "+12%" },
-  { name: "Enterprise Bundle", sales: 189, revenue: 113211.0, trend: "+8%" },
-  { name: "Pro Package", sales: 156, revenue: 62244.0, trend: "+15%" },
-  { name: "Starter Package", sales: 134, revenue: 19966.0, trend: "+5%" },
-  { name: "Deluxe Widget", sales: 98, revenue: 19502.0, trend: "-3%" },
-]
+  { name: 'Premium Widget Set', sales: 245, revenue: 73255.0, trend: '+12%' },
+  { name: 'Enterprise Bundle', sales: 189, revenue: 113211.0, trend: '+8%' },
+  { name: 'Pro Package', sales: 156, revenue: 62244.0, trend: '+15%' },
+  { name: 'Starter Package', sales: 134, revenue: 19966.0, trend: '+5%' },
+  { name: 'Deluxe Widget', sales: 98, revenue: 19502.0, trend: '-3%' },
+];
 
 export function TopProducts() {
   return (
@@ -27,12 +27,19 @@ export function TopProducts() {
               </div>
               <div>
                 <p className="font-medium text-gray-900">{product.name}</p>
-                <p className="text-sm text-gray-500">{product.sales} sales</p>
+                <p className="text-sm text-gray-500">
+                  {product.sales}
+                  {' '}
+                  sales
+                </p>
               </div>
             </div>
             <div className="text-right">
-              <p className="font-semibold text-gray-900">${product.revenue.toLocaleString()}</p>
-              <p className={`text-sm ${product.trend.startsWith("+") ? "text-[#50cd89]" : "text-[#f1416c]"}`}>
+              <p className="font-semibold text-gray-900">
+                $
+                {product.revenue.toLocaleString()}
+              </p>
+              <p className={`text-sm ${product.trend.startsWith('+') ? 'text-[#50cd89]' : 'text-[#f1416c]'}`}>
                 {product.trend}
               </p>
             </div>
@@ -40,5 +47,5 @@ export function TopProducts() {
         ))}
       </div>
     </Card>
-  )
+  );
 }

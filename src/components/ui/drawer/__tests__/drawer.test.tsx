@@ -41,7 +41,7 @@ const TestDrawer = () => {
   );
 };
 
-test('should handle basic drawer flow', async () => {
+it('should handle basic drawer flow', async () => {
   await rtlRender(<TestDrawer />);
 
   expect(screen.queryByText(titleText)).not.toBeInTheDocument();

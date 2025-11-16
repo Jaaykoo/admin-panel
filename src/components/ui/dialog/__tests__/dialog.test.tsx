@@ -51,7 +51,7 @@ const TestDialog = () => {
   );
 };
 
-test('should handle basic dialog flow', async () => {
+it('should handle basic dialog flow', async () => {
   rtlRender(<TestDialog />);
 
   expect(screen.queryByText(titleText)).not.toBeInTheDocument();

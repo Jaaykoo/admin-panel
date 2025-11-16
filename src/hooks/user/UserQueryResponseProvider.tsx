@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { FC } from 'react';
@@ -8,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { use, useEffect, useMemo, useState } from 'react';
 import { QUERIES } from '@/helpers/crud-helper/consts';
 import { createResponseContext, stringifyRequestQuery } from '@/helpers/crud-helper/helpers';
-import { getUsers } from '@/services/usersService';
+import { getUsers } from '@/services/UsersService';
 import { initialQueryResponse, initialQueryState } from '@/types/_types';
 import { useQueryRequest } from '../_QueryRequestProvider';
 
@@ -26,7 +28,6 @@ const UserQueryResponseProvider: FC<WithChildren> = ({ children }) => {
       setQuery(updatedQuery);
     }
   }, [updatedQuery]);
-
   const {
     isFetching,
     refetch,
@@ -34,14 +35,14 @@ const UserQueryResponseProvider: FC<WithChildren> = ({ children }) => {
   } = useQuery(
     [QUERIES.USERS_LIST, query],
     () => {
-      return getUsers(JSON.parse(query));
+      return getUsers(query);
     },
     {
       staleTime: 0,
       refetchOnWindowFocus: false,
     },
   );
-
+console.log('response dans UserQueryResponseProvider:', response);
   const contextValue = useMemo(
     () => ({ isLoading: isFetching, refetch, response, query }),
     [isFetching, refetch, response, query],

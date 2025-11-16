@@ -1,11 +1,12 @@
 'use client';
 
+import type { UseFormRegisterReturn } from 'react-hook-form';
+import type { FieldWrapperPassThroughProps } from './field-wrapper';
+
 import * as React from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
 
 import { cn } from '@/utils/cn';
-
-import { FieldWrapper, FieldWrapperPassThroughProps } from './field-wrapper';
+import { FieldWrapper } from './field-wrapper';
 
 type Option = {
   label: React.ReactNode;
@@ -20,8 +21,8 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
 };
 
 export const Select = (props: SelectFieldProps) => {
-  const { label, options, error, className, defaultValue, registration } =
-    props;
+  const { label, options, error, className, defaultValue, registration }
+    = props;
   return (
     <FieldWrapper label={label} error={error}>
       <select

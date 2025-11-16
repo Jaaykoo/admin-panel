@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react/no-unstable-context-value */
 /* eslint-disable react-refresh/only-export-components */
 import type { FC } from 'react';

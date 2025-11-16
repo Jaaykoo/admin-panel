@@ -10,6 +10,7 @@ import { Toaster } from 'sonner';
 import { MainErrorFallback } from '@/components/errors/main';
 import { Notifications } from '@/components/ui/notifications';
 import { MetronicSplashScreenProvider } from '@/components/ui/splash-screen';
+import { SidebarProvider } from '@/contexts/SidebarContext';
 import { ListViewProvider } from '@/hooks/_ListViewProvider';
 import { QueryRequestProvider } from '@/hooks/_QueryRequestProvider';
 import { AuthInit, AuthProvider } from '@/hooks/auth/Auth';
@@ -36,25 +37,27 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         <MetronicSplashScreenProvider>
           <QueryRequestProvider>
             <ListViewProvider>
-              {isAuthRoute
-                ? (
-                    <>
-                      {process.env.DEV && <ReactQueryDevtools />}
-                      <Notifications />
-                      {children}
-                      <Toaster richColors />
-                    </>
-                  )
-                : (
-                    <AuthProvider>
-                      <AuthInit>
+              <SidebarProvider>
+                {isAuthRoute
+                  ? (
+                      <>
                         {process.env.DEV && <ReactQueryDevtools />}
                         <Notifications />
                         {children}
                         <Toaster richColors />
-                      </AuthInit>
-                    </AuthProvider>
-                  )}
+                      </>
+                    )
+                  : (
+                      <AuthProvider>
+                        <AuthInit>
+                          {process.env.DEV && <ReactQueryDevtools />}
+                          <Notifications />
+                          {children}
+                          <Toaster richColors />
+                        </AuthInit>
+                      </AuthProvider>
+                    )}
+              </SidebarProvider>
             </ListViewProvider>
           </QueryRequestProvider>
         </MetronicSplashScreenProvider>

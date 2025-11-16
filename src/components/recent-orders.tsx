@@ -1,54 +1,54 @@
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 
 const orders = [
   {
-    id: "#ORD-2024-001",
-    customer: "Sarah Johnson",
-    product: "Premium Widget Set",
-    amount: "$299.00",
-    status: "completed",
-    date: "2024-01-15",
+    id: '#ORD-2024-001',
+    customer: 'Sarah Johnson',
+    product: 'Premium Widget Set',
+    amount: '$299.00',
+    status: 'completed',
+    date: '2024-01-15',
   },
   {
-    id: "#ORD-2024-002",
-    customer: "Michael Chen",
-    product: "Starter Package",
-    amount: "$149.00",
-    status: "processing",
-    date: "2024-01-15",
+    id: '#ORD-2024-002',
+    customer: 'Michael Chen',
+    product: 'Starter Package',
+    amount: '$149.00',
+    status: 'processing',
+    date: '2024-01-15',
   },
   {
-    id: "#ORD-2024-003",
-    customer: "Emma Wilson",
-    product: "Enterprise Bundle",
-    amount: "$599.00",
-    status: "completed",
-    date: "2024-01-14",
+    id: '#ORD-2024-003',
+    customer: 'Emma Wilson',
+    product: 'Enterprise Bundle',
+    amount: '$599.00',
+    status: 'completed',
+    date: '2024-01-14',
   },
   {
-    id: "#ORD-2024-004",
-    customer: "James Brown",
-    product: "Basic Widget",
-    amount: "$79.00",
-    status: "pending",
-    date: "2024-01-14",
+    id: '#ORD-2024-004',
+    customer: 'James Brown',
+    product: 'Basic Widget',
+    amount: '$79.00',
+    status: 'pending',
+    date: '2024-01-14',
   },
   {
-    id: "#ORD-2024-005",
-    customer: "Lisa Anderson",
-    product: "Pro Package",
-    amount: "$399.00",
-    status: "completed",
-    date: "2024-01-13",
+    id: '#ORD-2024-005',
+    customer: 'Lisa Anderson',
+    product: 'Pro Package',
+    amount: '$399.00',
+    status: 'completed',
+    date: '2024-01-13',
   },
-]
+];
 
 const statusColors = {
-  completed: "bg-[#e8fff3] text-[#50cd89]",
-  processing: "bg-[#fff8dd] text-[#ffc700]",
-  pending: "bg-[#f8f5ff] text-[#7239ea]",
-}
+  completed: 'bg-[#e8fff3] text-[#50cd89]',
+  processing: 'bg-[#fff8dd] text-[#ffc700]',
+  pending: 'bg-[#f8f5ff] text-[#7239ea]',
+};
 
 export function RecentOrders() {
   return (
@@ -58,7 +58,7 @@ export function RecentOrders() {
         <button className="text-sm font-medium text-[#009ef7] hover:underline">View All</button>
       </div>
       <div className="space-y-4">
-        {orders.map((order) => (
+        {orders.map(order => (
           <div
             key={order.id}
             className="flex items-center justify-between border-b border-gray-200 pb-4 last:border-0 last:pb-0"
@@ -81,5 +81,5 @@ export function RecentOrders() {
         ))}
       </div>
     </Card>
-  )
+  );
 }

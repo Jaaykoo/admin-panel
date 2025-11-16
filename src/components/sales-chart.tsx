@@ -1,22 +1,22 @@
-"use client"
+'use client';
 
-import { Card } from "@/components/ui/card"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Card } from '@/components/ui/card';
 
 const data = [
-  { month: "Jan", sales: 12500 },
-  { month: "Feb", sales: 15800 },
-  { month: "Mar", sales: 18200 },
-  { month: "Apr", sales: 16900 },
-  { month: "May", sales: 21400 },
-  { month: "Jun", sales: 24800 },
-  { month: "Jul", sales: 22100 },
-  { month: "Aug", sales: 26500 },
-  { month: "Sep", sales: 28900 },
-  { month: "Oct", sales: 31200 },
-  { month: "Nov", sales: 29800 },
-  { month: "Dec", sales: 34500 },
-]
+  { month: 'Jan', sales: 12500 },
+  { month: 'Feb', sales: 15800 },
+  { month: 'Mar', sales: 18200 },
+  { month: 'Apr', sales: 16900 },
+  { month: 'May', sales: 21400 },
+  { month: 'Jun', sales: 24800 },
+  { month: 'Jul', sales: 22100 },
+  { month: 'Aug', sales: 26500 },
+  { month: 'Sep', sales: 28900 },
+  { month: 'Oct', sales: 31200 },
+  { month: 'Nov', sales: 29800 },
+  { month: 'Dec', sales: 34500 },
+];
 
 export function SalesChart() {
   return (
@@ -33,19 +33,19 @@ export function SalesChart() {
             fontSize={12}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => `$${value / 1000}k`}
+            tickFormatter={value => `$${value / 1000}k`}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#fff",
-              border: "1px solid #e1e3ea",
-              borderRadius: "8px",
+              backgroundColor: '#fff',
+              border: '1px solid #e1e3ea',
+              borderRadius: '8px',
             }}
-            formatter={(value) => [`$${value}`, "Sales"]}
+            formatter={value => [`$${value}`, 'Sales']}
           />
           <Bar dataKey="sales" fill="#009ef7" radius={[8, 8, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </Card>
-  )
+  );
 }

@@ -1,24 +1,25 @@
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { PageHeader } from "@/components/page-header"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { DollarSign, ShoppingCart, TrendingUp, Calendar } from "lucide-react"
-import { SalesReportChart } from "@/components/sales-report-chart"
-import { SalesReportTable } from "@/components/sales-report-table"
+import { Calendar, DollarSign, ShoppingCart, TrendingUp } from 'lucide-react';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { MainContent } from '@/components/layouts/main-content';
+import { PageHeader } from '@/components/page-header';
+import { SalesReportChart } from '@/components/sales-report-chart';
+import { SalesReportTable } from '@/components/sales-report-table';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function SalesReportPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
             <PageHeader
               title="Sales Report"
-              breadcrumbs={[{ label: "Home", href: "/" }, { label: "Reports" }, { label: "Sales" }]}
-              actions={
+              breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Reports' }, { label: 'Sales' }]}
+              actions={(
                 <div className="flex gap-3">
                   <Button variant="outline">
                     <Calendar className="mr-2 h-4 w-4" />
@@ -26,7 +27,7 @@ export default function SalesReportPage() {
                   </Button>
                   <Button className="bg-[#009ef7] hover:bg-[#0077b6]">Export Report</Button>
                 </div>
-              }
+              )}
             />
 
             <div className="mb-6 grid gap-6 md:grid-cols-3">
@@ -85,5 +86,5 @@ export default function SalesReportPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

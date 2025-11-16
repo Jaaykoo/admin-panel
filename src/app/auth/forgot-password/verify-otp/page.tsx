@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { getResetEmail } from '@/helpers/crud-helper/AuthHelpers';
 import { QUERIES } from '@/helpers/crud-helper/consts';
 import { get400ErrorMessage } from '@/helpers/errorMessage';
-import { getNewPasswordResetCode, verifyTwoFactorCode } from '@/services/authService';
+import { getNewPasswordResetCode, verifyTwoFactorCode } from '@/services/AuthService';
 
 export default function VerifyOtpPage() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);

@@ -16,17 +16,17 @@ import { Label } from '@/components/ui/label';
 import { clearResetEmail } from '@/helpers/crud-helper/AuthHelpers';
 import { QUERIES } from '@/helpers/crud-helper/consts';
 import { get400ErrorMessage } from '@/helpers/errorMessage';
-import { resetPasswordWithCode } from '@/services/authService';
+import { resetPasswordWithCode } from '@/services/AuthService';
 
 const resetPasswordSchema = z.object({
   password: z.string()
     .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
     .regex(/[A-Z]/, 'Le mot de passe doit contenir au moins une majuscule')
     .regex(/[a-z]/, 'Le mot de passe doit contenir au moins une minuscule')
-    .regex(/[0-9]/, 'Le mot de passe doit contenir au moins un chiffre')
-    .regex(/[^A-Za-z0-9]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
+    .regex(/\d/, 'Le mot de passe doit contenir au moins un chiffre')
+    .regex(/[^A-Z0-9]/i, 'Le mot de passe doit contenir au moins un caractère spécial'),
   confirmPassword: z.string().min(1, 'Veuillez confirmer le mot de passe'),
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine(data => data.password === data.confirmPassword, {
   message: 'Les mots de passe ne correspondent pas',
   path: ['confirmPassword'],
 });

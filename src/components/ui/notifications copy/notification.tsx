@@ -1,6 +1,6 @@
 'use client';
 
-import { Info, CircleAlert, CircleX, CircleCheck } from 'lucide-react';
+import { CircleAlert, CircleCheck, CircleX, Info } from 'lucide-react';
 
 const icons = {
   info: <Info className="size-6 text-blue-500" aria-hidden="true" />,
@@ -37,7 +37,7 @@ export const Notification = ({
             </div>
             <div className="ml-4 flex shrink-0">
               <button
-                className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:outline-none"
                 onClick={() => {
                   onDismiss(id);
                 }}

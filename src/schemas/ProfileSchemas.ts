@@ -1,10 +1,16 @@
 import { z } from 'zod';
 
+export const ProfileTiltechema = z.enum([
+  'MADAME',
+  'MADEMOISELLE',
+  'MONSIEUR',
+]);
+
 export const UserProfileSchema = z.object({
   id: z.number(),
   first_name: z.string(),
   last_name: z.string(),
-  title: z.string(),
+  title: ProfileTiltechema,
   birthdate: z.string().optional(),
   mobile: z.string().optional(),
   fax: z.string().optional(),

@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { setResetEmail } from '@/helpers/crud-helper/AuthHelpers';
 import { QUERIES } from '@/helpers/crud-helper/consts';
 import { get400ErrorMessage } from '@/helpers/errorMessage';
-import { resetPassword } from '@/services/authService';
+import { resetPassword } from '@/services/AuthService';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Email invalide').min(1, 'Email requis'),

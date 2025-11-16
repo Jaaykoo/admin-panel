@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { Search } from 'lucide-react';
+import Link from 'next/link';
+import { Input } from '@/components/ui/input';
 
 export default function NotFound() {
   return (
@@ -55,7 +55,8 @@ export default function NotFound() {
           </div>
           <h1 className="mb-4 text-4xl font-bold text-gray-900">We have lost this page</h1>
           <p className="text-gray-600">
-            The requested page is missing. Check the URL or{" "}
+            The requested page is missing. Check the URL or
+            {' '}
             <Link href="/" className="font-medium text-[#009ef7] hover:underline">
               Return Home
             </Link>
@@ -66,11 +67,11 @@ export default function NotFound() {
         {/* Search */}
         <div className="mx-auto max-w-md">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400" />
             <Input type="search" placeholder="Search Metronic" className="h-12 border-gray-300 pl-10" />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

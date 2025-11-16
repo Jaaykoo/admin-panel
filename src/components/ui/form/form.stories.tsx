@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { z } from 'zod';
 
 import { Button } from '../button';
@@ -26,19 +26,19 @@ const MyForm = ({ hideSubmit = false }: { hideSubmit?: boolean }) => {
         <>
           <Input
             label="Title"
-            error={formState.errors['title']}
+            error={formState.errors.title}
             registration={register('title')}
           />
           <Textarea
             label="Description"
-            error={formState.errors['description']}
+            error={formState.errors.description}
             registration={register('description')}
           />
           <Select
             label="Type"
-            error={formState.errors['type']}
+            error={formState.errors.type}
             registration={register('type')}
-            options={['A', 'B', 'C'].map((type) => ({
+            options={['A', 'B', 'C'].map(type => ({
               label: type,
               value: type,
             }))}
@@ -75,11 +75,11 @@ export const AsFormDrawer: Story = {
       triggerButton={<Button>Open Form</Button>}
       isDone={true}
       title="My Form"
-      submitButton={
+      submitButton={(
         <Button form="my-form" type="submit">
           Submit
         </Button>
-      }
+      )}
     >
       <MyForm hideSubmit />
     </FormDrawer>

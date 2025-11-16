@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react/no-unstable-context-value */
 import type { FC } from 'react';
 import type { ID, ListViewContextProps } from '@/types/_types';

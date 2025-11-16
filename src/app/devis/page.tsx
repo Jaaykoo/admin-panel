@@ -1,18 +1,18 @@
-"use client"
+'use client';
 
-import { Search, Filter, Download, Plus, Eye } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
+import { Download, Eye, Filter, Plus, Search } from 'lucide-react';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const devis = [
-  { id: "01", number: "#856214", client: "Lucy Chen", date: "06/12/24", amount: "25,000 XOF", status: "Accepté" },
-  { id: "02", number: "#554228", client: "Angela Lopez", date: "05/12/24", amount: "25,000 XOF", status: "En attente" },
-  { id: "03", number: "#856412", client: "John Nolan", date: "06/12/24", amount: "25,000 XOF", status: "Refusé" },
-  { id: "04", number: "#557954", client: "Nyla Harper", date: "05/12/24", amount: "25,000 XOF", status: "Expiré" },
-  { id: "05", number: "#445689", client: "Tim Bradford", date: "08/12/24", amount: "25,000 XOF", status: "Brouillon" },
-]
+  { id: '01', number: '#856214', client: 'Lucy Chen', date: '06/12/24', amount: '25,000 XOF', status: 'Accepté' },
+  { id: '02', number: '#554228', client: 'Angela Lopez', date: '05/12/24', amount: '25,000 XOF', status: 'En attente' },
+  { id: '03', number: '#856412', client: 'John Nolan', date: '06/12/24', amount: '25,000 XOF', status: 'Refusé' },
+  { id: '04', number: '#557954', client: 'Nyla Harper', date: '05/12/24', amount: '25,000 XOF', status: 'Expiré' },
+  { id: '05', number: '#445689', client: 'Tim Bradford', date: '08/12/24', amount: '25,000 XOF', status: 'Brouillon' },
+];
 
 export default function DevisPage() {
   return (
@@ -31,7 +31,7 @@ export default function DevisPage() {
             <h1 className="text-2xl font-bold text-gray-900">Devis</h1>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="gap-2 bg-white border-gray-300">
+            <Button variant="outline" className="gap-2 border-gray-300 bg-white">
               <Filter className="h-4 w-4" />
               Filtres
             </Button>
@@ -52,25 +52,25 @@ export default function DevisPage() {
         <div className="rounded-lg bg-white shadow-sm">
           <div className="border-b border-gray-200 p-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input placeholder="Recherche" className="pl-10 border-gray-300" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Input placeholder="Recherche" className="border-gray-300 pl-10" />
             </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">num</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">ID des devis</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">Clients</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">Montant</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">Statut</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500"></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">num</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID des devis</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Clients</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Montant</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {devis.map((item) => (
+                {devis.map(item => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 text-sm text-gray-700">{item.id}</td>
                     <td className="px-6 py-4 text-sm text-gray-700">{item.number}</td>
@@ -87,15 +87,15 @@ export default function DevisPage() {
                     <td className="px-6 py-4">
                       <Badge
                         className={
-                          item.status === "Accepté"
-                            ? "bg-[#50cd89] text-white hover:bg-[#47b881]"
-                            : item.status === "En attente"
-                              ? "bg-[#ffc700] text-gray-900 hover:bg-[#e6b300]"
-                              : item.status === "Refusé"
-                                ? "bg-[#f1416c] text-white hover:bg-[#d9355b]"
-                                : item.status === "Expiré"
-                                  ? "bg-gray-600 text-white hover:bg-gray-700"
-                                  : "bg-[#009ef7] text-white hover:bg-[#0086d6]"
+                          item.status === 'Accepté'
+                            ? 'bg-[#50cd89] text-white hover:bg-[#47b881]'
+                            : item.status === 'En attente'
+                              ? 'bg-[#ffc700] text-gray-900 hover:bg-[#e6b300]'
+                              : item.status === 'Refusé'
+                                ? 'bg-[#f1416c] text-white hover:bg-[#d9355b]'
+                                : item.status === 'Expiré'
+                                  ? 'bg-gray-600 text-white hover:bg-gray-700'
+                                  : 'bg-[#009ef7] text-white hover:bg-[#0086d6]'
                         }
                       >
                         {item.status}
@@ -117,5 +117,5 @@ export default function DevisPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

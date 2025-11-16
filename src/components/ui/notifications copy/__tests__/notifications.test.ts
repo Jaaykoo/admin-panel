@@ -1,8 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
+import type { Notification } from '../notifications-store';
 
-import { useNotifications, Notification } from '../notifications-store';
+import { act, renderHook } from '@testing-library/react';
+import { useNotifications } from '../notifications-store';
 
-test('should add and remove notifications', () => {
+it('should add and remove notifications', () => {
   const { result } = renderHook(() => useNotifications());
 
   expect(result.current.notifications.length).toBe(0);

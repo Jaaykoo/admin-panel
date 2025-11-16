@@ -1,16 +1,16 @@
-"use client"
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const data = [
-  { month: "Jan", sales: 45000, orders: 320 },
-  { month: "Feb", sales: 52000, orders: 380 },
-  { month: "Mar", sales: 48000, orders: 350 },
-  { month: "Apr", sales: 61000, orders: 420 },
-  { month: "May", sales: 55000, orders: 390 },
-  { month: "Jun", sales: 67000, orders: 450 },
-]
+  { month: 'Jan', sales: 45000, orders: 320 },
+  { month: 'Feb', sales: 52000, orders: 380 },
+  { month: 'Mar', sales: 48000, orders: 350 },
+  { month: 'Apr', sales: 61000, orders: 420 },
+  { month: 'May', sales: 55000, orders: 390 },
+  { month: 'Jun', sales: 67000, orders: 450 },
+];
 
 export function SalesReportChart() {
   return (
@@ -37,5 +37,5 @@ export function SalesReportChart() {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

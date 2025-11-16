@@ -1,31 +1,32 @@
-"use client"
+'use client';
 
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { PageHeader } from "@/components/page-header"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { MainContent } from '@/components/layouts/main-content';
+import { PageHeader } from '@/components/page-header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
             <PageHeader
               title="Settings"
-              breadcrumbs={[{ label: "Home", href: "/" }, { label: "Settings" }]}
+              breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Settings' }]}
               actions={<Button className="bg-[#009ef7] hover:bg-[#0077b6]">Save Changes</Button>}
             />
 
             <div className="grid gap-6 lg:grid-cols-3">
-              <div className="lg:col-span-2 space-y-6">
+              <div className="space-y-6 lg:col-span-2">
                 {/* Profile Settings */}
                 <Card>
                   <CardHeader>
@@ -161,7 +162,7 @@ export default function SettingsPage() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full justify-start text-red-600 hover:text-red-700 bg-transparent"
+                      className="w-full justify-start bg-transparent text-red-600 hover:text-red-700"
                     >
                       Delete Account
                     </Button>
@@ -173,5 +174,5 @@ export default function SettingsPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

@@ -1,16 +1,17 @@
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { InvoiceTable } from "@/components/invoice-table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Plus, Filter, Download } from "lucide-react"
-import { Card } from "@/components/ui/card"
+import { Download, Filter, Plus } from 'lucide-react';
+import { InvoiceTable } from '@/components/invoice-table';
+import { Header } from '@/components/layouts/header';
+import { MainContent } from '@/components/layouts/main-content';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 export default function InvoicesPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
@@ -65,7 +66,7 @@ export default function InvoicesPage() {
             <InvoiceTable />
           </div>
         </main>
-      </div>
+      </MainContent>
     </div>
-  )
+  );
 }

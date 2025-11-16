@@ -3,7 +3,7 @@ import { rtlRender, screen, userEvent, waitFor } from '@/testing/test-utils';
 
 import { ConfirmationDialog } from '../confirmation-dialog';
 
-test('should handle confirmation flow', async () => {
+it('should handle confirmation flow', async () => {
   const titleText = 'Are you sure?';
   const bodyText = 'Are you sure you want to delete this item?';
   const confirmationButtonText = 'Confirm';

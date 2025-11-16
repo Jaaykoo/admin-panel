@@ -1,3 +1,5 @@
+'use client';
+
 import type { Dispatch, SetStateAction } from 'react';
 import type { ID, QueryResponseContextProps, QueryState } from '@/types/_types';
 import qs from 'qs';

@@ -1,15 +1,16 @@
 import { DollarSign, ShoppingCart, TrendingUp, Users } from 'lucide-react';
 import { Header } from '@/components/layouts/header';
+import { MainContent } from '@/components/layouts/main-content';
+import { Sidebar } from '@/components/layouts/sidebar';
 import { RecentOrders } from '@/components/recent-orders';
 import { SalesChart } from '@/components/sales-chart';
-import { Sidebar } from '@/components/layouts/sidebar';
 import { StatCard } from '@/components/stat-card';
 
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
@@ -72,7 +73,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </main>
-      </div>
+      </MainContent>
     </div>
   );
 }

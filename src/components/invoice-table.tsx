@@ -1,88 +1,88 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { MoreHorizontal, Download, Send, Eye } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Download, Eye, MoreHorizontal, Send } from 'lucide-react';
+import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const invoices = [
   {
-    id: "INV-2024-001",
-    customer: "Sarah Johnson",
-    date: "2024-01-15",
-    dueDate: "2024-02-14",
+    id: 'INV-2024-001',
+    customer: 'Sarah Johnson',
+    date: '2024-01-15',
+    dueDate: '2024-02-14',
     amount: 299.0,
-    status: "paid",
+    status: 'paid',
   },
   {
-    id: "INV-2024-002",
-    customer: "Michael Chen",
-    date: "2024-01-15",
-    dueDate: "2024-02-14",
+    id: 'INV-2024-002',
+    customer: 'Michael Chen',
+    date: '2024-01-15',
+    dueDate: '2024-02-14',
     amount: 149.0,
-    status: "paid",
+    status: 'paid',
   },
   {
-    id: "INV-2024-003",
-    customer: "Emma Wilson",
-    date: "2024-01-14",
-    dueDate: "2024-02-13",
+    id: 'INV-2024-003',
+    customer: 'Emma Wilson',
+    date: '2024-01-14',
+    dueDate: '2024-02-13',
     amount: 599.0,
-    status: "paid",
+    status: 'paid',
   },
   {
-    id: "INV-2024-004",
-    customer: "James Brown",
-    date: "2024-01-14",
-    dueDate: "2024-02-13",
+    id: 'INV-2024-004',
+    customer: 'James Brown',
+    date: '2024-01-14',
+    dueDate: '2024-02-13',
     amount: 79.0,
-    status: "pending",
+    status: 'pending',
   },
   {
-    id: "INV-2024-005",
-    customer: "Lisa Anderson",
-    date: "2024-01-13",
-    dueDate: "2024-02-12",
+    id: 'INV-2024-005',
+    customer: 'Lisa Anderson',
+    date: '2024-01-13',
+    dueDate: '2024-02-12',
     amount: 399.0,
-    status: "paid",
+    status: 'paid',
   },
   {
-    id: "INV-2024-006",
-    customer: "David Martinez",
-    date: "2024-01-13",
-    dueDate: "2024-02-12",
+    id: 'INV-2024-006',
+    customer: 'David Martinez',
+    date: '2024-01-13',
+    dueDate: '2024-02-12',
     amount: 199.0,
-    status: "sent",
+    status: 'sent',
   },
   {
-    id: "INV-2024-007",
-    customer: "Jennifer Lee",
-    date: "2024-01-10",
-    dueDate: "2024-02-09",
+    id: 'INV-2024-007',
+    customer: 'Jennifer Lee',
+    date: '2024-01-10',
+    dueDate: '2024-02-09',
     amount: 449.0,
-    status: "overdue",
+    status: 'overdue',
   },
   {
-    id: "INV-2024-008",
-    customer: "Robert Taylor",
-    date: "2024-01-12",
-    dueDate: "2024-02-11",
+    id: 'INV-2024-008',
+    customer: 'Robert Taylor',
+    date: '2024-01-12',
+    dueDate: '2024-02-11',
     amount: 89.0,
-    status: "draft",
+    status: 'draft',
   },
-]
+];
 
 const statusConfig = {
-  paid: { label: "Paid", className: "bg-[#e8fff3] text-[#50cd89]" },
-  pending: { label: "Pending", className: "bg-[#fff8dd] text-[#ffc700]" },
-  sent: { label: "Sent", className: "bg-[#e1f0ff] text-[#009ef7]" },
-  overdue: { label: "Overdue", className: "bg-[#fff5f8] text-[#f1416c]" },
-  draft: { label: "Draft", className: "bg-gray-100 text-gray-600" },
-}
+  paid: { label: 'Paid', className: 'bg-[#e8fff3] text-[#50cd89]' },
+  pending: { label: 'Pending', className: 'bg-[#fff8dd] text-[#ffc700]' },
+  sent: { label: 'Sent', className: 'bg-[#e1f0ff] text-[#009ef7]' },
+  overdue: { label: 'Overdue', className: 'bg-[#fff5f8] text-[#f1416c]' },
+  draft: { label: 'Draft', className: 'bg-gray-100 text-gray-600' },
+};
 
 export function InvoiceTable() {
-  const [selectedInvoices, setSelectedInvoices] = useState<string[]>([])
+  const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
 
   return (
     <div className="overflow-hidden rounded-lg border border-gray-300 bg-white">
@@ -96,38 +96,38 @@ export function InvoiceTable() {
                   className="rounded border-gray-300"
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setSelectedInvoices(invoices.map((i) => i.id))
+                      setSelectedInvoices(invoices.map(i => i.id));
                     } else {
-                      setSelectedInvoices([])
+                      setSelectedInvoices([]);
                     }
                   }}
                 />
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Invoice ID
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Customer
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Issue Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Due Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Amount
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Status
               </th>
-              <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">
+              <th className="px-6 py-3 text-right text-xs font-semibold tracking-wider text-gray-600 uppercase">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {invoices.map((invoice) => (
+            {invoices.map(invoice => (
               <tr key={invoice.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">
                   <input
@@ -136,9 +136,9 @@ export function InvoiceTable() {
                     checked={selectedInvoices.includes(invoice.id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedInvoices([...selectedInvoices, invoice.id])
+                        setSelectedInvoices([...selectedInvoices, invoice.id]);
                       } else {
-                        setSelectedInvoices(selectedInvoices.filter((id) => id !== invoice.id))
+                        setSelectedInvoices(selectedInvoices.filter(id => id !== invoice.id));
                       }
                     }}
                   />
@@ -149,7 +149,10 @@ export function InvoiceTable() {
                 <td className="px-6 py-4 text-sm text-gray-900">{invoice.customer}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{invoice.date}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{invoice.dueDate}</td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">${invoice.amount.toFixed(2)}</td>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  $
+                  {invoice.amount.toFixed(2)}
+                </td>
                 <td className="px-6 py-4">
                   <Badge
                     variant="secondary"
@@ -187,5 +190,5 @@ export function InvoiceTable() {
         </table>
       </div>
     </div>
-  )
+  );
 }

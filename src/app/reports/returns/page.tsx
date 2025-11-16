@@ -1,29 +1,30 @@
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
-import { PageHeader } from "@/components/page-header"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { RotateCcw, Package, AlertCircle, Calendar } from "lucide-react"
-import { ReturnsChart } from "@/components/returns-chart"
-import { ReturnsTable } from "@/components/returns-table"
+import { AlertCircle, Calendar, Package, RotateCcw } from 'lucide-react';
+import { Header } from '@/components/layouts/header';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { MainContent } from '@/components/layouts/main-content';
+import { PageHeader } from '@/components/page-header';
+import { ReturnsChart } from '@/components/returns-chart';
+import { ReturnsTable } from '@/components/returns-table';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function ReturnsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="pl-64">
+      <MainContent>
         <Header />
         <main className="pt-16">
           <div className="p-6">
             <PageHeader
               title="Returns Report"
-              breadcrumbs={[{ label: "Home", href: "/" }, { label: "Reports" }, { label: "Returns" }]}
-              actions={
+              breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Reports' }, { label: 'Returns' }]}
+              actions={(
                 <Button variant="outline">
                   <Calendar className="mr-2 h-4 w-4" />
                   Last 30 Days
                 </Button>
-              }
+              )}
             />
 
             <div className="mb-6 grid gap-6 md:grid-cols-3">
@@ -85,5 +86,5 @@ export default function ReturnsPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { QUERIES } from '@/helpers/crud-helper/consts';
 import { get400ErrorMessage } from '@/helpers/errorMessage';
-import { login } from '@/services/authService';
+import { login } from '@/services/AuthService';
 
 const loginInputSchema = z.object({
   email: z.email().min(1, 'Required'),

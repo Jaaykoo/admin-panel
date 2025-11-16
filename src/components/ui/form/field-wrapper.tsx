@@ -1,5 +1,5 @@
+import type { FieldError } from 'react-hook-form';
 import * as React from 'react';
-import { type FieldError } from 'react-hook-form';
 
 import { Error } from './error';
 import { Label } from './label';

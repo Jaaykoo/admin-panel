@@ -1,15 +1,17 @@
-import type React from "react"
-import { Sidebar } from "@/components/layouts/sidebar"
-import { Header } from "@/components/layouts/header"
+import type { ReactNode } from 'react';
+import { QueryRequestProvider } from '@/hooks/_QueryRequestProvider';
+import { UserQueryResponseProvider } from '@/hooks/user/UserQueryResponseProvider';
 
-export default function UsersLayout({ children }: { children: React.ReactNode }) {
+export default function UsersLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 pl-64">
-        <Header />
+    <QueryRequestProvider>
+      <UserQueryResponseProvider>
         {children}
-      </div>
-    </div>
-  )
+      </UserQueryResponseProvider>
+    </QueryRequestProvider>
+  );
 }

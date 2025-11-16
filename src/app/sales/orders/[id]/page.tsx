@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { ArrowLeft, FileText, Package, Award } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ArrowLeft, Award, FileText, Package } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function OrderDetailsPage() {
-  const [activeTab, setActiveTab] = useState("summary")
+  const [activeTab, setActiveTab] = useState('summary');
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -47,16 +47,16 @@ export default function OrderDetailsPage() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-        <TabsList className="bg-white border-b border-gray-200 rounded-none h-auto p-0">
+        <TabsList className="h-auto rounded-none border-b border-gray-200 bg-white p-0">
           <TabsTrigger
             value="summary"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7] px-6 py-3"
+            className="rounded-none border-b-2 border-transparent px-6 py-3 data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7]"
           >
             Order Summary
           </TabsTrigger>
           <TabsTrigger
             value="history"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7] px-6 py-3"
+            className="rounded-none border-b-2 border-transparent px-6 py-3 data-[state=active]:border-[#009ef7] data-[state=active]:text-[#009ef7]"
           >
             Order History
           </TabsTrigger>
@@ -70,7 +70,7 @@ export default function OrderDetailsPage() {
                 Back
               </Button>
             </Link>
-            <Button size="sm" className="bg-[#50cd89] hover:bg-[#47be7d] text-white">
+            <Button size="sm" className="bg-[#50cd89] text-white hover:bg-[#47be7d]">
               Edit Order
             </Button>
             <Button size="sm" className="bg-[#009ef7] hover:bg-[#0077b6]">
@@ -79,13 +79,13 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Top Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Order Details */}
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Details (#14534)</h3>
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Order Details (#14534)</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -99,7 +99,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -116,7 +116,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -133,11 +133,11 @@ export default function OrderDetailsPage() {
             </Card>
 
             {/* Customer Details */}
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Details</h3>
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Customer Details</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -154,7 +154,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -168,7 +168,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -185,25 +185,25 @@ export default function OrderDetailsPage() {
             </Card>
 
             {/* Documents */}
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Documents</h3>
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Documents</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <FileText className="mt-0.5 h-5 w-5 text-gray-400" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-500">Invoice</div>
                     <div className="font-medium text-[#009ef7]">#INV-00041</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Package className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <Package className="mt-0.5 h-5 w-5 text-gray-400" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-500">Shipping</div>
                     <div className="font-medium text-gray-900">#SHP-002541</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Award className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <Award className="mt-0.5 h-5 w-5 text-gray-400" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-500">Reward Points</div>
                     <div className="font-medium text-gray-900">60</div>
@@ -214,10 +214,10 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Addresses */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Billing Address</h3>
-              <div className="text-gray-700 leading-relaxed">
+          <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Billing Address</h3>
+              <div className="leading-relaxed text-gray-700">
                 Unit 1/23 Hastings Road,
                 <br />
                 Melbourne 3000,
@@ -227,9 +227,9 @@ export default function OrderDetailsPage() {
                 Australia.
               </div>
             </Card>
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Address</h3>
-              <div className="text-gray-700 leading-relaxed">
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Shipping Address</h3>
+              <div className="leading-relaxed text-gray-700">
                 Unit 1/23 Hastings Road,
                 <br />
                 Melbourne 3000,
@@ -242,23 +242,23 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Order Items */}
-          <Card className="p-6 bg-white shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Order #14534</h3>
+          <Card className="bg-white p-6 shadow-sm">
+            <h3 className="mb-6 text-lg font-semibold text-gray-900">Order #14534</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="pb-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Product
                     </th>
-                    <th className="pb-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">SKU</th>
-                    <th className="pb-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">SKU</th>
+                    <th className="pb-3 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       QTY
                     </th>
-                    <th className="pb-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-right text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Unit Price
                     </th>
-                    <th className="pb-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-right text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Total
                     </th>
                   </tr>
@@ -267,7 +267,7 @@ export default function OrderDetailsPage() {
                   <tr>
                     <td className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-12 w-12 rounded bg-gray-900 flex items-center justify-center">
+                        <div className="flex h-12 w-12 items-center justify-center rounded bg-gray-900">
                           <div className="h-6 w-6 rounded-full bg-white"></div>
                         </div>
                         <div>
@@ -319,7 +319,7 @@ export default function OrderDetailsPage() {
                   <span>Shipping Rate</span>
                   <span className="font-medium">$5.00</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold text-gray-900 pt-3 border-t border-gray-200">
+                <div className="flex justify-between border-t border-gray-200 pt-3 text-lg font-bold text-gray-900">
                   <span>Grand Total</span>
                   <span>$269.00</span>
                 </div>
@@ -336,7 +336,7 @@ export default function OrderDetailsPage() {
                 Back
               </Button>
             </Link>
-            <Button size="sm" className="bg-[#50cd89] hover:bg-[#47be7d] text-white">
+            <Button size="sm" className="bg-[#50cd89] text-white hover:bg-[#47be7d]">
               Edit Order
             </Button>
             <Button size="sm" className="bg-[#009ef7] hover:bg-[#0077b6]">
@@ -345,13 +345,13 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Top Cards - Same as Summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Order Details */}
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Details (#14534)</h3>
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Order Details (#14534)</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -365,7 +365,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -382,7 +382,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -399,11 +399,11 @@ export default function OrderDetailsPage() {
             </Card>
 
             {/* Customer Details */}
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Details</h3>
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Customer Details</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -420,7 +420,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -434,7 +434,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mt-0.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -451,25 +451,25 @@ export default function OrderDetailsPage() {
             </Card>
 
             {/* Documents */}
-            <Card className="p-6 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Documents</h3>
+            <Card className="bg-white p-6 shadow-sm">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Documents</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <FileText className="mt-0.5 h-5 w-5 text-gray-400" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-500">Invoice</div>
                     <div className="font-medium text-[#009ef7]">#INV-00041</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Package className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <Package className="mt-0.5 h-5 w-5 text-gray-400" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-500">Shipping</div>
                     <div className="font-medium text-gray-900">#SHP-002541</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Award className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <Award className="mt-0.5 h-5 w-5 text-gray-400" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-500">Reward Points</div>
                     <div className="font-medium text-gray-900">60</div>
@@ -480,22 +480,22 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Order History Table */}
-          <Card className="p-6 bg-white shadow-sm mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Order History</h3>
+          <Card className="mb-6 bg-white p-6 shadow-sm">
+            <h3 className="mb-6 text-lg font-semibold text-gray-900">Order History</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="pb-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Date Added
                     </th>
-                    <th className="pb-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Comment
                     </th>
-                    <th className="pb-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Order Status
                     </th>
-                    <th className="pb-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="pb-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Customer Notified
                     </th>
                   </tr>
@@ -571,32 +571,32 @@ export default function OrderDetailsPage() {
           </Card>
 
           {/* Order Data */}
-          <Card className="p-6 bg-white shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Data</h3>
+          <Card className="bg-white p-6 shadow-sm">
+            <h3 className="mb-6 text-lg font-semibold text-gray-900">Order Data</h3>
             <div className="space-y-4">
-              <div className="flex justify-between py-3 border-b border-gray-100">
+              <div className="flex justify-between border-b border-gray-100 py-3">
                 <span className="text-gray-500">IP Address</span>
-                <span className="text-gray-900 font-medium">172.68.221.26</span>
+                <span className="font-medium text-gray-900">172.68.221.26</span>
               </div>
-              <div className="flex justify-between py-3 border-b border-gray-100">
+              <div className="flex justify-between border-b border-gray-100 py-3">
                 <span className="text-gray-500">Forwarded IP</span>
-                <span className="text-gray-900 font-medium">89.201.163.49</span>
+                <span className="font-medium text-gray-900">89.201.163.49</span>
               </div>
-              <div className="flex justify-between py-3 border-b border-gray-100">
+              <div className="flex justify-between border-b border-gray-100 py-3">
                 <span className="text-gray-500">User Agent</span>
-                <span className="text-gray-900 font-medium text-sm">
+                <span className="text-sm font-medium text-gray-900">
                   Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110
                   Safari/537.36
                 </span>
               </div>
               <div className="flex justify-between py-3">
                 <span className="text-gray-500">Accept Language</span>
-                <span className="text-gray-900 font-medium">en-GB,en-US;q=0.9,en;q=0.8</span>
+                <span className="font-medium text-gray-900">en-GB,en-US;q=0.9,en;q=0.8</span>
               </div>
             </div>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
