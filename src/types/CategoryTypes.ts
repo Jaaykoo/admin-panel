@@ -1,10 +1,10 @@
-import type { z } from 'zod';
-import type {
-  CategoryType,
+import { z } from 'zod';
+import {
+  CategorySchema,
   CreateCategorySchema,
   UpdateCategorySchema,
 } from '@/schemas/CategorySchemas';
 
-export type Category = CategoryType;
+export type Category = z.infer<typeof CategorySchema>;
 export type CreateCategory = z.infer<typeof CreateCategorySchema>;
 export type UpdateCategory = z.infer<typeof UpdateCategorySchema>;

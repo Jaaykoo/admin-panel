@@ -33,8 +33,9 @@ const navigation: NavigationItem[] = [
     href: '#',
     icon: Package,
     children: [
-      { name: 'Produits', href: '/products' },
+      { name: 'Types de produit', href: '/catalog/product-classes' },
       { name: 'Catégories', href: '/catalog/categories' },
+      { name: 'Produits', href: '/products' },
     ],
   },
   {
@@ -127,7 +128,7 @@ export function Sidebar() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+          <nav className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 flex-1 space-y-1 overflow-y-auto p-4">
             {navigation.map((item) => {
               if ('children' in item && item.children) {
                 const isExpanded = expandedMenus.includes(item.name);
@@ -135,7 +136,7 @@ export function Sidebar() {
 
                 if (isCollapsed) {
                   return (
-                    <div key={item.name} className="relative group">
+                    <div key={item.name} className="group relative">
                       <button
                         className={cn(
                           'flex w-full items-center justify-center rounded-lg p-3 transition-colors',
@@ -145,10 +146,10 @@ export function Sidebar() {
                       >
                         <item.icon className="h-5 w-5" />
                       </button>
-                      <div className="pointer-events-none absolute left-full top-0 z-50 ml-2 hidden rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg group-hover:block">
+                      <div className="pointer-events-none absolute top-0 left-full z-50 ml-2 hidden rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg group-hover:block">
                         <div className="font-medium">{item.name}</div>
                         <div className="mt-1 space-y-1">
-                          {item.children?.map((child) => (
+                          {item.children?.map(child => (
                             <Link
                               key={child.href}
                               href={child.href}
@@ -213,7 +214,7 @@ export function Sidebar() {
                     title={item.name}
                   >
                     <item.icon className="h-5 w-5" />
-                    <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2 hidden -translate-y-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg group-hover:block">
+                    <span className="pointer-events-none absolute top-1/2 left-full z-50 ml-2 hidden -translate-y-1/2 rounded-lg bg-gray-900 px-3 py-2 text-sm whitespace-nowrap text-white shadow-lg group-hover:block">
                       {item.name}
                     </span>
                   </Link>
@@ -240,4 +241,3 @@ export function Sidebar() {
     </>
   );
 }
-

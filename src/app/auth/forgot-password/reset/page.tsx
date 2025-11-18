@@ -1,5 +1,7 @@
 'use client';
 
+import type React from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
@@ -14,8 +16,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { clearResetEmail } from '@/helpers/crud-helper/AuthHelpers';
-import { QUERIES } from '@/helpers/crud-helper/consts';
-import { get400ErrorMessage } from '@/helpers/errorMessage';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
+import { get400ErrorMessage } from '@/helpers/ErrorMessage';
 import { resetPasswordWithCode } from '@/services/AuthService';
 
 const resetPasswordSchema = z.object({

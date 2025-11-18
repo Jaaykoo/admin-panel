@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { createContext, use, useEffect, useState } from 'react';
 import { LayoutSplashScreen } from '@/components/ui/splash-screen';
-import { QUERIES } from '@/helpers/crud-helper/consts';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { getUser, logout as logoutService } from '@/services/AuthService';
 
 type AuthContextProps = {

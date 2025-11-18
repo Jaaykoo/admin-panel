@@ -4,10 +4,11 @@ import { OptionGroupSchema } from '@/schemas/ProductOptionGroupSchemas';
 const attributesSchema = z.object({
   url: z.string(),
   option_group: OptionGroupSchema,
-  type: z.enum(['text', 'integer', 'float', 'boolean', 'date']),
+  type: z.enum(['text', 'integer', 'float', 'boolean', 'date', 'option']),
   required: z.boolean().default(false),
   name: z.string(),
   code: z.string(),
+  product_class: z.string().default(''),
 });
 export const ProductClassSchema = z.object({
   url: z.string(),

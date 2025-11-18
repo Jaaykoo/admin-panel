@@ -1,58 +1,25 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import type React from 'react';
+
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { setResetEmail } from '@/helpers/crud-helper/AuthHelpers';
-import { QUERIES } from '@/helpers/crud-helper/consts';
-import { get400ErrorMessage } from '@/helpers/errorMessage';
-import { resetPassword } from '@/services/AuthService';
-
-const forgotPasswordSchema = z.object({
-  email: z.string().email('Email invalide').min(1, 'Email requis'),
-});
-
-type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState('');
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordForm>({
-    resolver: zodResolver(forgotPasswordSchema),
-  });
 
-  const mutation = useMutation(
-    [QUERIES.RESET_PASSWORD],
-    async (data: ForgotPasswordForm) => {
-      await resetPassword(data.email);
-      return data.email;
-    },
-    {
-      onSuccess: (email) => {
-        // Stocker l'email dans localStorage pour 15 minutes
-        setResetEmail(email);
-        toast.success('Email envoyé !', {
-          description: 'Vérifiez votre boîte de réception pour le code de vérification.',
-        });
-        // Rediriger vers la page de vérification OTP
-        router.push('/auth/forgot-password/verify-otp');
-      },
-      onError: (error) => {
-        get400ErrorMessage(error);
-      },
-    },
-  );
-
-  const onSubmit = (data: ForgotPasswordForm) => {
-    mutation.mutate(data);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.warn('[v0] Password reset requested for:', email);
+    // Navigate to email sent confirmation
+    router.push(`/auth/forgot-password/email-sent?email=${encodeURIComponent(email)}`);
   };
 
   return (
@@ -75,11 +42,11 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="mb-6 text-center">
             <h1 className="text-2xl font-bold text-gray-900">Mot de passe oublié ?</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Entrez votre email pour recevoir un code de vérification
+              Entrez votre email pour réinitialiser votre mot de passe
             </p>
           </div>
 
@@ -91,19 +58,16 @@ export default function ForgotPasswordPage() {
               id="email"
               type="email"
               placeholder="email@exemple.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               className="mt-1.5 h-12 border-gray-300 bg-white"
-              {...register('email')}
+              required
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
           </div>
 
-          <Button
-            type="submit"
-            disabled={mutation.isLoading}
-            className="h-12 w-full bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]"
-          >
-            {mutation.isLoading ? 'Envoi en cours...' : 'Continuer'}
-            {!mutation.isLoading && <ArrowRight className="ml-2 h-5 w-5" />}
+          <Button type="submit" className="h-12 w-full bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]">
+            Continuer
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
 
           <div className="text-center">

@@ -4,19 +4,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { FC } from 'react';
 import type { PaginationState } from '@/types/_types';
-import type { User } from '@/types/UserTypes';
+import type { ProductClass } from '@/types/ProductClassTypes';
 import type { WithChildren } from '@/utils/react18MigrationHelpers';
 import { useQuery } from '@tanstack/react-query';
 import { use, useEffect, useMemo, useState } from 'react';
-import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { createResponseContext, stringifyRequestQuery } from '@/helpers/crud-helper/helpers';
-import { getUsers } from '@/services/UsersService';
+import { getProductClasses } from '@/services/ProductTypeService';
 import { initialQueryResponse, initialQueryState } from '@/types/_types';
 import { useQueryRequest } from '../_QueryRequestProvider';
 
-const QueryResponseContext = createResponseContext<User>(initialQueryResponse);
+const QueryResponseContext = createResponseContext<ProductClass>(initialQueryResponse);
 
-const UserQueryResponseProvider: FC<WithChildren> = ({ children }) => {
+const ProductClassQueryResponseProvider: FC<WithChildren> = ({ children }) => {
   const { state } = useQueryRequest();
   // eslint-disable-next-line react/prefer-use-state-lazy-initialization
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state));
@@ -28,21 +27,26 @@ const UserQueryResponseProvider: FC<WithChildren> = ({ children }) => {
       setQuery(updatedQuery);
     }
   }, [updatedQuery]);
+
   const {
     isFetching,
     refetch,
     data: response,
   } = useQuery(
-    [QUERIES.USERS_LIST, query],
+    ['product-classes', query],
     () => {
-      return getUsers(query);
+      return getProductClasses(query);
     },
     {
-      staleTime: 0,
+      staleTime: 30000, // 30 secondes avant que les données soient considérées comme obsolètes
+      cacheTime: 300000, // 5 minutes de cache
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      keepPreviousData: true, // Garde les données précédentes pendant le chargement des nouvelles
     },
   );
-console.log('response dans UserQueryResponseProvider:', response);
+
   const contextValue = useMemo(
     () => ({ isLoading: isFetching, refetch, response, query }),
     [isFetching, refetch, response, query],
@@ -74,7 +78,7 @@ const useQueryResponseData = () => {
 };
 
 const useQueryResponsePagination = () => {
-  const defaultPaginationState: PaginationState<User> = {
+  const defaultPaginationState: PaginationState<ProductClass> = {
     ...initialQueryState,
     filter: {},
   };
@@ -94,9 +98,9 @@ const useQueryResponseLoading = (): boolean => {
 };
 
 export {
+  ProductClassQueryResponseProvider,
   useQueryResponse,
   useQueryResponseData,
   useQueryResponseLoading,
   useQueryResponsePagination,
-  UserQueryResponseProvider,
 };

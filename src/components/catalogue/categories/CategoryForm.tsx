@@ -525,3 +525,4 @@ export function CategoryForm({
     </Dialog>
   );
 }
+

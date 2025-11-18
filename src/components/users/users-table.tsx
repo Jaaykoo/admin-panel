@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useQueryResponse } from '@/hooks/user/UserQueryResponseProvider';
-import { blockUser, deleteUser, unblockUser } from '@/services/UsersService';
+import { blockUser, deleteUser, unblockUser } from '@/services/usersService';
 
 type UsersTableProps = {
   users: User[];
@@ -163,18 +163,9 @@ export function UsersTable({ users }: UsersTableProps) {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {users.map((user) => {
-                // Vérification de sécurité pour user_profile
-                if (!user.user_profile) {
-                  return null;
-                }
-
                 const status = getStatusConfig(user.is_active);
                 const roleBadge = getRoleBadge(user.role);
-                const firstName = user.user_profile.first_name || '';
-                const lastName = user.user_profile.last_name || '';
-                const initials = firstName && lastName
-                  ? `${firstName[0]}${lastName[0]}`.toUpperCase()
-                  : 'U';
+                const initials = `${user.user_profile.first_name[0]}${user.user_profile.last_name[0]}`.toUpperCase();
 
                 return (
                   <tr key={user.id} className="hover:bg-gray-50">
@@ -185,11 +176,11 @@ export function UsersTable({ users }: UsersTableProps) {
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">
-                            {firstName}
+                            {user.user_profile.first_name}
                             {' '}
-                            {lastName}
+                            {user.user_profile.last_name}
                           </p>
-                          <p className="text-sm text-gray-500">{user.user_profile.title || '-'}</p>
+                          <p className="text-sm text-gray-500">{user.user_profile.title}</p>
                         </div>
                       </div>
                     </td>

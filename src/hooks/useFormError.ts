@@ -1,6 +1,6 @@
-import type { ApiError } from '@/helpers/errorMessage';
+import type { ApiError } from '@/helpers/ErrorMessageHelper';
 import { useCallback, useState } from 'react';
-import { displayApiError, getFieldError, parseApiError } from '@/helpers/errorMessage';
+import { displayApiError, getFieldError, parseApiError } from '@/helpers/ErrorMessageHelper';
 
 /**
  * Hook personnalisé pour gérer les erreurs dans les formulaires

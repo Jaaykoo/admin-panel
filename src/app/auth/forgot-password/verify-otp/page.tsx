@@ -4,6 +4,7 @@ import type React from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 import { Mail } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -11,8 +12,8 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getResetEmail } from '@/helpers/crud-helper/AuthHelpers';
-import { QUERIES } from '@/helpers/crud-helper/consts';
-import { get400ErrorMessage } from '@/helpers/errorMessage';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
+import { get400ErrorMessage } from '@/helpers/ErrorMessage';
 import { getNewPasswordResetCode, verifyTwoFactorCode } from '@/services/AuthService';
 
 export default function VerifyOtpPage() {
@@ -32,9 +33,7 @@ export default function VerifyOtpPage() {
       router.push('/auth/forgot-password');
       return;
     }
-
-    // Définir l'email de manière asynchrone pour éviter les cascading renders
-    setTimeout(() => setEmail(storedEmail), 0);
+    setEmail(storedEmail);
 
     // Timer pour le countdown
     const timer = setInterval(() => {
@@ -43,6 +42,7 @@ export default function VerifyOtpPage() {
 
     return () => clearInterval(timer);
   }, [router]);
+
   const verifyMutation = useMutation(
     [QUERIES.VERIFY_OTP],
     async (code: string) => {
@@ -176,12 +176,29 @@ export default function VerifyOtpPage() {
 
   const maskedEmail = email
     ? email.replace(/(.{2})(.*)(@.*)/, (_, start, middle, end) =>
-        start + '*'.repeat(Math.min(middle.length, 4)) + end)
+        start + '*'.repeat(Math.min(middle.length, 4)) + end,
+      )
     : '';
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
       <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center">
+          <div className="relative h-40 w-80">
+            <Image
+              src="/Logo.svg"
+              alt="Logo"
+              fill
+              className="object-contain"
+              style={{
+                filter: 'brightness(0) saturate(100%) invert(45%) sepia(97%) saturate(2439%) hue-rotate(178deg) brightness(98%) contrast(101%)',
+              }}
+              priority
+            />
+          </div>
+        </div>
+
         {/* Content */}
         <div className="space-y-6">
           {/* Email Icon */}
@@ -220,17 +237,15 @@ export default function VerifyOtpPage() {
             </div>
 
             <div className="text-center text-sm text-gray-600">
-              {countdown > 0
-                ? (
-                    <>
-                      Le code expire dans
-                      {' '}
-                      <span className="font-semibold text-gray-900">{formatTime(countdown)}</span>
-                    </>
-                  )
-                : (
-                    <span className="text-red-600">Code expiré</span>
-                  )}
+              {countdown > 0 ? (
+                <>
+                  Le code expire dans
+                  {' '}
+                  <span className="font-semibold text-gray-900">{formatTime(countdown)}</span>
+                </>
+              ) : (
+                <span className="text-red-600">Code expiré</span>
+              )}
             </div>
 
             <div className="text-center text-sm text-gray-600">

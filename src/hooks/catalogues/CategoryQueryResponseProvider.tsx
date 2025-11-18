@@ -8,7 +8,7 @@ import type { Category } from '@/types/CategoryTypes';
 import type { WithChildren } from '@/utils/react18MigrationHelpers';
 import { useQuery } from '@tanstack/react-query';
 import { use, useEffect, useMemo, useState } from 'react';
-import { QUERIES } from '@/helpers/crud-helper/consts';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { createResponseContext, stringifyRequestQuery } from '@/helpers/crud-helper/helpers';
 import { getCategories } from '@/services/CategoryServices';
 import { initialQueryResponse, initialQueryState } from '@/types/_types';

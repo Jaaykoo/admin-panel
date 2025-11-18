@@ -8,6 +8,8 @@ const QUERIES = {
   RESET_PASSWORD_WITH_CODE: 'reset-password-with-code',
   CATEGORIES_LIST: 'categories-list',
   CATEGORY_DETAIL: 'category-detail',
+  PRODUCT_CLASSES_LIST: 'product-classes-list',
+  PRODUCT_CLASS_DETAIL: 'product-class-detail',
 };
 
 export { QUERIES };

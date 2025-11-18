@@ -13,8 +13,8 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { QUERIES } from '@/helpers/crud-helper/consts';
-import { get400ErrorMessage } from '@/helpers/errorMessage';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
+import { get400ErrorMessage } from '@/helpers/ErrorMessage';
 import { login } from '@/services/AuthService';
 
 const loginInputSchema = z.object({
@@ -38,7 +38,7 @@ export default function LoginPage() {
       onSuccess: () => {
         // Handle successful login
         toast.success('Connexion réussie !');
-        router.push('/');
+        router.push('/dashboard');
       },
       onError: (error) => {
         // Handle login error

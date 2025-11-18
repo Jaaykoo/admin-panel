@@ -8,6 +8,7 @@ import { use, useState } from 'react';
 import { CategoryBreadcrumb } from '@/components/catalogue/categories/CategoryBreadcrumb';
 import { CategoryDeleteDialog } from '@/components/catalogue/categories/CategoryDeleteDialog';
 import { CategoryForm } from '@/components/catalogue/categories/CategoryForm';
+import { CategoryTree } from '@/components/catalogue/categories/CategoryTree';
 import { Header } from '@/components/layouts/header';
 import { MainContent } from '@/components/layouts/main-content';
 import { Sidebar } from '@/components/layouts/sidebar';
@@ -124,7 +125,7 @@ export default function CategoryDetailPage({
               </div>
             </div>
 
-            <div className="grid-rows grid gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               {/* Informations principales */}
               <Card className="p-6 lg:col-span-2">
                 <div className="mb-6 flex items-start justify-between">
@@ -204,29 +205,45 @@ export default function CategoryDetailPage({
               </Card>
 
               {/* Informations supplémentaires */}
-              <Card className="p-6 lg:col-span-2">
-                <h2 className="text-lg font-semibold">Informations supplémentaires</h2>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs font-medium text-gray-500">Slug</p>
-                    <p className="text-sm text-gray-900">{category.slug || '-'}</p>
+              <div className="space-y-6">
+                <Card className="p-6">
+                  <h2 className="mb-4 text-lg font-semibold">Informations</h2>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Slug</p>
+                      <p className="text-sm text-gray-900">{category.slug || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Breadcrumbs</p>
+                      <p className="text-sm text-gray-900">{category.breadcrumbs || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Parents publics</p>
+                      <p className="text-sm text-gray-900">
+                        {category.ancestors_are_public ? 'Oui' : 'Non'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">URL</p>
+                      <p className="truncate text-sm text-gray-900">{category.url}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500">Breadcrumbs</p>
-                    <p className="text-sm text-gray-900">{category.breadcrumbs || '-'}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500">Parents publics</p>
-                    <p className="text-sm text-gray-900">
-                      {category.ancestors_are_public ? 'Oui' : 'Non'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500">URL</p>
-                    <p className="truncate text-sm text-gray-900">{category.url}</p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+
+                {category.children && category.children.length > 0 && (
+                  <Card className="p-6">
+                    <h2 className="mb-4 text-lg font-semibold">
+                      Sous-catégories (
+                      {category.children.length}
+                      )
+                    </h2>
+                    <CategoryTree
+                      categories={category.children}
+                      showSearch={false}
+                    />
+                  </Card>
+                )}
+              </div>
             </div>
           </div>
         </main>

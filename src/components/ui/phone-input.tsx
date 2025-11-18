@@ -14,7 +14,7 @@ export function PhoneInputComponent({
   return (
     <PhoneInput
       {...props}
-      defaultCountry="SN"
+      defaultCountry="FR"
       international
       countryCallingCodeEditable={false}
       className={cn(

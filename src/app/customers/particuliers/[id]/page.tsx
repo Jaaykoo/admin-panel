@@ -1,14 +1,14 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Calendar, CheckCircle, Edit, Mail, MapPin, Phone, Shield, XCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, CheckCircle, Edit, Mail, MapPin, Phone, Shield, User, XCircle } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Header } from '@/components/layouts/header';
 import { Sidebar } from '@/components/layouts/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getUserById } from '@/services/UsersService';
+import { getUserById } from '@/services/usersService';
 
 export default function ParticulierDetailPage() {
   const params = useParams();
@@ -95,6 +95,9 @@ export default function ParticulierDetailPage() {
               </Button>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#009ef7] to-[#0077b6] text-white shadow-lg">
+                    <User className="h-6 w-6" />
+                  </div>
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">Détails du client</h1>
                     <p className="text-sm text-gray-500">Informations complètes du particulier</p>
@@ -118,11 +121,11 @@ export default function ParticulierDetailPage() {
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center text-center">
-                    {user.user_profile.avatar
+                    {user.avatar_url
                       ? (
                           <div className="h-24 w-24 overflow-hidden rounded-full">
                             <img
-                              src={user.user_profile.avatar}
+                              src={user.avatar_url}
                               alt={fullName}
                               className="h-full w-full object-cover"
                             />

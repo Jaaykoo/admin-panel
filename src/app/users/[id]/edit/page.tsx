@@ -31,8 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getUserById, updateUser } from '@/services/UsersService';
-import {get400ErrorMessage} from "@/helpers/errorMessage";
+import { getUserById, updateUser } from '@/services/usersService';
 
 // Schéma de validation pour la mise à jour
 const updateUserSchema = z.object({
@@ -92,15 +91,15 @@ export default function EditUserPage() {
 
   // Charger les données de l'utilisateur dans le formulaire
   useEffect(() => {
-    if (user && user.user_profile) {
+    if (user) {
       form.reset({
         email: user.email,
         phone_number: user.phone_number,
         role: user.role as 'ADMIN' | 'PERSONNEL',
         profile: {
-          first_name: user.user_profile.first_name || '',
-          last_name: user.user_profile.last_name || '',
-          title: user.user_profile.title || 'MONSIEUR',
+          first_name: user.user_profile.first_name,
+          last_name: user.user_profile.last_name,
+          title: user.user_profile.title,
           birthdate: user.user_profile.birthdate || '',
         },
         address: {
@@ -119,7 +118,10 @@ export default function EditUserPage() {
       router.push(`/users/${userId}`);
     },
     onError: (error: any) => {
-      get400ErrorMessage(error);
+      const errorMessage = error?.response?.data?.detail
+        || error?.response?.data?.message
+        || 'Erreur lors de la mise à jour';
+      toast.error(errorMessage);
     },
   });
 
@@ -127,7 +129,7 @@ export default function EditUserPage() {
     updateMutation.mutate(data);
   };
 
-  // const selectedRole = form.watch('role');
+  const selectedRole = form.watch('role');
   const getRoleColor = () => '#009ef7';
 
   if (isLoading) {
@@ -199,7 +201,7 @@ export default function EditUserPage() {
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg"
                     style={{
-                      background: `linear-gradient(135deg, ${getRoleColor()}, ${getRoleColor()}dd)`,
+                      background: `linear-gradient(135deg, ${getRoleColor(selectedRole)}, ${getRoleColor(selectedRole)}dd)`,
                     }}
                   >
                     <Shield className="h-6 w-6" />
@@ -207,9 +209,9 @@ export default function EditUserPage() {
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">Modifier l'utilisateur</h1>
                     <p className="text-sm text-gray-500">
-                      {user.user_profile?.first_name || ''}
+                      {user.user_profile.first_name}
                       {' '}
-                      {user.user_profile?.last_name || ''}
+                      {user.user_profile.last_name}
                     </p>
                   </div>
                 </div>
@@ -422,7 +424,7 @@ export default function EditUserPage() {
                   <Button
                     type="submit"
                     disabled={updateMutation.isPending}
-                    style={{ backgroundColor: getRoleColor() }}
+                    style={{ backgroundColor: getRoleColor(selectedRole) }}
                     className="hover:opacity-90"
                   >
                     {updateMutation.isPending

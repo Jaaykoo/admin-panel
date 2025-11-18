@@ -11,7 +11,6 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { Header } from '@/components/layouts/header';
 import { Sidebar } from '@/components/layouts/sidebar';
-import { MainContent } from '@/components/layouts/main-content';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -32,12 +31,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createUser } from '@/services/UsersService';
-import {get400ErrorMessage} from "@/helpers/errorMessage";
+import { createUser } from '@/services/usersService';
 
 // Schéma de validation pour créer un utilisateur
 const createUserSchema = z.object({
-  email: z.email(),
+  email: z.string().email('Email invalide'),
+  password: z.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
   phone_number: z
     .string()
     .min(1, 'Le numéro de téléphone est requis')
@@ -50,6 +49,11 @@ const createUserSchema = z.object({
     last_name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
     title: z.enum(['MONSIEUR', 'MADAME', 'MADEMOISELLE']),
   }),
+  address: z.object({
+    line1: z.string().optional(),
+    line4: z.string().optional(),
+    postcode: z.string().optional(),
+  }).optional(),
 });
 
 type CreateUserFormValues = z.infer<typeof createUserSchema>;
@@ -61,12 +65,18 @@ export default function CreateUserPage() {
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       email: '',
+      password: '',
       phone_number: '',
       role: 'PERSONNEL',
       profile: {
         first_name: '',
         last_name: '',
         title: 'MONSIEUR',
+      },
+      address: {
+        line1: '',
+        line4: '',
+        postcode: '',
       },
     },
   });
@@ -78,7 +88,10 @@ export default function CreateUserPage() {
       router.push('/users');
     },
     onError: (error: any) => {
-      get400ErrorMessage(error);
+      const errorMessage = error?.response?.data?.detail
+        || error?.response?.data?.message
+        || 'Erreur lors de la création';
+      toast.error(errorMessage);
     },
   });
 
@@ -86,13 +99,13 @@ export default function CreateUserPage() {
     createMutation.mutate(data);
   };
 
-  // const selectedRole = form.watch('role');
+  const selectedRole = form.watch('role');
   const getRoleColor = () => '#009ef7';
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <MainContent>
+      <div className="pl-64">
         <Header />
         <main className="pt-16">
           <div className="space-y-6 p-6">
@@ -111,7 +124,7 @@ export default function CreateUserPage() {
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg"
                     style={{
-                      background: `linear-gradient(135deg, ${getRoleColor()}, ${getRoleColor()}dd)`,
+                      background: `linear-gradient(135deg, ${getRoleColor(selectedRole)}, ${getRoleColor(selectedRole)}dd)`,
                     }}
                   >
                     <Shield className="h-6 w-6" />
@@ -172,6 +185,24 @@ export default function CreateUserPage() {
                           </FormItem>
                         )}
                       />
+
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mot de passe</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="••••••••" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Minimum 8 caractères
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
                       <FormField
                         control={form.control}
                         name="phone_number"
@@ -253,6 +284,59 @@ export default function CreateUserPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Adresse (optionnel) */}
+                <Card className="shadow-sm">
+                  <CardHeader className="border-b border-gray-100">
+                    <CardTitle className="text-lg">Adresse (optionnel)</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="address.line1"
+                        render={({ field }) => (
+                          <FormItem className="sm:col-span-2">
+                            <FormLabel>Adresse</FormLabel>
+                            <FormControl>
+                              <Input placeholder="123 Rue de la Paix" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="address.line4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Ville</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Paris" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="address.postcode"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Code postal</FormLabel>
+                            <FormControl>
+                              <Input placeholder="75001" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-4">
                   <Button
@@ -265,7 +349,7 @@ export default function CreateUserPage() {
                   <Button
                     type="submit"
                     disabled={createMutation.isPending}
-                    style={{ backgroundColor: getRoleColor() }}
+                    style={{ backgroundColor: getRoleColor(selectedRole) }}
                     className="hover:opacity-90"
                   >
                     {createMutation.isPending
@@ -291,3 +375,5 @@ export default function CreateUserPage() {
     </div>
   );
 }
+
+

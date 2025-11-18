@@ -30,8 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getUserById, updateUser } from '@/services/UsersService';
-import {get400ErrorMessage} from "@/helpers/errorMessage";
+import { getUserById, updateUser } from '@/services/usersService';
 
 // Schéma de validation pour entreprise
 const entrepriseSchema = z.object({
@@ -146,7 +145,10 @@ export default function EditEntreprisePage() {
       router.push(`/customers/entreprises/${userId}`);
     },
     onError: (error: any) => {
-      get400ErrorMessage(error);
+      const errorMessage = error?.response?.data?.detail
+        || error?.response?.data?.message
+        || 'Erreur lors de la mise à jour';
+      toast.error(errorMessage);
     },
   });
 
@@ -163,7 +165,7 @@ export default function EditEntreprisePage() {
           <main className="pt-16">
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
-                <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[#009ef7] border-t-transparent" />
+                <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[#7239ea] border-t-transparent" />
                 <p className="mt-4 text-sm text-gray-600">Chargement des données...</p>
               </div>
             </div>
@@ -217,7 +219,7 @@ export default function EditEntreprisePage() {
               </Button>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#009ef7] to-[#0077b6] text-white shadow-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#7239ea] to-[#5c2ab8] text-white shadow-lg">
                     <Building2 className="h-6 w-6" />
                   </div>
                   <div>
@@ -240,7 +242,7 @@ export default function EditEntreprisePage() {
                     <div className="grid gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
-                        name="profile.company_name"
+                        name="user_profile.company_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Nom de l'entreprise</FormLabel>
@@ -254,7 +256,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.service"
+                        name="user_profile.service"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Service</FormLabel>
@@ -268,7 +270,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.siret_number"
+                        name="user_profile.siret_number"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Numéro SIRET</FormLabel>
@@ -282,7 +284,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.tva_number"
+                        name="user_profile.tva_number"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Numéro TVA</FormLabel>
@@ -306,7 +308,7 @@ export default function EditEntreprisePage() {
                     <div className="grid gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
-                        name="profile.title"
+                        name="user_profile.title"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Civilité</FormLabel>
@@ -329,7 +331,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.fonction"
+                        name="user_profile.fonction"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Fonction</FormLabel>
@@ -343,7 +345,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.first_name"
+                        name="user_profile.first_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Prénom</FormLabel>
@@ -357,7 +359,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.last_name"
+                        name="user_profile.last_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Nom</FormLabel>
@@ -412,7 +414,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.phone_standard"
+                        name="user_profile.phone_standard"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Téléphone standard</FormLabel>
@@ -429,7 +431,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.fax"
+                        name="user_profile.fax"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Fax</FormLabel>
@@ -511,7 +513,7 @@ export default function EditEntreprisePage() {
                   <Button
                     type="submit"
                     disabled={updateMutation.isPending}
-                    className="bg-[#009ef7] hover:bg-[#0077b6]"
+                    className="bg-[#7239ea] hover:bg-[#5c2ab8]"
                   >
                     {updateMutation.isPending
                       ? (

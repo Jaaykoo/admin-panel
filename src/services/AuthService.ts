@@ -1,3 +1,4 @@
+import type { AxiosResponse } from 'axios';
 import type { AuthResponse } from '@/types/_types';
 import type { User } from '@/types/UserTypes';
 import { api } from '@/libs/api-client';

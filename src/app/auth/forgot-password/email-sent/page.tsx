@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -23,6 +24,22 @@ function EmailSentContent() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
       <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center">
+          <div className="relative h-40 w-80">
+            <Image
+              src="/Logo.svg"
+              alt="Logo"
+              fill
+              className="object-contain"
+              style={{
+                filter: 'brightness(0) saturate(100%) invert(45%) sepia(97%) saturate(2439%) hue-rotate(178deg) brightness(98%) contrast(101%)',
+              }}
+              priority
+            />
+          </div>
+        </div>
+
         {/* Content */}
         <div className="space-y-6 text-center">
           {/* Illustration */}
@@ -109,3 +126,9 @@ export default function EmailSentPage() {
     </Suspense>
   );
 }
+
+    </Suspense>
+  );
+}
+
+

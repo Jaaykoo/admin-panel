@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/layouts/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getUserById } from '@/services/UsersService';
+import { getUserById } from '@/services/usersService';
 
 export default function EntrepriseDetailPage() {
   const params = useParams();
@@ -30,7 +30,7 @@ export default function EntrepriseDetailPage() {
           <main className="pt-16">
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
-                <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[#009ef7] border-t-transparent" />
+                <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[#7239ea] border-t-transparent" />
                 <p className="mt-4 text-sm text-gray-600">Chargement des détails...</p>
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function EntrepriseDetailPage() {
               </Button>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#009ef7] text-white shadow-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#7239ea] to-[#5c2ab8] text-white shadow-lg">
                     <Building2 className="h-6 w-6" />
                   </div>
                   <div>
@@ -104,7 +104,7 @@ export default function EntrepriseDetailPage() {
                 </div>
                 <Button
                   onClick={() => router.push(`/customers/entreprises/${userId}/edit`)}
-                  className="bg-[#009ef7] shadow-md hover:bg-[##5050FA]"
+                  className="bg-[#7239ea] shadow-md hover:bg-[#5c2ab8]"
                 >
                   <Edit className="mr-2 h-4 w-4" />
                   Modifier
@@ -120,7 +120,7 @@ export default function EntrepriseDetailPage() {
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center text-center">
-                    <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-[#009ef7] to-[##5050FA] text-white shadow-lg">
+                    <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-[#7239ea] to-[#5c2ab8] text-white shadow-lg">
                       <Building2 className="h-12 w-12" />
                     </div>
                     <h2 className="mt-4 text-xl font-bold text-gray-900">{companyName}</h2>
@@ -293,7 +293,7 @@ export default function EntrepriseDetailPage() {
                         {user.address.line1 && <p className="font-medium">{user.address.line1}</p>}
                         {user.address.line4 && <p>{user.address.line4}</p>}
                         {user.address.postcode && (
-                          <p className="font-medium text-[#009ef7]">{user.address.postcode}</p>
+                          <p className="font-medium text-[#7239ea]">{user.address.postcode}</p>
                         )}
                       </div>
                     </CardContent>
@@ -315,7 +315,7 @@ export default function EntrepriseDetailPage() {
                           Rôle
                         </span>
                         <p className="mt-2">
-                          <Badge className="bg-[#009ef7] text-white">{user.role}</Badge>
+                          <Badge className="bg-[#7239ea] text-white">{user.role}</Badge>
                         </p>
                       </div>
                       <div>

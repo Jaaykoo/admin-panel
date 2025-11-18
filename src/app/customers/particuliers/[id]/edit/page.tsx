@@ -1,6 +1,5 @@
 'use client';
 
-import type { UpdateUser } from '@/types/UserTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
@@ -31,23 +30,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getUserById, updateUser } from '@/services/UsersService';
-import {get400ErrorMessage} from "@/helpers/errorMessage";
+import { getUserById, updateUser } from '@/services/usersService';
 
-// Schéma de validation pour particulier (pour la soumission avec 'profile')
+// Schéma de validation pour particulier
 const particulierSchema = z.object({
   email: z.string().email('Email invalide'),
   phone_number: z
     .string()
     .min(1, 'Le numéro de téléphone est requis')
-    .refine(val => isPossiblePhoneNumber(val), {
+    .refine((val) => isPossiblePhoneNumber(val), {
       message: 'Saisissez un numéro de téléphone valide.',
     }),
-  profile: z.object({
+  user_profile: z.object({
     first_name: z.string().min(2, 'Le prénom doit contenir au moins 2 caractères'),
     last_name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
     title: z.enum(['MONSIEUR', 'MADAME', 'MADEMOISELLE']),
     birthdate: z.string().optional(),
+    mobile: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (!val || val === '') return true;
+          return isPossiblePhoneNumber(val);
+        },
+        {
+          message: 'Saisissez un numéro de téléphone valide.',
+        },
+      ),
+  }),
+  address: z.object({
+    line1: z.string().min(1, 'Ce champ ne peut être vide.'),
+    line4: z.string().min(1, 'Ce champ ne peut être vide.'),
+    postcode: z.string().min(1, 'Ce champ ne peut être vide.'),
   }),
 });
 
@@ -69,11 +84,17 @@ export default function EditParticulierPage() {
     defaultValues: {
       email: '',
       phone_number: '',
-      profile: {
+      user_profile: {
         first_name: '',
         last_name: '',
         title: 'MONSIEUR',
         birthdate: '',
+        mobile: '',
+      },
+      address: {
+        line1: '',
+        line4: '',
+        postcode: '',
       },
     },
   });
@@ -84,24 +105,33 @@ export default function EditParticulierPage() {
       form.reset({
         email: user.email,
         phone_number: user.phone_number,
-        profile: {
+        user_profile: {
           first_name: user.user_profile.first_name,
           last_name: user.user_profile.last_name,
           title: user.user_profile.title,
           birthdate: user.user_profile.birthdate || '',
+          mobile: user.user_profile.mobile || '',
+        },
+        address: {
+          line1: user.address?.line1 || '',
+          line4: user.address?.line4 || '',
+          postcode: user.address?.postcode || '',
         },
       });
     }
   }, [user, form]);
 
   const updateMutation = useMutation({
-    mutationFn: (data: ParticulierFormValues) => updateUser(userId, data as UpdateUser),
+    mutationFn: (data: ParticulierFormValues) => updateUser(userId, data),
     onSuccess: () => {
       toast.success('Profil mis à jour avec succès');
       router.push(`/customers/particuliers/${userId}`);
     },
     onError: (error: any) => {
-      get400ErrorMessage(error);
+      const errorMessage = error?.response?.data?.detail
+        || error?.response?.data?.message
+        || 'Erreur lors de la mise à jour';
+      toast.error(errorMessage);
     },
   });
 
@@ -196,7 +226,7 @@ export default function EditParticulierPage() {
                     <div className="grid gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
-                        name="profile.title"
+                        name="user_profile.title"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Civilité</FormLabel>
@@ -219,7 +249,7 @@ export default function EditParticulierPage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.first_name"
+                        name="user_profile.first_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Prénom</FormLabel>
@@ -233,7 +263,7 @@ export default function EditParticulierPage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.last_name"
+                        name="user_profile.last_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Nom</FormLabel>
@@ -247,7 +277,7 @@ export default function EditParticulierPage() {
 
                       <FormField
                         control={form.control}
-                        name="profile.birthdate"
+                        name="user_profile.birthdate"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Date de naissance</FormLabel>
@@ -300,9 +330,80 @@ export default function EditParticulierPage() {
                           </FormItem>
                         )}
                       />
+
+                      <FormField
+                        control={form.control}
+                        name="user_profile.mobile"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mobile (optionnel)</FormLabel>
+                            <FormControl>
+                              <PhoneInputComponent
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="Entrez un numéro mobile"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Adresse */}
+                <Card className="shadow-sm">
+                  <CardHeader className="border-b border-gray-100">
+                    <CardTitle className="text-lg">Adresse</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="address.line1"
+                        render={({ field }) => (
+                          <FormItem className="sm:col-span-2">
+                            <FormLabel>Adresse</FormLabel>
+                            <FormControl>
+                              <Input placeholder="123 Rue de la Paix" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="address.line4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Ville</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Paris" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="address.postcode"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Code postal</FormLabel>
+                            <FormControl>
+                              <Input placeholder="75001" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-4">
                   <Button
