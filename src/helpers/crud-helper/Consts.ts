@@ -10,6 +10,10 @@ const QUERIES = {
   CATEGORY_DETAIL: 'category-detail',
   PRODUCT_CLASSES_LIST: 'product-classes-list',
   PRODUCT_CLASS_DETAIL: 'product-class-detail',
+  PRODUCTS_LIST: 'products-list',
+  PRODUCT_DETAIL: 'product-detail',
+  ORDERS_LIST: 'orders-list',
+  ORDER_DETAIL: 'order-detail',
 };
 
 export { QUERIES };

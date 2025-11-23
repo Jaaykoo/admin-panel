@@ -126,9 +126,3 @@ export default function EmailSentPage() {
     </Suspense>
   );
 }
-
-    </Suspense>
-  );
-}
-
-

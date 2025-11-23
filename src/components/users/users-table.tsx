@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useQueryResponse } from '@/hooks/user/UserQueryResponseProvider';
-import { blockUser, deleteUser, unblockUser } from '@/services/usersService';
+import { blockUser, deleteUser, unblockUser } from '@/services/UsersService';
 
 type UsersTableProps = {
   users: User[];

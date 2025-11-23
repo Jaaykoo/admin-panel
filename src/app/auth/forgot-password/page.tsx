@@ -12,14 +12,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
   const router = useRouter();
+  const router = useRouter();
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+  const [email, setEmail] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.warn('[v0] Password reset requested for:', email);
-    // Navigate to email sent confirmation
-    router.push(`/auth/forgot-password/email-sent?email=${encodeURIComponent(email)}`);
+  const mutation = useMutation(
+    [QUERIES.RESET_PASSWORD],
   };
 
   return (
@@ -62,12 +62,15 @@ export default function ForgotPasswordPage() {
               onChange={e => setEmail(e.target.value)}
               className="mt-1.5 h-12 border-gray-300 bg-white"
               required
-            />
           </div>
 
+          <Button
           <Button type="submit" className="h-12 w-full bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]">
             Continuer
             <ArrowRight className="ml-2 h-5 w-5" />
+          >
+            {mutation.isLoading ? 'Envoi en cours...' : 'Continuer'}
+            {!mutation.isLoading && <ArrowRight className="ml-2 h-5 w-5" />}
           </Button>
 
           <div className="text-center">
@@ -75,8 +78,8 @@ export default function ForgotPasswordPage() {
               Retour à la connexion
             </Link>
           </div>
-        </form>
+  );
       </div>
     </div>
-  );
+              Entrez votre email pour réinitialiser votre mot de passe
 }

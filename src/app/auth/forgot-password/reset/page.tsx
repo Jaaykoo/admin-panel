@@ -1,7 +1,5 @@
 'use client';
 
-import type React from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
@@ -17,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { clearResetEmail } from '@/helpers/crud-helper/AuthHelpers';
 import { QUERIES } from '@/helpers/crud-helper/Consts';
-import { get400ErrorMessage } from '@/helpers/ErrorMessage';
+import { get400ErrorMessage } from '@/helpers/ErrorMessageHelper';
 import { resetPasswordWithCode } from '@/services/AuthService';
 
 const resetPasswordSchema = z.object({
@@ -55,6 +53,7 @@ export default function ResetPasswordPage() {
       router.push('/auth/forgot-password/verify-otp');
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCode(verifiedCode);
   }, [router]);
 

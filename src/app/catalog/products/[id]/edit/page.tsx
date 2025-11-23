@@ -1,18 +1,15 @@
 'use client';
 
 import type { ProductClassDetail } from '@/types/ProductClassTypes';
-import type { ProductCreate } from '@/types/ProductTypes';
+import type { ProductUpdate } from '@/types/ProductTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import slugify from 'react-slugify';
 import { toast } from 'sonner';
-import { Header } from '@/components/layouts/header';
-import { MainContent } from '@/components/layouts/main-content';
-import { Sidebar } from '@/components/layouts/sidebar';
-import { PageHeader } from '@/components/page-header';
 import {
   CategoryMultiSelect,
   DynamicAttributesForm,
@@ -20,6 +17,10 @@ import {
   ImageListManager,
   ProductClassSelector,
 } from '@/components/catalogue/products';
+import { Header } from '@/components/layouts/header';
+import { MainContent } from '@/components/layouts/main-content';
+import { Sidebar } from '@/components/layouts/sidebar';
+import { PageHeader } from '@/components/page-header';
 import {
   Accordion,
   AccordionContent,
@@ -32,11 +33,18 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { extractProductClassSlugFromUrl } from '@/helpers/UrlHelper';
-import { ProductCreateSchema } from '@/schemas/ProductSchemas';
-import { createProduct } from '@/services/ProductService';
+import { ProductUpdateSchema } from '@/schemas/ProductSchemas';
+import { getProductClassBySlug } from '@/services/ProductClassService';
+import { getProductById, updateProduct } from '@/services/ProductService';
 
-export default function AddProductPage() {
+export default function EditProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = use(params);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedProductClass, setSelectedProductClass] = useState<ProductClassDetail | null>(null);
@@ -46,23 +54,10 @@ export default function AddProductPage() {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
-  } = useForm<ProductCreate>({
-    resolver: zodResolver(ProductCreateSchema) as any,
-    defaultValues: {
-      structure: 'standalone',
-      is_public: true,
-      is_discountable: true,
-      categories: [],
-      attributes: [],
-      images: [],
-      fiche_techniques: [],
-      stockrecords: {
-        price_currency: 'XOF',
-        price: '',
-        num_in_stock: 0,
-      },
-    },
+  } = useForm<ProductUpdate>({
+    resolver: zodResolver(ProductUpdateSchema) as any,
   });
 
   const watchTitle = watch('title');
@@ -72,7 +67,51 @@ export default function AddProductPage() {
   const watchImages = watch('images') || [];
   const watchFicheTechniques = watch('fiche_techniques') || [];
 
-  // Auto-générer le slug depuis le titre
+  // Charger les données du produit avec React Query
+  const { data: product, isLoading, error } = useQuery({
+    queryKey: [QUERIES.PRODUCT_DETAIL, resolvedParams.id],
+    queryFn: () => getProductById(Number(resolvedParams.id)),
+    enabled: !!resolvedParams.id,
+  });
+
+  // Pré-remplir le formulaire quand le produit est chargé
+  useEffect(() => {
+    if (product) {
+      reset({
+        title: product.title,
+        slug: product.slug,
+        description: product.description,
+        meta_title: product.meta_title,
+        meta_description: product.meta_description,
+        structure: product.structure,
+        is_public: product.is_public,
+        is_discountable: product.is_discountable,
+        categories: product.categories,
+        product_class: product.product_class,
+        attributes: product.attributes,
+        images: product.images,
+        fiche_techniques: product.fiche_techniques,
+        stockrecords: product.stockrecords,
+      });
+
+      // Charger le product class si présent
+      if (product.product_class) {
+        getProductClassBySlug(product.product_class)
+          .then(setSelectedProductClass)
+          .catch(err => console.error('Error fetching product class:', err));
+      }
+    }
+  }, [product, reset]);
+
+  // Gérer les erreurs
+  useEffect(() => {
+    if (error) {
+      console.error('Error fetching product:', error);
+      toast.error('Erreur lors du chargement du produit');
+      router.back();
+    }
+  }, [error, router]);
+
   const handleTitleChange = (title: string) => {
     setValue('title', title);
     if (!watchSlug || watchSlug === slugify(watchTitle)) {
@@ -80,19 +119,44 @@ export default function AddProductPage() {
     }
   };
 
-  const onSubmit = async (data: ProductCreate) => {
+  const onSubmit = async (data: ProductUpdate) => {
+    console.log('🚀 onSubmit appelé avec data:', data);
+    console.log('📊 Catégories:', data.categories);
+    console.log('🏷️ Product class:', data.product_class);
+    console.log('🔧 Attributs:', data.attributes);
+
     setIsSubmitting(true);
     try {
-      await createProduct(data);
-      toast.success('Produit créé avec succès');
-      router.push('/catalog/products');
+      await updateProduct(Number(resolvedParams.id), data);
+      toast.success('Produit mis à jour avec succès');
+      router.push(`/catalog/products/${resolvedParams.id}`);
     } catch (error: any) {
-      console.error('Error creating product:', error);
-      toast.error(error.response?.data?.detail || 'Erreur lors de la création du produit');
+      console.error('❌ Error updating product:', error);
+      console.error('❌ Error response:', error.response?.data);
+      toast.error(error.response?.data?.detail || 'Erreur lors de la mise à jour du produit');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100">
+        <Sidebar />
+        <MainContent>
+          <Header />
+          <main className="pt-16">
+            <div className="flex h-64 items-center justify-center">
+              <div className="text-center">
+                <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#009ef7]" />
+                <p className="mt-2 text-sm text-gray-500">Chargement du produit...</p>
+              </div>
+            </div>
+          </main>
+        </MainContent>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -102,12 +166,12 @@ export default function AddProductPage() {
         <main className="pt-16">
           <div className="p-6">
             <PageHeader
-              title="Ajouter un produit"
+              title="Modifier le produit"
               breadcrumbs={[
                 { label: 'Accueil', href: '/' },
                 { label: 'Catalogue' },
                 { label: 'Produits', href: '/catalog/products' },
-                { label: 'Ajouter' },
+                { label: 'Modifier' },
               ]}
               actions={(
                 <div className="flex gap-3">
@@ -120,12 +184,13 @@ export default function AddProductPage() {
                     Retour
                   </Button>
                   <Button
+                    type="button"
                     onClick={handleSubmit(onSubmit)}
                     disabled={isSubmitting}
                     className="bg-[#009ef7] hover:bg-[#0077b6]"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Créer le produit
+                    Mettre à jour
                   </Button>
                 </div>
               )}
@@ -249,13 +314,9 @@ export default function AddProductPage() {
                 <CardContent className="space-y-4">
                   <ProductClassSelector
                     value={watch('product_class')}
-                    onSelect={(productClass) => {
+                    onSelect={async (productClass) => {
                       setSelectedProductClass(productClass);
-                      if (productClass) {
-                        // eslint-disable-next-line ts/ban-ts-comment
-                        // @ts-expect-error
-                        setValue('product_class', extractProductClassSlugFromUrl(productClass.url ?? undefined));
-                      }
+                      setValue('product_class', extractProductClassSlugFromUrl(productClass?.url || '') || undefined);
                       setValue('attributes', []);
                     }}
                     disabled={isSubmitting}

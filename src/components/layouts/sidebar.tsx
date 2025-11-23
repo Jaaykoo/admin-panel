@@ -35,7 +35,7 @@ const navigation: NavigationItem[] = [
     children: [
       { name: 'Types de produit', href: '/catalog/product-classes' },
       { name: 'Catégories', href: '/catalog/categories' },
-      { name: 'Produits', href: '/products' },
+      { name: 'Produits', href: '/catalog/products' },
     ],
   },
   {
@@ -84,6 +84,7 @@ export function Sidebar() {
     <>
       {/* Overlay pour mobile */}
       {!isCollapsed && (
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
         <div
           className="fixed inset-0 z-30 bg-black/50 lg:hidden"
           onClick={toggleSidebar}

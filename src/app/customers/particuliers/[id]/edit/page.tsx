@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getUserById, updateUser } from '@/services/usersService';
+import { getUserById, updateUser } from '@/services/UsersService';
 
 // Schéma de validation pour particulier
 const particulierSchema = z.object({
@@ -38,7 +38,7 @@ const particulierSchema = z.object({
   phone_number: z
     .string()
     .min(1, 'Le numéro de téléphone est requis')
-    .refine((val) => isPossiblePhoneNumber(val), {
+    .refine(val => isPossiblePhoneNumber(val), {
       message: 'Saisissez un numéro de téléphone valide.',
     }),
   user_profile: z.object({
@@ -51,7 +51,9 @@ const particulierSchema = z.object({
       .optional()
       .refine(
         (val) => {
-          if (!val || val === '') return true;
+          if (!val || val === '') {
+            return true;
+          }
           return isPossiblePhoneNumber(val);
         },
         {

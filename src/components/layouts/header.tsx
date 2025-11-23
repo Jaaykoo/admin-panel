@@ -11,16 +11,16 @@ export function Header() {
   const { currentUser, logout } = useAuth();
   const { isCollapsed } = useSidebar();
   const fullName = `${currentUser?.user_profile?.first_name} ${currentUser?.user_profile?.last_name}`;
-  
+
   const handleLogout = () => {
     logout();
   };
-  
+
   return (
-    <header 
+    <header
       className={cn(
         'fixed top-0 right-0 z-30 h-16 border-b border-gray-300 bg-white py-2 transition-all duration-300',
-        isCollapsed ? 'left-0 lg:left-20' : 'left-0 lg:left-64'
+        isCollapsed ? 'left-0 lg:left-20' : 'left-0 lg:left-64',
       )}
     >
       <div className="flex h-full items-center justify-end px-6">

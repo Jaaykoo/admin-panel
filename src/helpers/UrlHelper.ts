@@ -12,8 +12,8 @@ export function extractIdFromUrl(url: string): number | null {
   const match = url.match(/\/(\d+)\/?$/);
 
   if (match && match[1]) {
-    const id = parseInt(match[1], 10);
-    return isNaN(id) ? null : id;
+    const id = Number.parseInt(match[1], 10);
+    return Number.isNaN(id) ? null : id;
   }
 
   return null;
@@ -34,8 +34,8 @@ export function extractIdFromUrlAlt(url: string): number | null {
   const lastPart = parts[parts.length - 1];
 
   if (lastPart && /^\d+$/.test(lastPart)) {
-    const id = parseInt(lastPart, 10);
-    return isNaN(id) ? null : id;
+    const id = Number.parseInt(lastPart, 10);
+    return Number.isNaN(id) ? null : id;
   }
 
   return null;

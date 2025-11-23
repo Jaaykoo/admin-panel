@@ -4,19 +4,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { FC } from 'react';
 import type { PaginationState } from '@/types/_types';
-import type { Category } from '@/types/CategoryTypes';
+import type { OrderList } from '@/types/OrderTypes';
 import type { WithChildren } from '@/utils/react18MigrationHelpers';
 import { useQuery } from '@tanstack/react-query';
 import { use, useEffect, useMemo, useState } from 'react';
 import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { createResponseContext, stringifyRequestQuery } from '@/helpers/crud-helper/helpers';
-import { getCategories } from '@/services/CategoryServices';
+import { getOrders } from '@/services/OrderService';
 import { initialQueryResponse, initialQueryState } from '@/types/_types';
 import { useQueryRequest } from '../_QueryRequestProvider';
 
-const QueryResponseContext = createResponseContext<Category>(initialQueryResponse);
+const QueryResponseContext = createResponseContext<OrderList>(initialQueryResponse);
 
-const CategoryQueryResponseProvider: FC<WithChildren> = ({ children }) => {
+const OrderQueryResponseProvider: FC<WithChildren> = ({ children }) => {
   const { state } = useQueryRequest();
   // eslint-disable-next-line react/prefer-use-state-lazy-initialization
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state));
@@ -34,9 +34,9 @@ const CategoryQueryResponseProvider: FC<WithChildren> = ({ children }) => {
     refetch,
     data: response,
   } = useQuery(
-    [QUERIES.CATEGORIES_LIST, query],
+    [QUERIES.ORDERS_LIST, query],
     () => {
-      return getCategories(query);
+      return getOrders(query);
     },
     {
       staleTime: 0,
@@ -75,7 +75,7 @@ const useQueryResponseData = () => {
 };
 
 const useQueryResponsePagination = () => {
-  const defaultPaginationState: PaginationState<Category> = {
+  const defaultPaginationState: PaginationState<OrderList> = {
     ...initialQueryState,
     filter: {},
   };
@@ -95,7 +95,7 @@ const useQueryResponseLoading = (): boolean => {
 };
 
 export {
-  CategoryQueryResponseProvider,
+  OrderQueryResponseProvider,
   useQueryResponse,
   useQueryResponseData,
   useQueryResponseLoading,

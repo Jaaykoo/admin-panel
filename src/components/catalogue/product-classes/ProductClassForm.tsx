@@ -28,10 +28,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import {get400ErrorMessage} from "@/helpers/ErrorMessageHelper";
 import { extractProductClassSlugFromUrl } from '@/helpers/UrlHelper';
 import { ProductClassCreateSchema, ProductClassUpdateSchema } from '@/schemas/ProductClassSchemas';
 import { createProductClass, updateProductClass } from '@/services/ProductTypeService';
-import {get400ErrorMessage} from "@/helpers/ErrorMessageHelper";
 
 type ProductClassFormProps = {
   initialData?: ProductClass;

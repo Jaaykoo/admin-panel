@@ -58,6 +58,7 @@ export type PaginationResponse<T> = PaginationState<T> & PaginationState<T>;
 export type QueryState = {
   limit?: 10 | 20 | 50 | 100;
   offset?: number;
+  page?: number;
   sort?: string;
   order?: 'asc' | 'desc';
   filter?: unknown;

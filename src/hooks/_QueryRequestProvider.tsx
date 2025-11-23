@@ -27,4 +27,10 @@ const QueryRequestProvider: FC<WithChildren> = ({ children }) => {
 
 const useQueryRequest = () => use(QueryRequestContext);
 
-export { QueryRequestProvider, useQueryRequest };
+const useQueryRequestLoading = (): boolean => {
+  // This is a simple implementation - in practice, the loading state
+  // is better managed by the QueryResponse provider
+  return false;
+};
+
+export { QueryRequestProvider, useQueryRequest, useQueryRequestLoading };

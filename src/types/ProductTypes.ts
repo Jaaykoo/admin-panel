@@ -22,10 +22,12 @@ export type FicheTechnique = z.infer<typeof FicheTechniqueSchema>;
 
 export type ProductList = {
   url: string;
-  id: string;
+  id: number;
   title: string;
   description: string;
   slug: string;
   price: string;
-  images: ProductImage;
+  code?: string;
+  upc?: string;
+  images: ProductImage[];
 };

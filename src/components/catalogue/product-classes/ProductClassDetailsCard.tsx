@@ -197,17 +197,23 @@ export function ProductClassDetailsCard({ productClass }: ProductClassDetailsCar
                                   onClick={() => toggleAttribute(attribute.code)}
                                   className="border-[#009ef7] text-[#009ef7] hover:bg-[#f1f8ff]"
                                 >
-                                  {expandedAttributes[attribute.code] ? (
-                                    <>
-                                      <ChevronUp className="mr-2 h-4 w-4" />
-                                      <span>Afficher moins d'options</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <ChevronDown className="mr-2 h-4 w-4" />
-                                      <span>Voir toutes les options ({attribute.option_group.options.length})</span>
-                                    </>
-                                  )}
+                                  {expandedAttributes[attribute.code]
+                                    ? (
+                                        <>
+                                          <ChevronUp className="mr-2 h-4 w-4" />
+                                          <span>Afficher moins d'options</span>
+                                        </>
+                                      )
+                                    : (
+                                        <>
+                                          <ChevronDown className="mr-2 h-4 w-4" />
+                                          <span>
+                                            Voir toutes les options (
+                                            {attribute.option_group.options.length}
+                                            )
+                                          </span>
+                                        </>
+                                      )}
                                 </Button>
                               </div>
                             )}

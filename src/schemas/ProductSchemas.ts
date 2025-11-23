@@ -24,8 +24,8 @@ export const StockRecordSchema = z.object({
   price_currency: z.string().default('XOF'),
   price: z.string(),
   num_in_stock: z.number(),
-  num_allocated: z.number().optional(),
-  low_stock_threshold: z.number().optional(),
+  num_allocated: z.number().nullable().optional(),
+  low_stock_threshold: z.number().nullable().optional(),
   date_created: z.string().optional(),
   date_updated: z.string().optional(),
 });
@@ -47,7 +47,7 @@ export const FicheTechniqueContentSchema = z.object({
 });
 export const FicheTechniqueSchema = z.object({
   titre: z.string(),
-  content: FicheTechniqueContentSchema,
+  content: z.array(FicheTechniqueContentSchema),
 });
 
 // Schéma principal du produit (version complète)
@@ -94,13 +94,13 @@ export const ProductCreateSchema = z.object({
   priority: z.number().optional(),
   is_discountable: z.boolean().default(true),
   parent: z.number().optional(),
-  categories: z.array(z.string()).optional(),
+  categories: z.array(z.string()).default([]),
   product_class: z.string().optional(),
-  attributes: z.array(ProductAttributeSchema).optional(),
+  attributes: z.array(ProductAttributeSchema).default([]),
   options: z.array(ProductOptionSchema).optional(),
   recommended_products: z.array(z.string()).optional(),
   stockrecords: StockRecordSchema,
-  images: z.array(ProductImageSchema).optional(),
-  fiche_techniques: z.array(FicheTechniqueSchema).optional(),
+  images: z.array(ProductImageSchema).default([]),
+  fiche_techniques: z.array(FicheTechniqueSchema).default([]),
 });
 export const ProductUpdateSchema = ProductCreateSchema.partial();
