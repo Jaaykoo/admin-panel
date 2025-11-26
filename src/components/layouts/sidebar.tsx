@@ -1,14 +1,12 @@
 'use client';
 
 import {
-  BarChart3,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   FileText,
   LayoutDashboard,
   Package,
-  Settings,
   ShoppingCart,
   Users,
 } from 'lucide-react';
@@ -44,6 +42,7 @@ const navigation: NavigationItem[] = [
     icon: ShoppingCart,
     children: [{ name: 'Commandes', href: '/sales/orders' }],
   },
+  { name: 'Devis', href: '/devis', icon: FileText },
   {
     name: 'Clients',
     href: '#',
@@ -53,22 +52,7 @@ const navigation: NavigationItem[] = [
       { name: 'Entreprises', href: '/customers/entreprises' },
     ],
   },
-  {
-    name: 'Rapports',
-    href: '/reports',
-    icon: BarChart3,
-    children: [
-      { name: 'Ventes', href: '/reports/sales' },
-      { name: 'Commandes Clients', href: '/reports/customer-orders' },
-      { name: 'Produits Consultés', href: '/reports/products-viewed' },
-      { name: 'Retours', href: '/reports/returns' },
-      { name: 'Expéditions', href: '/reports/shipping' },
-    ],
-  },
   { name: 'Utilisateurs', href: '/users', icon: Users },
-  { name: 'Devis', href: '/devis', icon: FileText },
-  { name: 'Factures', href: '/invoices', icon: FileText },
-  { name: 'Paramètres', href: '/settings', icon: Settings },
 ];
 
 export function Sidebar() {

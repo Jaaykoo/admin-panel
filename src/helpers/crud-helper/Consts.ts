@@ -14,6 +14,9 @@ const QUERIES = {
   PRODUCT_DETAIL: 'product-detail',
   ORDERS_LIST: 'orders-list',
   ORDER_DETAIL: 'order-detail',
+  QUOTES_LIST: 'quotes-list',
+  QUOTE_DETAIL: 'quote-detail',
+  QUOTES_STATS: 'quotes-stats',
 };
 
 export { QUERIES };

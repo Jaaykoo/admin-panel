@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/layouts/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getUserById } from '@/services/usersService';
+import { getUserById } from '@/services/UsersService';
 
 export default function ParticulierDetailPage() {
   const params = useParams();

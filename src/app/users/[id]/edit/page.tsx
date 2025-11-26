@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getUserById, updateUser } from '@/services/usersService';
+import { getUserById, updateUser } from '@/services/UsersService';
 
 // Schéma de validation pour la mise à jour
 const updateUserSchema = z.object({

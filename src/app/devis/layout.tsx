@@ -1,15 +1,15 @@
+'use client';
+
 import type React from 'react';
-import { Header } from '@/components/layouts/header';
-import { Sidebar } from '@/components/layouts/sidebar';
+import { QueryRequestProvider } from '@/hooks/_QueryRequestProvider';
+import { QuoteQueryResponseProvider } from '@/hooks/quotes/QuoteQueryResponseProvider';
 
 export default function DevisLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 pl-64">
-        <Header />
+    <QueryRequestProvider>
+      <QuoteQueryResponseProvider>
         {children}
-      </div>
-    </div>
+      </QuoteQueryResponseProvider>
+    </QueryRequestProvider>
   );
 }

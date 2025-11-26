@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createUser } from '@/services/usersService';
+import { createUser } from '@/services/UsersService';
 
 // Schéma de validation pour créer un utilisateur
 const createUserSchema = z.object({

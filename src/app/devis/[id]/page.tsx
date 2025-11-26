@@ -1,197 +1,289 @@
 'use client';
 
-import { ArrowLeft } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ArrowLeft, Download, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { use, useState } from 'react';
+import { toast } from 'sonner';
+import { BillingDetails } from '@/components/devis/invoice/BillingDetails';
+import { CompanyInfo } from '@/components/devis/invoice/CompanyInfo';
+import { FooterNote } from '@/components/devis/invoice/FooterNote';
+import { InvoiceDetails } from '@/components/devis/invoice/InvoiceDetails';
+import { InvoiceSummary } from '@/components/devis/invoice/InvoiceSummary';
+import { InvoiceTotals } from '@/components/devis/invoice/InvoiceTotals';
+import { ItemsTable } from '@/components/devis/invoice/ItemsTable';
+import { QuoteStatusBadge } from '@/components/devis/QuoteStatusBadge';
+import { Header } from '@/components/layouts/header';
+import { MainContent } from '@/components/layouts/main-content';
+import { Sidebar } from '@/components/layouts/sidebar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { COMPANY_INFO } from '@/config/company';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
+import { generateQuotePDF } from '@/lib/pdf/generateQuotePDF';
+import { deleteQuote, getQuoteById } from '@/services/QuoteService';
+import { isQuoteEditable } from '@/types/QuoteTypes';
 
-export default function DevisDetailPage() {
+export default function DevisDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const { data: quote, isLoading } = useQuery({
+    queryKey: [QUERIES.QUOTE_DETAIL, id],
+    queryFn: () => getQuoteById(Number(id)),
+    enabled: !!id,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteQuote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERIES.QUOTES_LIST] });
+      toast.success('Devis supprimé avec succès');
+      router.push('/devis');
+    },
+    onError: () => {
+      toast.error('Erreur lors de la suppression du devis');
+    },
+  });
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!quote) {
+      return;
+    }
+
+    // Vérifier que le statut permet le téléchargement
+    if (quote.status !== 'RESPONDED' && quote.status !== 'ACCEPTED') {
+      toast.error('Seuls les devis avec le statut "Accepté" ou "Répondu" peuvent être téléchargés en PDF');
+      return;
+    }
+
+    try {
+      await generateQuotePDF(quote);
+      toast.success('PDF téléchargé avec succès');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Erreur lors de la génération du PDF');
+    }
+  };
+
+  // Vérifier si le PDF peut être téléchargé
+  const canDownloadPDF = quote?.status === 'RESPONDED' || quote?.status === 'ACCEPTED';
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Sidebar />
+        <MainContent>
+          <Header />
+          <main className="pt-16">
+            <div className="p-8">
+              <Skeleton className="mb-6 h-10 w-48" />
+              <div className="mx-auto max-w-5xl space-y-4">
+                <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-96 w-full" />
+              </div>
+            </div>
+          </main>
+        </MainContent>
+      </div>
+    );
+  }
+
+  if (!quote) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Sidebar />
+        <MainContent>
+          <Header />
+          <main className="pt-16">
+            <div className="p-8">
+              <div className="mx-auto max-w-5xl text-center">
+                <h2 className="text-2xl font-bold text-gray-900">Devis introuvable</h2>
+                <p className="mt-2 text-gray-600">Le devis que vous recherchez n'existe pas.</p>
+                <Link href="/devis">
+                  <Button className="mt-4">Retour à la liste</Button>
+                </Link>
+              </div>
+            </div>
+          </main>
+        </MainContent>
+      </div>
+    );
+  }
+
+  const editable = isQuoteEditable(quote.status);
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="p-8">
-        <div className="mb-6 flex items-center gap-3">
-          <Link href="/devis">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Détail du Devis</h1>
-        </div>
+      <Sidebar />
+      <MainContent>
+        <Header />
+        <main className="pt-16">
+          <div className="p-8">
+            {/* Header Actions */}
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Link href="/devis">
+                  <Button variant="ghost" size="sm">
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <h1 className="text-2xl font-bold text-gray-900">Détail du Devis</h1>
+                <QuoteStatusBadge status={quote.status} />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={handleDownloadPDF}
+                  disabled={!canDownloadPDF}
+                  title={!canDownloadPDF ? 'Le téléchargement est disponible uniquement pour les devis acceptés ou répondus' : ''}
+                >
+                  <Download className="h-4 w-4" />
+                  Télécharger PDF
+                </Button>
+                {editable && (
+                  <Link href={`/devis/${id}/edit`}>
+                    <Button variant="outline" className="gap-2">
+                      <Edit className="h-4 w-4" />
+                      Modifier
+                    </Button>
+                  </Link>
+                )}
+                <Button
+                  variant="destructive"
+                  className="gap-2"
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Supprimer
+                </Button>
+              </div>
+            </div>
 
-        <div className="mx-auto max-w-4xl rounded-lg bg-white p-8 shadow-sm">
-          {/* Header */}
-          <div className="mb-8 grid grid-cols-3 gap-6 border-b border-gray-200 pb-6">
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-gray-900">Devis</h3>
-              <div className="space-y-2 text-sm">
-                <p className="text-gray-600">
-                  Numéro de devis :
-                  {' '}
-                  <span className="font-medium text-gray-900">DEV2025-001</span>
-                </p>
-                <p className="text-gray-600">
-                  Date de facture :
-                  {' '}
-                  <span className="font-medium text-gray-900">25 Jan 2025</span>
-                </p>
-                <p className="text-gray-600">
-                  Date d'échéance :
-                  {' '}
-                  <span className="font-medium text-gray-900">31 Jan 2025</span>
-                </p>
-                <div className="inline-block rounded bg-[#f1416c] px-2 py-1 text-xs text-white">
-                  Validité du devis : 30 jours
+            {/* Invoice Card */}
+            <Card className="mx-auto max-w-5xl">
+              <CardContent className="p-8">
+                {/* 1. HEADER - Company Info & Invoice Summary */}
+                <div className="mb-8 flex items-start justify-between border-b border-gray-200 pb-6">
+                  <CompanyInfo
+                    ownerName={COMPANY_INFO.ownerName}
+                    phone={COMPANY_INFO.phone}
+                    email={COMPANY_INFO.email}
+                  />
+
+                  <InvoiceSummary
+                    quoteNumber={quote.quote_number}
+                  />
                 </div>
-              </div>
-            </div>
 
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-gray-900">Destiné à</h3>
-              <div className="space-y-1 text-sm">
-                <p className="font-medium text-gray-900">Badette Dieng</p>
-                <p className="text-gray-600">Sally Carrefour, Mbour, Sénégal</p>
-                <p className="text-gray-600">Téléphone : +221 77 008 03 01</p>
-                <p className="text-gray-600">Email : info@example.com</p>
-              </div>
-            </div>
+                {/* 2. INFOS SECTION - 2 Columns */}
+                <div className="mb-8 grid grid-cols-2 gap-6">
+                  {/* Left: Invoice Details */}
+                  <InvoiceDetails
+                    creationDate={quote.responded_at}
+                    expirationDate={quote.expiration_date}
+                  />
 
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-gray-900">Adresse de l'émetteur</h3>
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200 text-gray-600">
-                <span className="text-lg font-bold">J</span>
-              </div>
-              <div className="space-y-1 text-sm">
-                <p className="font-medium text-gray-900">JABA</p>
-                <p className="text-gray-600">Sally Carrefour, Mbour, Sénégal</p>
-                <p className="text-gray-600">Phone : +221 33 688 23 21</p>
-                <p className="text-gray-600">Email : info@example.com</p>
-                <p className="text-gray-600">NINEA : 801122 2G3</p>
-              </div>
-            </div>
+                  {/* Right: Billing Details */}
+                  <BillingDetails
+                    title="Coordonnées du client"
+                    companyName={quote.customer.user_profile.company_name || 'Client inconnu'}
+                    address={quote.customer?.address}
+                    phone={quote.customer?.phone_number}
+                    email={quote.customer?.email}
+                    ninea={quote.customer?.user_profile.siret_number}
+                  />
+                </div>
+
+                {/* 3. ITEMS TABLE */}
+                <div className="mb-6">
+                  <ItemsTable
+                    items={quote.items.map((item) => {
+                      const unitPriceHT = Number.parseFloat(item.unit_price);
+                      const tva = Number.parseFloat(item.rate);
+                      const amountHT = unitPriceHT * item.quantity;
+                      const amountTTC = amountHT * (1 + tva / 100);
+
+                      return {
+                        id: item.id,
+                        designation: item.product_detail?.title,
+                        reference: item.product_detail.code,
+                        quantity: item.quantity,
+                        unit: '',
+                        unitPriceHT,
+                        tva,
+                        amountHT,
+                        amountTTC,
+                        image: item.image,
+                      };
+                    })}
+                  />
+                </div>
+
+                {/* 4. TOTALS - Right Aligned */}
+                <div className="mb-6">
+                  <InvoiceTotals
+                    totalTTC={quote.total}
+                  />
+                </div>
+
+                {/* 5. FOOTER */}
+                <FooterNote
+                  note={
+                    quote.expiration_date
+                      ? `Ce devis est valable jusqu'au ${formatDate(quote.expiration_date)}.`
+                      : undefined
+                  }
+                />
+              </CardContent>
+            </Card>
+
+            {/* Delete Dialog */}
+            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Êtes-vous sûr de vouloir supprimer ce devis ? Cette action est irréversible.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteMutation.mutate(Number(id))}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Supprimer
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
-
-          {/* Products Table */}
-          <div className="mb-6">
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">Articles de produits/services</h3>
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-300 bg-gray-100">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">#</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Produit/Service</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-700">Quantité</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-700">Unité</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-700">Taux</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-700">Remise</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-700">TVA</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-700">Montant</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-200">
-                  <td className="px-4 py-3 text-gray-700">1</td>
-                  <td className="px-4 py-3 text-gray-900">T-Shirt</td>
-                  <td className="px-4 py-3 text-center text-gray-700">2</td>
-                  <td className="px-4 py-3 text-center text-gray-700">Pcs</td>
-                  <td className="px-4 py-3 text-right text-gray-700">1 000 CFA</td>
-                  <td className="px-4 py-3 text-center text-gray-700">10%</td>
-                  <td className="px-4 py-3 text-center text-gray-700">000</td>
-                  <td className="px-4 py-3 text-right text-gray-900">000</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="px-4 py-3 text-gray-700">2</td>
-                  <td className="px-4 py-3 text-gray-900">Office Chair</td>
-                  <td className="px-4 py-3 text-center text-gray-700">1</td>
-                  <td className="px-4 py-3 text-center text-gray-700">Pcs</td>
-                  <td className="px-4 py-3 text-right text-gray-700">2 000 CFA</td>
-                  <td className="px-4 py-3 text-center text-gray-700">5%</td>
-                  <td className="px-4 py-3 text-center text-gray-700">000</td>
-                  <td className="px-4 py-3 text-right text-gray-900">000</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="px-4 py-3 text-gray-700">3</td>
-                  <td className="px-4 py-3 text-gray-900">LED Monitor</td>
-                  <td className="px-4 py-3 text-center text-gray-700">1</td>
-                  <td className="px-4 py-3 text-center text-gray-700">Pcs</td>
-                  <td className="px-4 py-3 text-right text-gray-700">5 000 CFA</td>
-                  <td className="px-4 py-3 text-center text-gray-700">2%</td>
-                  <td className="px-4 py-3 text-center text-gray-700">000</td>
-                  <td className="px-4 py-3 text-right text-gray-900">000</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="px-4 py-3 text-gray-700">4</td>
-                  <td className="px-4 py-3 text-gray-900">Smartphone</td>
-                  <td className="px-4 py-3 text-center text-gray-700">4</td>
-                  <td className="px-4 py-3 text-center text-gray-700">Pcs</td>
-                  <td className="px-4 py-3 text-right text-gray-700">2 000 CFA</td>
-                  <td className="px-4 py-3 text-center text-gray-700">10%</td>
-                  <td className="px-4 py-3 text-center text-gray-700">000</td>
-                  <td className="px-4 py-3 text-right text-gray-900">000</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Totals */}
-          <div className="mb-8 flex justify-end">
-            <div className="w-80 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Montant</span>
-                <span className="font-medium text-gray-900">00000</span>
-              </div>
-              <div className="flex justify-between text-[#f1416c]">
-                <span>Remise (25%)</span>
-                <span>-000</span>
-              </div>
-              <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold">
-                <span>Total (USD)</span>
-                <span>00000 CFA</span>
-              </div>
-              <div className="text-gray-600">
-                <p className="font-medium">Total en mots</p>
-                <p>Trente mille franc CFA</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Terms and Notes */}
-          <div className="mb-8 space-y-4 border-t border-gray-200 pt-6">
-            <div>
-              <h4 className="mb-2 text-sm font-semibold text-gray-900">Termes et conditions</h4>
-              <p className="text-sm text-gray-600">
-                Ce devis est valable jusqu'au [date]. Une fois accepté, une facture sera émise.
-              </p>
-            </div>
-            <div>
-              <h4 className="mb-2 text-sm font-semibold text-gray-900">Notes</h4>
-              <p className="text-sm text-gray-600">
-                Ce devis n'engage pas la facturation tant qu'il n'est pas été accepté
-              </p>
-            </div>
-          </div>
-
-          {/* Signature */}
-          <div className="mb-8 flex justify-end border-t border-gray-200 pt-6">
-            <div className="text-right">
-              <div className="font-script mb-2 text-2xl text-gray-700">Badette dieng</div>
-              <p className="text-sm font-medium text-gray-900">Badette dieng</p>
-              <p className="text-sm text-gray-600">CEO JABA</p>
-            </div>
-          </div>
-
-          {/* Footer Message */}
-          <div className="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
-            "Merci de confirmer votre accord par signature ou par email. Une facture définitive sera générée ensuite."
-          </div>
-
-          {/* Branding */}
-          <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
-            <p className="text-xs text-gray-500">Smart invoice</p>
-            <div className="flex items-center gap-1">
-              <span className="text-lg font-bold text-[#ff6b2c]">smart</span>
-              <span className="text-lg font-bold text-gray-900">invoice.</span>
-            </div>
-          </div>
-        </div>
-      </div>
+        </main>
+      </MainContent>
     </div>
   );
 }

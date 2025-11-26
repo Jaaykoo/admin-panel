@@ -107,7 +107,7 @@ export function OrderEditForm({ order }: OrderEditFormProps) {
             <FormField
               control={form.control}
               name="shipping_method"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Méthode de livraison</FormLabel>
                   <FormControl>
@@ -129,7 +129,7 @@ export function OrderEditForm({ order }: OrderEditFormProps) {
             <FormField
               control={form.control}
               name="shipping_code"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Code de livraison</FormLabel>
                   <FormControl>
