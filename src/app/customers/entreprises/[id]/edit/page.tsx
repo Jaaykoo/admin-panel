@@ -87,7 +87,7 @@ export default function EditEntreprisePage() {
   });
 
   const form = useForm<EntrepriseFormValues>({
-    resolver: zodResolver(entrepriseSchema),
+    resolver: zodResolver(entrepriseSchema) as any,
     defaultValues: {
       email: '',
       phone_number: '',
@@ -242,7 +242,7 @@ export default function EditEntreprisePage() {
                     <div className="grid gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
-                        name="user_profile.company_name"
+                        name="profile.company_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Nom de l'entreprise</FormLabel>
@@ -256,7 +256,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.service"
+                        name="profile.service"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Service</FormLabel>
@@ -270,7 +270,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.siret_number"
+                        name="profile.siret_number"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Numéro SIRET</FormLabel>
@@ -284,7 +284,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.tva_number"
+                        name="profile.tva_number"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Numéro TVA</FormLabel>
@@ -308,7 +308,7 @@ export default function EditEntreprisePage() {
                     <div className="grid gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
-                        name="user_profile.title"
+                        name="profile.title"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Civilité</FormLabel>
@@ -331,7 +331,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.fonction"
+                        name="profile.fonction"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Fonction</FormLabel>
@@ -345,7 +345,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.first_name"
+                        name="profile.first_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Prénom</FormLabel>
@@ -359,7 +359,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.last_name"
+                        name="profile.last_name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Nom</FormLabel>
@@ -414,7 +414,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.phone_standard"
+                        name="profile.phone_standard"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Téléphone standard</FormLabel>
@@ -431,7 +431,7 @@ export default function EditEntreprisePage() {
 
                       <FormField
                         control={form.control}
-                        name="user_profile.fax"
+                        name="profile.fax"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Fax</FormLabel>

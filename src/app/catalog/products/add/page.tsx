@@ -9,10 +9,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import slugify from 'react-slugify';
 import { toast } from 'sonner';
-import { Header } from '@/components/layouts/header';
-import { MainContent } from '@/components/layouts/main-content';
-import { Sidebar } from '@/components/layouts/sidebar';
-import { PageHeader } from '@/components/page-header';
+import { PageHeader } from '@/components/catalogue/PageHeader';
 import {
   CategoryMultiSelect,
   DynamicAttributesForm,
@@ -20,6 +17,9 @@ import {
   ImageListManager,
   ProductClassSelector,
 } from '@/components/catalogue/products';
+import { Header } from '@/components/layouts/header';
+import { MainContent } from '@/components/layouts/main-content';
+import { Sidebar } from '@/components/layouts/sidebar';
 import {
   Accordion,
   AccordionContent,
@@ -169,8 +169,23 @@ export default function AddProductPage() {
                         <p className="text-sm text-red-500">{errors.slug.message}</p>
                       )}
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="code">Réference</Label>
+                      <Input
+                        id="code"
+                        {...register('code')}
+                        placeholder="Réference détaillée du produit"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="upc">UPC</Label>
+                      <Input
+                        id="upc"
+                        {...register('upc')}
+                        placeholder="UPC du produit"
+                      />
+                    </div>
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
                     <Textarea
@@ -180,7 +195,6 @@ export default function AddProductPage() {
                       placeholder="Description détaillée du produit"
                     />
                   </div>
-
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="meta_title">Meta Title (SEO)</Label>

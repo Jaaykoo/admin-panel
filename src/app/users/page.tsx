@@ -17,8 +17,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { UsersTable } from '@/components/users/users-table';
+import { UsersKpiCards } from '@/components/users/UsersKpiCards';
 import { useQueryRequest } from '@/hooks/_QueryRequestProvider';
 import { useQueryResponseData, useQueryResponseLoading, useQueryResponsePagination } from '@/hooks/user/UserQueryResponseProvider';
+import { useUsersStatistics } from '@/hooks/useUsersStatistics';
 
 export default function UsersPage() {
   const router = useRouter();
@@ -30,12 +32,16 @@ export default function UsersPage() {
   const isLoading = useQueryResponseLoading();
   const paginationData = useQueryResponsePagination();
 
+  // KPIs en temps réel basés sur le filtre de rôle
+  const currentRole = roleFilter === 'all' ? undefined : (roleFilter as 'PARTICULIER' | 'ENTREPRISE');
+  const { statistics, isLoading: isLoadingStats } = useUsersStatistics(currentRole);
+
   // Initialiser sans filtre restrictif
   useEffect(() => {
     updateState({
       offset: 0,
     });
-  }, []);
+  }, [updateState]);
 
   // Recherche en temps réel avec debounce
   useEffect(() => {
@@ -44,7 +50,7 @@ export default function UsersPage() {
     }, 300); // Délai de 300ms
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery]);
+  }, [searchQuery, updateState]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,10 +140,20 @@ export default function UsersPage() {
                 className="bg-[#009ef7] shadow-md hover:bg-[#0077b6]"
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Nouvel utilisateur
+                Créer un utilisateur
               </Button>
             </div>
-            {/* Filters and Search */}
+
+            {/* KPIs en temps réel */}
+            <UsersKpiCards
+              total={statistics.total}
+              active={statistics.active}
+              verified={statistics.verified}
+              inactive={statistics.inactive}
+              isLoading={isLoadingStats}
+            />
+
+            {/* Filtres et recherche */}
             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
               <div className="flex items-center gap-4">
                 <form onSubmit={handleSearch} className="flex-1">

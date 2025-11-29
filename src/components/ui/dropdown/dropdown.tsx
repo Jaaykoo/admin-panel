@@ -2,13 +2,13 @@
 
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import {
-  CheckIcon,
-  ChevronRightIcon,
-  DotFilledIcon,
-} from '@radix-ui/react-icons';
+  Check,
+  ChevronRight,
+  Circle,
+} from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -35,7 +35,7 @@ const DropdownMenuSubTrigger = ({ ref, className, inset, children, ...props }: R
     {...props}
   >
     {children}
-    <ChevronRightIcon className="ml-auto size-4" />
+    <ChevronRight className="ml-auto size-4" />
   </DropdownMenuPrimitive.SubTrigger>
 );
 DropdownMenuSubTrigger.displayName
@@ -97,7 +97,7 @@ const DropdownMenuCheckboxItem = ({ ref, className, children, checked, ...props 
   >
     <span className="absolute left-2 flex size-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <CheckIcon className="size-4" />
+        <Check className="size-4" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -117,7 +117,7 @@ const DropdownMenuRadioItem = ({ ref, className, children, ...props }: React.Com
   >
     <span className="absolute left-2 flex size-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <DotFilledIcon className="size-4 fill-current" />
+        <Circle className="size-2 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}

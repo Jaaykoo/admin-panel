@@ -1,10 +1,12 @@
 import type { TablePaginationProps } from './pagination';
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-expect-error
 import type { BaseEntity } from '@/types/api';
 
 import { ArchiveX } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { TablePagination } from './pagination';
 
 const TableElement = ({ ref, className, ...props }: React.HTMLAttributes<HTMLTableElement> & { ref?: React.RefObject<HTMLTableElement | null> }) => (

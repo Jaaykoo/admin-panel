@@ -13,7 +13,8 @@ export const logout = (): Promise<void> => {
 };
 
 export const getUser = (): Promise<User> => {
-  return api.get<User>('/users/me/');
+  return api.get<User>('/users/me/')
+    .then();
 };
 
 export function resetPassword(email: string): Promise<void> {

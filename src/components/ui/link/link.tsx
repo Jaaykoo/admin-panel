@@ -1,7 +1,7 @@
 import type { LinkProps as NextLinkProps } from 'next/link';
 import NextLink from 'next/link';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 export type LinkProps = {
   className?: string;

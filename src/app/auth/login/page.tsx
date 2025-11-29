@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { QUERIES } from '@/helpers/crud-helper/Consts';
-import { get400ErrorMessage } from '@/helpers/ErrorMessage';
+import { get400ErrorMessage } from '@/helpers/ErrorMessageHelper';
 import { login } from '@/services/AuthService';
 
 const loginInputSchema = z.object({
@@ -38,7 +38,7 @@ export default function LoginPage() {
       onSuccess: () => {
         // Handle successful login
         toast.success('Connexion réussie !');
-        router.push('/dashboard');
+        router.push('/');
       },
       onError: (error) => {
         // Handle login error

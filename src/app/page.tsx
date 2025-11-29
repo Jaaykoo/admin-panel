@@ -1,181 +1,239 @@
-import type { DiscountedSalesProps } from '@/components/dashboard/DiscountedSalesCard';
 import type { KpiBarCardProps } from '@/components/dashboard/KpiBarCard';
-import type { KpiPieCardProps } from '@/components/dashboard/KpiPieCard';
-import type { MarketingCardProps } from '@/components/dashboard/MarketingCard';
-import type { NewCustomersCardProps } from '@/components/dashboard/NewCustomersCard';
+import type { KpiPieCardProps, KpiPieCategory } from '@/components/dashboard/KpiPieCard';
+import type { CustomerRole, NewCustomersCardProps } from '@/components/dashboard/NewCustomersCard';
 import type { OrdersThisMonthProps } from '@/components/dashboard/OrdersThisMonthCard';
-import type { ProductDeliveryProps } from '@/components/dashboard/ProductDeliveryCard';
-import type { ProductOrdersTableProps } from '@/components/dashboard/ProductOrdersTable';
-import type { SalesLineChartProps } from '@/components/dashboard/SalesLineChartCard';
 import { PieChartIcon } from 'lucide-react';
 import { KpiBarCard } from '@/components/dashboard/KpiBarCard';
 import { KpiPieCard } from '@/components/dashboard/KpiPieCard';
 import { NewCustomersCard } from '@/components/dashboard/NewCustomersCard';
 import { OrdersThisMonthCard } from '@/components/dashboard/OrdersThisMonthCard';
-import { ProductDeliveryCard } from '@/components/dashboard/ProductDeliveryCard';
-import { ProductOrdersTable } from '@/components/dashboard/ProductOrdersTable';
-import { SalesLineChartCard } from '@/components/dashboard/SalesLineChartCard';
+import { ProductDeliveryCardWrapper } from '@/components/dashboard/ProductDeliveryCardWrapper';
+import { RecentOrdersCard } from '@/components/dashboard/RecentOrdersCard';
+import { SalesLineChartWrapper } from '@/components/dashboard/SalesLineChartWrapper';
 import { Header } from '@/components/layouts/header';
 import { MainContent } from '@/components/layouts/main-content';
 import { Sidebar } from '@/components/layouts/sidebar';
-import { RecentOrders } from '@/components/recent-orders';
+import { getCustomersNew, getKpiBar, getKpiDonut, getOrdersMonth, getProductDeliveries, getRecentOrders, getSalesLineChart } from '@/services/AnalyticService';
 
-export default function DashboardPage() {
-  // Données pour KpiPieCard - Ventes par catégorie
-  const salesByCategoryData: KpiPieCardProps = {
-    title: 'Ventes par catégorie',
-    mainValue: 45231,
-    variation: 12.5,
-    categories: [
-      { label: 'Électronique', value: 18500, color: '#009ef7' },
-      { label: 'Vêtements', value: 12300, color: '#50cd89' },
-      { label: 'Alimentation', value: 8900, color: '#ffc700' },
-      { label: 'Maison', value: 5531, color: '#7239ea' },
-    ],
+// Palette de couleurs pour les catégories
+const CATEGORY_COLORS = ['#009ef7', '#50cd89', '#ffc700', '#7239ea', '#f1416c'];
+
+export default async function DashboardPage() {
+  // Récupération des données depuis l'API pour la ligne 1 avec gestion d'erreur
+  let salesByCategoryData: KpiPieCardProps;
+  let monthlyRevenueData: KpiBarCardProps;
+
+  try {
+    const [salesByCategoryResponse, weeklyRevenueResponse] = await Promise.all([
+      getKpiDonut(),
+      getKpiBar(),
+    ]);
+
+    // Transformation des données pour KpiPieCard
+    salesByCategoryData = {
+      title: salesByCategoryResponse.title,
+      mainValue: salesByCategoryResponse.mainValue,
+      variation: salesByCategoryResponse.variation,
+      categories: salesByCategoryResponse.categories.map((cat, index): KpiPieCategory => ({
+        label: cat.label,
+        value: cat.value,
+        color: CATEGORY_COLORS[index % CATEGORY_COLORS.length] || '#009ef7',
+      })),
+    };
+
+    // Transformation des données pour KpiBarCard
+    monthlyRevenueData = {
+      title: weeklyRevenueResponse.title,
+      mainValue: weeklyRevenueResponse.mainValue,
+      variation: weeklyRevenueResponse.variation,
+      bars: weeklyRevenueResponse.bars,
+      labels: weeklyRevenueResponse.labels,
+      barColor: '#009ef7',
+    };
+  } catch (error: any) {
+    console.error('Erreur lors de la récupération des données analytics:', error);
+    console.error('Détails erreur:', {
+      status: error?.response?.status,
+      message: error?.message,
+      url: error?.config?.url,
+    });
+
+    // Données par défaut en cas d'erreur
+    salesByCategoryData = {
+      title: 'Ventes par catégorie (Données non disponibles)',
+      mainValue: 0,
+      variation: 0,
+      categories: [
+        { label: 'Aucune donnée disponible', value: 1, color: '#009ef7' },
+      ],
+    };
+
+    monthlyRevenueData = {
+      title: 'Revenus hebdomadaires (Données non disponibles)',
+      mainValue: 0,
+      variation: 0,
+      bars: [0, 0, 0, 0, 0, 0, 0],
+      labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+      barColor: '#009ef7',
+    };
+  }
+
+  // LIGNE 2 - KPI Secondaires - Récupération depuis l'API
+  let ordersThisMonthData: OrdersThisMonthProps;
+  let newCustomersData: NewCustomersCardProps;
+
+  try {
+    const [ordersMonthResponse, customersNewResponse] = await Promise.all([
+      getOrdersMonth(),
+      getCustomersNew(),
+    ]);
+
+    // Transformation des données pour OrdersThisMonthCard
+    ordersThisMonthData = {
+      title: ordersMonthResponse.title,
+      value: ordersMonthResponse.value,
+      variation: ordersMonthResponse.variation,
+      goal: ordersMonthResponse.goal,
+    };
+
+    // Transformation des données pour NewCustomersCard
+    newCustomersData = {
+      title: customersNewResponse.title,
+      value: customersNewResponse.value,
+      roles: customersNewResponse.roles.map((role): CustomerRole => ({
+        label: role.label,
+        value: role.value,
+      })),
+    };
+  } catch (error: any) {
+    console.error('Erreur lors de la récupération des données ligne 2:', error);
+    console.error('Détails erreur:', {
+      status: error?.response?.status,
+      message: error?.message,
+      url: error?.config?.url,
+    });
+
+    // Données par défaut en cas d'erreur
+    ordersThisMonthData = {
+      title: 'Commandes ce mois (Données non disponibles)',
+      value: 0,
+      variation: 0,
+      goal: {
+        current: 0,
+        target: 100,
+      },
+    };
+
+    newCustomersData = {
+      title: 'Nouveaux clients (Données non disponibles)',
+      value: 0,
+      roles: [
+        { label: 'Particuliers', value: 0 },
+        { label: 'Entreprises', value: 0 },
+      ],
+    };
+  }
+
+  // LIGNE 3 - Grand Chart - Récupération depuis l'API
+  let salesLineChartData: {
+    title: string;
+    value: number;
+    objectiveMessage: string;
+    labels: string[];
+    dataset: number[];
   };
 
-  // Données pour KpiBarCard - Revenus mensuels
-  const monthlyRevenueData: KpiBarCardProps = {
-    title: 'Revenus mensuels',
-    mainValue: 128450,
-    variation: 8.3,
-    bars: [45000, 52000, 48000, 61000, 55000, 70000, 65000, 72000, 68000, 75000],
-    barColor: '#009ef7',
+  try {
+    const salesLineChartResponse = await getSalesLineChart(28); // Par défaut 28 jours
+
+    salesLineChartData = {
+      title: salesLineChartResponse.title,
+      value: salesLineChartResponse.value,
+      objectiveMessage: salesLineChartResponse.objectiveMessage,
+      labels: salesLineChartResponse.labels,
+      dataset: salesLineChartResponse.dataset,
+    };
+  } catch (error: any) {
+    console.error('Erreur lors de la récupération des données ligne 3:', error);
+    console.error('Détails erreur:', {
+      status: error?.response?.status,
+      message: error?.message,
+      url: error?.config?.url,
+    });
+
+    // Données par défaut en cas d'erreur
+    salesLineChartData = {
+      title: 'Sales This Month (Données non disponibles)',
+      value: 0,
+      objectiveMessage: 'Target: $0',
+      labels: [],
+      dataset: [],
+    };
+  }
+
+  // LIGNE 4 - Recent Orders - Récupération depuis l'API
+  let recentOrdersData: {
+    orders: Array<{
+      orderNumber: string;
+      customerName: string;
+      status: string;
+      totalPrice: number;
+      orderDate: string;
+    }>;
   };
 
-  // LIGNE 2 - KPI Secondaires
-  const ordersThisMonthData: OrdersThisMonthProps = {
-    title: 'Commandes ce mois',
-    value: 847,
-    variation: 15.3,
-    goal: {
-      current: 847,
-      target: 1000,
-    },
+  try {
+    const recentOrdersResponse = await getRecentOrders(10); // Par défaut 10 commandes
+
+    recentOrdersData = {
+      orders: recentOrdersResponse.orders,
+    };
+  } catch (error: any) {
+    console.error('Erreur lors de la récupération des données ligne 4:', error);
+    console.error('Détails erreur:', {
+      status: error?.response?.status,
+      message: error?.message,
+      url: error?.config?.url,
+    });
+
+    // Données par défaut en cas d'erreur
+    recentOrdersData = {
+      orders: [],
+    };
+  }
+
+  // LIGNE 6 - Product Delivery - Récupération depuis l'API
+  let productDeliveryData: {
+    itemsShipped: number;
+    deliveries: Array<{
+      productName: string;
+      recipientName: string;
+      deliveryDate: string;
+    }>;
   };
 
-  const newCustomersData: NewCustomersCardProps = {
-    title: 'Nouveaux clients',
-    value: 156,
-    avatars: [
-      'https://ui-avatars.com/api/?name=John+Doe&background=009ef7&color=fff',
-      'https://ui-avatars.com/api/?name=Jane+Smith&background=50cd89&color=fff',
-      'https://ui-avatars.com/api/?name=Bob+Johnson&background=ffc700&color=fff',
-      'https://ui-avatars.com/api/?name=Alice+Williams&background=7239ea&color=fff',
-      'https://ui-avatars.com/api/?name=Charlie+Brown&background=f1416c&color=fff',
-      'https://ui-avatars.com/api/?name=Emma+Davis&background=009ef7&color=fff',
-      'https://ui-avatars.com/api/?name=Michael+Wilson&background=50cd89&color=fff',
-    ],
-  };
+  try {
+    const productDeliveryResponse = await getProductDeliveries(10); // Par défaut 10 livraisons
 
-  // LIGNE 3 - Grand Chart
-  const salesLineChartData: SalesLineChartProps = {
-    title: 'Ventes ce mois',
-    value: 3250000,
-    objectiveMessage: 'Objectif: 4 000 000 FCFA pour ce mois',
-    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct'],
-    dataset: [120000, 150000, 180000, 200000, 250000, 280000, 300000, 320000, 350000, 380000],
-  };
+    productDeliveryData = {
+      itemsShipped: productDeliveryResponse.itemsShipped,
+      deliveries: productDeliveryResponse.deliveries,
+    };
+  } catch (error: any) {
+    console.error('Erreur lors de la récupération des données ligne 6:', error);
+    console.error('Détails erreur:', {
+      status: error?.response?.status,
+      message: error?.message,
+      url: error?.config?.url,
+    });
 
-  // LIGNE 4 - Discount Sales
-  const discountedSalesData: DiscountedSalesProps = {
-    title: 'Ventes avec réduction',
-    value: 458900,
-    variation: 18.7,
-    labels: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
-    dataset: [45000, 52000, 48000, 65000, 58000, 72000],
-  };
+    // Données par défaut en cas d'erreur
+    productDeliveryData = {
+      itemsShipped: 0,
+      deliveries: [],
+    };
+  }
 
-  // LIGNE 5 - Marketing + Product Orders
-  const marketingCardData: MarketingCardProps = {
-    title: 'Nouvelle application marketing',
-    description: 'Découvrez notre nouvelle application pour booster vos ventes et améliorer votre marketing digital.',
-    image: 'https://ui-avatars.com/api/?name=App&size=128&background=009ef7&color=fff',
-    buttons: [
-      { label: 'Voir l\'app', action: 'view-app', variant: 'default' },
-      { label: 'Nouveau produit', action: 'new-product', variant: 'outline' },
-    ],
-  };
-
-  const productOrdersData: ProductOrdersTableProps = {
-    filters: {
-      categories: ['Électronique', 'Vêtements', 'Alimentation', 'Maison'],
-      statuses: ['completed', 'pending', 'cancelled', 'processing'],
-    },
-    orders: [
-      {
-        orderId: 'ORD-2025-001',
-        createdAt: '26/11/2025',
-        customer: 'Jean Dupont',
-        total: 125000,
-        profit: 35000,
-        status: 'completed',
-      },
-      {
-        orderId: 'ORD-2025-002',
-        createdAt: '26/11/2025',
-        customer: 'Marie Martin',
-        total: 89000,
-        profit: 22000,
-        status: 'processing',
-      },
-      {
-        orderId: 'ORD-2025-003',
-        createdAt: '25/11/2025',
-        customer: 'Pierre Dubois',
-        total: 156000,
-        profit: 45000,
-        status: 'pending',
-      },
-      {
-        orderId: 'ORD-2025-004',
-        createdAt: '25/11/2025',
-        customer: 'Sophie Laurent',
-        total: 234000,
-        profit: 67000,
-        status: 'completed',
-      },
-      {
-        orderId: 'ORD-2025-005',
-        createdAt: '24/11/2025',
-        customer: 'Luc Bernard',
-        total: 45000,
-        profit: 12000,
-        status: 'cancelled',
-      },
-    ],
-  };
-
-  // LIGNE 6 - Product Delivery
-  const productDeliveryData: ProductDeliveryProps = {
-    itemsShipped: 234,
-    deliveries: [
-      {
-        item: 'HP ProBook 450 G9 - Lot de 5 unités',
-        recipient: 'Entreprise Tech Solutions',
-        status: 'delivered',
-        date: '26/11/2025 10:30',
-      },
-      {
-        item: 'Samsung Galaxy S23 - Lot de 10 unités',
-        recipient: 'Store Mobile Plus',
-        status: 'shipped',
-        date: '26/11/2025 09:15',
-      },
-      {
-        item: 'MacBook Air M2 - 3 unités',
-        recipient: 'Digital Agency Co.',
-        status: 'processing',
-        date: '26/11/2025 08:00',
-      },
-      {
-        item: 'Dell XPS 15 - 2 unités',
-        recipient: 'Startup Innovation',
-        status: 'pending',
-        date: '25/11/2025 16:45',
-      },
-    ],
-  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -185,7 +243,7 @@ export default function DashboardPage() {
         <main className="pt-16">
           <div className="p-6">
             {/* Page Header */}
-            <div className="flex items-center gap-3 mb-8">
+            <div className="mb-8 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#009ef7] to-[#0077b6] text-white shadow-lg">
                 <PieChartIcon className="h-6 w-6" />
               </div>
@@ -209,22 +267,20 @@ export default function DashboardPage() {
 
             {/* LIGNE 3 - Grand Chart des Ventes */}
             <div className="mb-6">
-              <SalesLineChartCard {...salesLineChartData} />
+              <SalesLineChartWrapper initialData={salesLineChartData} />
             </div>
 
-            {/* LIGNE 4 - Recent Orders + Discounted Sales */}
+            {/* LIGNE 4 - Recent Orders */}
             <div className="mb-6">
-              <RecentOrders />
-            </div>
-
-            {/* LIGNE 5 - Marketing Card + Product Orders Table */}
-            <div className="mb-6 ">
-              <ProductOrdersTable {...productOrdersData} />
+              <RecentOrdersCard orders={recentOrdersData.orders} />
             </div>
 
             {/* LIGNE 6 - Product Delivery Timeline */}
             <div className="mb-6">
-              <ProductDeliveryCard {...productDeliveryData} />
+              <ProductDeliveryCardWrapper
+                itemsShipped={productDeliveryData.itemsShipped}
+                deliveries={productDeliveryData.deliveries}
+              />
             </div>
           </div>
         </main>

@@ -1,7 +1,7 @@
 'use client';
 
-import { TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCompactNumber } from '@/utils/formatNumber';
 
 export type KpiPieCategory = {
   label: string;
@@ -16,25 +16,30 @@ export type KpiPieCardProps = {
   categories: KpiPieCategory[];
 };
 
-export function KpiPieCard({ title, mainValue, variation, categories }: KpiPieCardProps) {
-  const isPositive = variation >= 0;
+export function KpiPieCard({ title, categories }: KpiPieCardProps) {
   const total = categories.reduce((sum, cat) => sum + cat.value, 0);
 
   // Calculer les pourcentages et les angles pour le donut chart
-  let cumulativeAngle = 0;
-  const segments = categories.map((category) => {
+  const segments = categories.reduce<Array<{
+    label: string;
+    value: number;
+    color: string;
+    percentage: number;
+    startAngle: number;
+    angle: number;
+  }>>((acc, category) => {
     const percentage = (category.value / total) * 100;
     const angle = (category.value / total) * 360;
-    const startAngle = cumulativeAngle;
-    cumulativeAngle += angle;
-
-    return {
+    const startAngle = acc.length > 0 ? acc[acc.length - 1]!.startAngle + acc[acc.length - 1]!.angle : 0;
+    acc.push({
       ...category,
       percentage,
       startAngle,
       angle,
-    };
-  });
+    });
+
+    return acc;
+  }, []);
 
   // Créer le path SVG pour chaque segment
   const createArc = (startAngle: number, angle: number) => {
@@ -57,25 +62,6 @@ export function KpiPieCard({ title, mainValue, variation, categories }: KpiPieCa
       </CardHeader>
       <CardContent>
         <div className="flex items-start justify-between">
-          {/* Valeur principale et variation */}
-          <div className="flex-1">
-            <div className="mb-2 text-3xl font-bold text-gray-900">
-              {mainValue.toLocaleString()}
-            </div>
-            <div
-              className={`flex items-center gap-1 text-sm font-medium ${
-                isPositive ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {isPositive ? (
-                <TrendingUp className="h-4 w-4" />
-              ) : (
-                <TrendingDown className="h-4 w-4" />
-              )}
-              <span>{Math.abs(variation).toFixed(1)}%</span>
-            </div>
-          </div>
-
           {/* Mini Donut Chart */}
           <div className="flex h-24 w-24 items-center justify-center">
             <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90 transform">
@@ -108,9 +94,13 @@ export function KpiPieCard({ title, mainValue, variation, categories }: KpiPieCa
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-gray-900">
-                    {category.value.toLocaleString()}
+                    {formatCompactNumber(category.value)}
                   </span>
-                  <span className="text-gray-400">({percentage}%)</span>
+                  <span className="text-gray-400">
+                    (
+                    {percentage}
+                    %)
+                  </span>
                 </div>
               </div>
             );
@@ -120,4 +110,3 @@ export function KpiPieCard({ title, mainValue, variation, categories }: KpiPieCa
     </Card>
   );
 }
-

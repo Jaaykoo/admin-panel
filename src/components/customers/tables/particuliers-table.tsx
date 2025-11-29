@@ -161,8 +161,12 @@ export function IndividualsTable({ users }: IndividualsTableProps) {
                 : (
                     users.map((user) => {
                       const statusConfig = getStatusConfig(user.is_active);
-                      const fullName = `${user.user_profile.first_name} ${user.user_profile.last_name}`;
-                      const initials = `${user.user_profile.first_name[0]}${user.user_profile.last_name[0]}`.toUpperCase();
+                      const firstName = user?.user_profile?.first_name || '';
+                      const lastName = user?.user_profile?.last_name || '';
+                      const fullName = firstName && lastName ? `${firstName} ${lastName}` : 'N/A';
+                      const initials = user?.user_profile?.first_name && user?.user_profile?.last_name
+                        ? `${user.user_profile.first_name[0]}${user.user_profile.last_name[0]}`.toUpperCase()
+                        : '??';
 
                       return (
                         <tr key={user.id} className="transition-colors hover:bg-gray-50">
@@ -184,7 +188,7 @@ export function IndividualsTable({ users }: IndividualsTableProps) {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              {user.user_profile.avatar
+                              {user?.user_profile?.avatar
                                 ? (
                                     <img
                                       src={user.user_profile.avatar}
@@ -200,7 +204,7 @@ export function IndividualsTable({ users }: IndividualsTableProps) {
                               <div>
                                 <div className="font-medium text-gray-900">{fullName}</div>
                                 <div className="text-xs text-gray-500">
-                                  {user.user_profile.title}
+                                  {user?.user_profile?.title || 'N/A'}
                                 </div>
                               </div>
                             </div>

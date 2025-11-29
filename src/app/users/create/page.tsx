@@ -99,7 +99,6 @@ export default function CreateUserPage() {
     createMutation.mutate(data);
   };
 
-  const selectedRole = form.watch('role');
   const getRoleColor = () => '#009ef7';
 
   return (
@@ -124,7 +123,7 @@ export default function CreateUserPage() {
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg"
                     style={{
-                      background: `linear-gradient(135deg, ${getRoleColor(selectedRole)}, ${getRoleColor(selectedRole)}dd)`,
+                      background: `linear-gradient(135deg, ${getRoleColor()}, ${getRoleColor()}dd)`,
                     }}
                   >
                     <Shield className="h-6 w-6" />
@@ -349,7 +348,7 @@ export default function CreateUserPage() {
                   <Button
                     type="submit"
                     disabled={createMutation.isPending}
-                    style={{ backgroundColor: getRoleColor(selectedRole) }}
+                    style={{ backgroundColor: getRoleColor() }}
                     className="hover:opacity-90"
                   >
                     {createMutation.isPending

@@ -119,7 +119,6 @@ export function ProductTable() {
             <TableRow>
               <TableHead>Image</TableHead>
               <TableHead>Titre</TableHead>
-              <TableHead>upc</TableHead>
               <TableHead>reférence</TableHead>
               <TableHead>Prix</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -159,7 +158,6 @@ export function ProductTable() {
                         </div>
                       </TableCell>
                       <TableCell className="font-medium">{product.title}</TableCell>
-                      <TableCell className="text-sm text-gray-600">{product.upc ? product.upc : '-'}</TableCell>
                       <TableCell className="text-sm text-gray-600">{product.code ? product.code : '-'}</TableCell>
                       <TableCell className="font-semibold text-[#009ef7]">
                         {product.price}

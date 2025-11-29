@@ -64,4 +64,3 @@ export function ProductDeliveryCard({ itemsShipped, deliveries }: ProductDeliver
     </Card>
   );
 }
-

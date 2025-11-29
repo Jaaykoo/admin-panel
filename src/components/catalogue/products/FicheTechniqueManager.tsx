@@ -3,6 +3,12 @@
 import type { FicheTechnique } from '@/types/ProductTypes';
 import { Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,23 +20,17 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 
-interface FicheTechniqueManagerProps {
+type FicheTechniqueManagerProps = {
   value: FicheTechnique[];
   onChange: (fiches: FicheTechnique[]) => void;
   disabled?: boolean;
-}
+};
 
-interface ContentItem {
+type ContentItem = {
   name: string;
   value: string;
-}
+};
 
 export function FicheTechniqueManager({ value, onChange, disabled }: FicheTechniqueManagerProps) {
   const [open, setOpen] = useState(false);
@@ -45,7 +45,7 @@ export function FicheTechniqueManager({ value, onChange, disabled }: FicheTechni
       // Convertir l'objet content en array
       const contentArray = Array.isArray(value[index].content)
         ? value[index].content
-        : Object.entries(value[index].content).map(([name, val]) => ({ name, value: val }));
+        : Object.entries(value[index].content).map(([name, val]) => ({ name, value: val as string }));
       setContentItems(contentArray);
     } else {
       setEditIndex(null);
@@ -65,16 +65,22 @@ export function FicheTechniqueManager({ value, onChange, disabled }: FicheTechni
 
   const handleContentItemChange = (index: number, field: 'name' | 'value', newValue: string) => {
     const newItems = [...contentItems];
-    newItems[index][field] = newValue;
-    setContentItems(newItems);
+    if (newItems[index]) {
+      newItems[index][field] = newValue;
+      setContentItems(newItems);
+    }
   };
 
   const handleSave = () => {
-    if (!titre.trim()) return;
+    if (!titre.trim()) {
+      return;
+    }
 
     const validContentItems = contentItems.filter(item => item.name.trim() && item.value.trim());
 
-    if (validContentItems.length === 0) return;
+    if (validContentItems.length === 0) {
+      return;
+    }
 
     const newFiche: FicheTechnique = {
       titre: titre.trim(),
@@ -115,73 +121,80 @@ export function FicheTechniqueManager({ value, onChange, disabled }: FicheTechni
         </Button>
       </div>
 
-      {value.length === 0 ? (
-        <div className="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center">
-          <p className="text-sm text-gray-500">
-            Aucune fiche technique ajoutée. Cliquez sur "Ajouter une fiche" pour commencer.
-          </p>
-        </div>
-      ) : (
-        <Accordion type="single" collapsible className="w-full">
-          {value.map((fiche, index) => {
-            const contentArray = Array.isArray(fiche.content)
-              ? fiche.content
-              : Object.entries(fiche.content).map(([name, val]) => ({ name, value: val }));
+      {value.length === 0
+        ? (
+            <div className="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center">
+              <p className="text-sm text-gray-500">
+                Aucune fiche technique ajoutée. Cliquez sur "Ajouter une fiche" pour commencer.
+              </p>
+            </div>
+          )
+        : (
+            <Accordion type="single" collapsible className="w-full">
+              {value.map((fiche, index) => {
+                const contentArray = Array.isArray(fiche.content)
+                  ? fiche.content
+                  : Object.entries(fiche.content).map(([name, val]) => ({ name, value: val as string }));
 
-            return (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex w-full items-center justify-between pr-4">
-                    <span className="text-sm font-medium">{fiche.titre}</span>
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOpenDialog(index);
-                        }}
-                        disabled={disabled}
-                      >
-                        Modifier
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveFiche(index);
-                        }}
-                        disabled={disabled}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2 pl-4">
-                    {contentArray.map((item, i) => (
-                      <div key={i} className="flex justify-between text-sm">
-                        <span className="font-medium text-gray-700">{item.name}:</span>
-                        <span className="text-gray-600">{item.value}</span>
+                return (
+                  <AccordionItem key={index} value={`item-${index}`}>
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="flex w-full items-center justify-between pr-4">
+                        <span className="text-sm font-medium">{fiche.titre}</span>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenDialog(index);
+                            }}
+                            disabled={disabled}
+                          >
+                            Modifier
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="destructive"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveFiche(index);
+                            }}
+                            disabled={disabled}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            );
-          })}
-        </Accordion>
-      )}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 pl-4">
+                        {contentArray.map((item, i) => (
+                          <div key={i} className="flex justify-between text-sm">
+                            <span className="font-medium text-gray-700">
+                              {item.name}
+                              :
+                            </span>
+                            <span className="text-gray-600">{item.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              {editIndex !== null ? 'Modifier' : 'Ajouter'} une fiche technique
+              {editIndex !== null ? 'Modifier' : 'Ajouter'}
+              {' '}
+              une fiche technique
             </DialogTitle>
             <DialogDescription>
               Créez une fiche technique avec un titre et des caractéristiques
@@ -273,4 +286,3 @@ export function FicheTechniqueManager({ value, onChange, disabled }: FicheTechni
     </div>
   );
 }
-

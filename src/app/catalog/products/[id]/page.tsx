@@ -5,10 +5,10 @@ import { ArrowLeft, Edit, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
+import { PageHeader } from '@/components/catalogue/PageHeader';
 import { Header } from '@/components/layouts/header';
 import { MainContent } from '@/components/layouts/main-content';
 import { Sidebar } from '@/components/layouts/sidebar';
-import { PageHeader } from '@/components/page-header';
 import {
   Accordion,
   AccordionContent,
@@ -132,6 +132,14 @@ export default function ProductDetailPage({
                     <div>
                       <p className="text-sm font-medium text-gray-500">Slug</p>
                       <p className="mt-1 font-mono text-base text-sm">{product.slug}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Réference</p>
+                      <p className="mt-1 text-base">{product.code}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">UPC</p>
+                      <p className="mt-1 font-mono text-base text-sm">{product.upc}</p>
                     </div>
                   </div>
 

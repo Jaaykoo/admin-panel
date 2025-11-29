@@ -1,7 +1,8 @@
 'use client';
 
-import { Building2, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
 import { CustomerPagination } from '@/components/customers/tables/customer-pagination';
 import { EntreprisesTable } from '@/components/customers/tables/entreprises-table';
 import { Header } from '@/components/layouts/header';
@@ -16,8 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { UsersKpiCards } from '@/components/users/UsersKpiCards';
 import { useQueryRequest } from '@/hooks/_QueryRequestProvider';
 import { useQueryResponseData, useQueryResponseLoading, useQueryResponsePagination } from '@/hooks/user/UserQueryResponseProvider';
+import { useUsersStatistics } from '@/hooks/useUsersStatistics';
 
 export default function EntreprisesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,13 +30,16 @@ export default function EntreprisesPage() {
   const isLoading = useQueryResponseLoading();
   const paginationData = useQueryResponsePagination();
 
+  // KPIs en temps réel pour les ENTREPRISES uniquement
+  const { statistics, isLoading: isLoadingStats } = useUsersStatistics('ENTREPRISE');
+
   // Initialiser le filtre par rôle ENTREPRISE au montage du composant
   useEffect(() => {
     updateState({
       filter: { role: 'ENTREPRISE' },
       offset: 0,
     });
-  }, []);
+  }, [updateState]);
 
   // Recherche en temps réel avec debounce
   useEffect(() => {
@@ -42,7 +48,7 @@ export default function EntreprisesPage() {
     }, 300); // Délai de 300ms
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery]);
+  }, [searchQuery, updateState]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,14 +98,6 @@ export default function EntreprisesPage() {
   const totalPages = Math.ceil((paginationData.count || 0) / (state.limit || 10));
   const currentPage = Math.floor((state.offset || 0) / (state.limit || 10)) + 1;
 
-  // Calculer les statistiques à partir des données filtrées
-  const stats = {
-    total: paginationData.count || 0,
-    active: users.filter(u => u.is_active).length,
-    verified: users.filter(u => u.is_verified).length,
-    inactive: users.filter(u => !u.is_active).length,
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
@@ -125,49 +123,14 @@ export default function EntreprisesPage() {
               </Button> */}
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid gap-4 md:grid-cols-4">
-              <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                  </div>
-                  <div className="rounded-full bg-[#f8f5ff] p-3">
-                    <Building2 className="h-6 w-6 text-[#009ef7]" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Actives</p>
-                  <p className="text-2xl font-bold text-[#50cd89]">{stats.active}</p>
-                </div>
-                <div className="rounded-full bg-[#e8fff3] p-3">
-                  <div className="h-2 w-2 rounded-full bg-[#50cd89]" />
-                </div>
-              </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Vérifiées</p>
-                    <p className="text-2xl font-bold text-[#009ef7]">{stats.verified}</p>
-                  </div>
-                  <div className="rounded-full bg-[#f8f5ff] p-3">
-                    <div className="h-2 w-2 rounded-full bg-[#009ef7]" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Inactives</p>
-                  <p className="text-2xl font-bold text-gray-500">{stats.inactive}</p>
-                </div>
-                <div className="rounded-full bg-gray-100 p-3">
-                  <div className="h-2 w-2 rounded-full bg-gray-500" />
-                </div>
-              </div>
-            </div>
+            {/* KPIs en temps réel pour les ENTREPRISES */}
+            <UsersKpiCards
+              total={statistics.total}
+              active={statistics.active}
+              verified={statistics.verified}
+              inactive={statistics.inactive}
+              isLoading={isLoadingStats}
+            />
 
             {/* Filters and Search */}
             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">

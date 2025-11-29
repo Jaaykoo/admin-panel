@@ -165,7 +165,11 @@ export function UsersTable({ users }: UsersTableProps) {
               {users.map((user) => {
                 const status = getStatusConfig(user.is_active);
                 const roleBadge = getRoleBadge(user.role);
-                const initials = `${user.user_profile.first_name[0]}${user.user_profile.last_name[0]}`.toUpperCase();
+                const firstName = user.user_profile?.first_name || 'N/A';
+                const lastName = user.user_profile?.last_name || '';
+                const initials = user.user_profile?.first_name && user.user_profile?.last_name
+                  ? `${user.user_profile.first_name[0]}${user.user_profile.last_name[0]}`.toUpperCase()
+                  : '??';
 
                 return (
                   <tr key={user.id} className="hover:bg-gray-50">
@@ -176,11 +180,11 @@ export function UsersTable({ users }: UsersTableProps) {
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">
-                            {user.user_profile.first_name}
+                            {firstName}
                             {' '}
-                            {user.user_profile.last_name}
+                            {lastName}
                           </p>
-                          <p className="text-sm text-gray-500">{user.user_profile.title}</p>
+                          <p className="text-sm text-gray-500">{user.user_profile?.title || 'N/A'}</p>
                         </div>
                       </div>
                     </td>

@@ -20,7 +20,7 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 import { Label } from './label';
 
@@ -179,7 +179,7 @@ const Form = <
   id,
   schema,
 }: FormProps<TFormValues, Schema>) => {
-  const form = useForm({ ...options, resolver: zodResolver(schema) });
+  const form = useForm({ ...options, resolver: zodResolver(schema) as any });
   return (
     <FormProvider {...form}>
       <form

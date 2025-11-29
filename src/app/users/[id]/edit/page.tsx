@@ -129,7 +129,6 @@ export default function EditUserPage() {
     updateMutation.mutate(data);
   };
 
-  const selectedRole = form.watch('role');
   const getRoleColor = () => '#009ef7';
 
   if (isLoading) {
@@ -201,7 +200,7 @@ export default function EditUserPage() {
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg"
                     style={{
-                      background: `linear-gradient(135deg, ${getRoleColor(selectedRole)}, ${getRoleColor(selectedRole)}dd)`,
+                      background: `linear-gradient(135deg, ${getRoleColor()}, ${getRoleColor()}dd)`,
                     }}
                   >
                     <Shield className="h-6 w-6" />
@@ -424,7 +423,7 @@ export default function EditUserPage() {
                   <Button
                     type="submit"
                     disabled={updateMutation.isPending}
-                    style={{ backgroundColor: getRoleColor(selectedRole) }}
+                    style={{ backgroundColor: getRoleColor() }}
                     className="hover:opacity-90"
                   >
                     {updateMutation.isPending

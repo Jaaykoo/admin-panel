@@ -10,6 +10,7 @@ import { use, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import slugify from 'react-slugify';
 import { toast } from 'sonner';
+import { PageHeader } from '@/components/catalogue/PageHeader';
 import {
   CategoryMultiSelect,
   DynamicAttributesForm,
@@ -20,7 +21,6 @@ import {
 import { Header } from '@/components/layouts/header';
 import { MainContent } from '@/components/layouts/main-content';
 import { Sidebar } from '@/components/layouts/sidebar';
-import { PageHeader } from '@/components/page-header';
 import {
   Accordion,
   AccordionContent,
@@ -80,6 +80,8 @@ export default function EditProductPage({
       reset({
         title: product.title,
         slug: product.slug,
+        code: product.code,
+        upc: product.upc,
         description: product.description,
         meta_title: product.meta_title,
         meta_description: product.meta_description,
@@ -120,11 +122,6 @@ export default function EditProductPage({
   };
 
   const onSubmit = async (data: ProductUpdate) => {
-    console.log('🚀 onSubmit appelé avec data:', data);
-    console.log('📊 Catégories:', data.categories);
-    console.log('🏷️ Product class:', data.product_class);
-    console.log('🔧 Attributs:', data.attributes);
-
     setIsSubmitting(true);
     try {
       await updateProduct(Number(resolvedParams.id), data);
@@ -234,8 +231,23 @@ export default function EditProductPage({
                         <p className="text-sm text-red-500">{errors.slug.message}</p>
                       )}
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="code">Réference</Label>
+                      <Input
+                        id="code"
+                        {...register('code')}
+                        placeholder="Réference détaillée du produit"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="upc">UPC</Label>
+                      <Input
+                        id="upc"
+                        {...register('upc')}
+                        placeholder="UPC du produit"
+                      />
+                    </div>
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
                     <Textarea
@@ -245,7 +257,6 @@ export default function EditProductPage({
                       placeholder="Description détaillée du produit"
                     />
                   </div>
-
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="meta_title">Meta Title (SEO)</Label>

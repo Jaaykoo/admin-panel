@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import * as React from 'react';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 import { Spinner } from '../spinner';
 
@@ -54,7 +54,7 @@ const Button = (
       ref={ref}
       {...props}
     >
-      {isLoading && <Spinner size="sm" className="text-current" />}
+      {isLoading && <Spinner className="text-current" />}
       {!isLoading && icon && <span className="mr-2">{icon}</span>}
       <span className="mx-2">{children}</span>
     </Comp>

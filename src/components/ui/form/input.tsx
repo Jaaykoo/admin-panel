@@ -3,7 +3,7 @@ import type { FieldWrapperPassThroughProps } from './field-wrapper';
 
 import * as React from 'react';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { FieldWrapper } from './field-wrapper';
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>

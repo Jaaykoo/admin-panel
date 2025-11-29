@@ -1,7 +1,7 @@
 'use client';
 
 import type { ProductImage } from '@/types/ProductTypes';
-import { GripVertical, Plus, Trash2, X } from 'lucide-react';
+import { GripVertical, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -16,11 +16,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-interface ImageListManagerProps {
+type ImageListManagerProps = {
   value: ProductImage[];
   onChange: (images: ProductImage[]) => void;
   disabled?: boolean;
-}
+};
 
 export function ImageListManager({ value, onChange, disabled }: ImageListManagerProps) {
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ export function ImageListManager({ value, onChange, disabled }: ImageListManager
   const [caption, setCaption] = useState('');
   const [urlError, setUrlError] = useState('');
 
-  const urlRegex = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
+  const urlRegex = /^https?:\/\/.+\.(?:jpg|jpeg|png|gif|webp)(?:\?.*)?$/i;
 
   const handleAddImage = () => {
     if (!imageUrl) {
@@ -65,9 +65,13 @@ export function ImageListManager({ value, onChange, disabled }: ImageListManager
   };
 
   const handleMoveUp = (index: number) => {
-    if (index === 0) return;
+    if (index === 0 || !value[index] || !value[index - 1]) {
+      return;
+    }
     const newImages = [...value];
-    [newImages[index - 1], newImages[index]] = [newImages[index], newImages[index - 1]];
+    const temp = newImages[index - 1];
+    newImages[index - 1] = newImages[index]!;
+    newImages[index] = temp!;
     // Réorganiser les display_order
     const reorderedImages = newImages.map((img, i) => ({
       ...img,
@@ -75,19 +79,6 @@ export function ImageListManager({ value, onChange, disabled }: ImageListManager
     }));
     onChange(reorderedImages);
   };
-
-  const handleMoveDown = (index: number) => {
-    if (index === value.length - 1) return;
-    const newImages = [...value];
-    [newImages[index], newImages[index + 1]] = [newImages[index + 1], newImages[index]];
-    // Réorganiser les display_order
-    const reorderedImages = newImages.map((img, i) => ({
-      ...img,
-      display_order: i + 1,
-    }));
-    onChange(reorderedImages);
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -104,65 +95,67 @@ export function ImageListManager({ value, onChange, disabled }: ImageListManager
         </Button>
       </div>
 
-      {value.length === 0 ? (
-        <div className="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center">
-          <p className="text-sm text-gray-500">
-            Aucune image ajoutée. Cliquez sur "Ajouter une image" pour commencer.
-          </p>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {value.map((image, index) => (
-            <div
-              key={index}
-              className="group relative overflow-hidden rounded-lg border bg-white p-2"
-            >
-              <div className="relative aspect-square overflow-hidden rounded">
-                <Image
-                  src={image.original}
-                  alt={image.caption || `Image ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              </div>
-
-              {image.caption && (
-                <p className="mt-2 truncate text-xs text-gray-600">{image.caption}</p>
-              )}
-
-              <div className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="secondary"
-                  className="h-8 w-8"
-                  onClick={() => handleMoveUp(index)}
-                  disabled={index === 0 || disabled}
-                >
-                  <GripVertical className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="destructive"
-                  className="h-8 w-8"
-                  onClick={() => handleRemoveImage(index)}
-                  disabled={disabled}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div className="absolute left-2 top-2">
-                <span className="rounded bg-black/50 px-2 py-1 text-xs text-white">
-                  {index + 1}
-                </span>
-              </div>
+      {value.length === 0
+        ? (
+            <div className="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center">
+              <p className="text-sm text-gray-500">
+                Aucune image ajoutée. Cliquez sur "Ajouter une image" pour commencer.
+              </p>
             </div>
-          ))}
-        </div>
-      )}
+          )
+        : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {value.map((image, index) => (
+                <div
+                  key={index}
+                  className="group relative overflow-hidden rounded-lg border bg-white p-2"
+                >
+                  <div className="relative aspect-square overflow-hidden rounded">
+                    <Image
+                      src={image.original}
+                      alt={image.caption || `Image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+
+                  {image.caption && (
+                    <p className="mt-2 truncate text-xs text-gray-600">{image.caption}</p>
+                  )}
+
+                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8"
+                      onClick={() => handleMoveUp(index)}
+                      disabled={index === 0 || disabled}
+                    >
+                      <GripVertical className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="destructive"
+                      className="h-8 w-8"
+                      onClick={() => handleRemoveImage(index)}
+                      disabled={disabled}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="absolute top-2 left-2">
+                    <span className="rounded bg-black/50 px-2 py-1 text-xs text-white">
+                      {index + 1}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
@@ -183,7 +176,7 @@ export function ImageListManager({ value, onChange, disabled }: ImageListManager
                 id="imageUrl"
                 placeholder="https://example.com/image.jpg"
                 value={imageUrl}
-                onChange={e => {
+                onChange={(e) => {
                   setImageUrl(e.target.value);
                   setUrlError('');
                 }}
@@ -240,4 +233,3 @@ export function ImageListManager({ value, onChange, disabled }: ImageListManager
     </div>
   );
 }
-
