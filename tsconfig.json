@@ -81,7 +81,15 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "**/*.e2e.ts"
+    "**/*.e2e.ts",
+    "**/*.stories.tsx",
+    "**/*.stories.ts",
+    ".storybook",
+    "commitlint.config.ts",
+    "knip.config.ts",
+    "vitest.config.mts",
+    "playwright.config.ts",
+    "checkly.config.ts"
   ],
   "include": [
     "next-env.d.ts",
