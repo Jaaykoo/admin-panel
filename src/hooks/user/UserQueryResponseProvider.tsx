@@ -1,0 +1,102 @@
+'use client';
+
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/exhaustive-deps */
+import type { FC } from 'react';
+import type { PaginationState } from '@/types/_types';
+import type { User } from '@/types/UserTypes';
+import type { WithChildren } from '@/utils/react18MigrationHelpers';
+import { useQuery } from '@tanstack/react-query';
+import { use, useEffect, useMemo, useState } from 'react';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
+import { createResponseContext, stringifyRequestQuery } from '@/helpers/crud-helper/helpers';
+import { getUsers } from '@/services/UsersService';
+import { initialQueryResponse, initialQueryState } from '@/types/_types';
+import { useQueryRequest } from '../_QueryRequestProvider';
+
+const QueryResponseContext = createResponseContext<User>(initialQueryResponse);
+
+const UserQueryResponseProvider: FC<WithChildren> = ({ children }) => {
+  const { state } = useQueryRequest();
+  // eslint-disable-next-line react/prefer-use-state-lazy-initialization
+  const [query, setQuery] = useState<string>(stringifyRequestQuery(state));
+  const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state]);
+
+  useEffect(() => {
+    if (query !== updatedQuery) {
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      setQuery(updatedQuery);
+    }
+  }, [updatedQuery]);
+  const {
+    isFetching,
+    refetch,
+    data: response,
+  } = useQuery(
+    [QUERIES.USERS_LIST, query],
+    () => {
+      return getUsers(query);
+    },
+    {
+      staleTime: 0,
+      refetchOnWindowFocus: false,
+    },
+  );
+console.log('response dans UserQueryResponseProvider:', response);
+  const contextValue = useMemo(
+    () => ({ isLoading: isFetching, refetch, response, query }),
+    [isFetching, refetch, response, query],
+  );
+
+  return (
+    <QueryResponseContext value={contextValue}>
+      {children}
+    </QueryResponseContext>
+  );
+};
+
+const useQueryResponse = () => use(QueryResponseContext);
+
+const useQueryResponseData = () => {
+  const { response } = useQueryResponse();
+  if (!response) {
+    return [];
+  }
+  // Si response a results (DRF paginé), retourne-les
+  if ('results' in response && Array.isArray(response.results)) {
+    return response.results;
+  }
+  // Sinon, si response a data (réponse simple), retourne-la
+  if ('data' in response && Array.isArray(response.data)) {
+    return response.data;
+  }
+  return [];
+};
+
+const useQueryResponsePagination = () => {
+  const defaultPaginationState: PaginationState<User> = {
+    ...initialQueryState,
+    filter: {},
+  };
+
+  const { response } = useQueryResponse();
+
+  if (!response || !('results' in response)) {
+    return defaultPaginationState;
+  }
+
+  return response;
+};
+
+const useQueryResponseLoading = (): boolean => {
+  const { isLoading } = useQueryResponse();
+  return isLoading;
+};
+
+export {
+  useQueryResponse,
+  useQueryResponseData,
+  useQueryResponseLoading,
+  useQueryResponsePagination,
+  UserQueryResponseProvider,
+};

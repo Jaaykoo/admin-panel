@@ -18,6 +18,44 @@ const baseConfig: NextConfig = {
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8000',
+        pathname: '/media/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8000',
+        pathname: '/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.yourdomain.com',
+        pathname: '/media/**',
+      },
+      // Autoriser toutes les images HTTPS pour les URLs externes
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Configuration pour le développement
+    ...(process.env.NODE_ENV === 'development' && {
+      domains: ['localhost', '127.0.0.1'],
+      minimumCacheTTL: 0,
+    }),
+  },
 };
 
 // Initialize the Next-Intl plugin
