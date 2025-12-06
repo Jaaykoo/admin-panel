@@ -15,6 +15,9 @@ import { MainContent } from '@/components/layouts/main-content';
 import { Sidebar } from '@/components/layouts/sidebar';
 import { getCustomersNew, getKpiBar, getKpiDonut, getOrdersMonth, getProductDeliveries, getRecentOrders, getSalesLineChart } from '@/services/AnalyticService';
 
+// Force dynamic rendering because we use cookies()
+export const dynamic = 'force-dynamic';
+
 // Palette de couleurs pour les catégories
 const CATEGORY_COLORS = ['#009ef7', '#50cd89', '#ffc700', '#7239ea', '#f1416c'];
 
@@ -233,7 +236,6 @@ export default async function DashboardPage() {
       deliveries: [],
     };
   }
-
 
   return (
     <div className="min-h-screen bg-gray-100">
