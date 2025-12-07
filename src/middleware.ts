@@ -12,7 +12,7 @@ import { NextResponse } from 'next/server';
  * - Limite de 1MB pour le bundle
  */
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   console.warn(`[Proxy] 🚀 Request received: ${request.method} ${request.nextUrl.pathname}`);
 
   // Routes publiques accessibles sans authentification

@@ -171,4 +171,5 @@ fabric.properties
 .history
 .ionide
 
+.next/
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,visualstudiocode
