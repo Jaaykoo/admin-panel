@@ -90,7 +90,7 @@ export const ProductCreateSchema = z.object({
   structure: z.string().default('standalone'),
   is_public: z.boolean().default(true),
   upc: z.string().optional(),
-  code: z.string().optional(),
+  code: z.string().min(1, 'La référence est requise'),
   priority: z.number().optional(),
   is_discountable: z.boolean().default(true),
   parent: z.number().optional(),
@@ -100,7 +100,7 @@ export const ProductCreateSchema = z.object({
   options: z.array(ProductOptionSchema).optional(),
   recommended_products: z.array(z.string()).optional(),
   stockrecords: StockRecordSchema,
-  images: z.array(ProductImageSchema).default([]),
+  images: z.array(ProductImageSchema).min(1, 'Au moins une image est requise'),
   fiche_techniques: z.array(FicheTechniqueSchema).default([]),
 });
 export const ProductUpdateSchema = ProductCreateSchema.partial();

@@ -41,9 +41,8 @@ export function OptionAttributeSelector({
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Afficher les 4 premières options
-  const firstOptions = options.slice(0, 4);
-  const hasMoreOptions = options.length > 4;
+  // Limiter à 5 options max pour le bouton "Autres..."
+  const showOthersButton = options.length > 5;
 
   // Filtrer les options dans le dialog
   const filteredOptions = options.filter(option =>
@@ -68,8 +67,8 @@ export function OptionAttributeSelector({
           <SelectTrigger className="flex-1">
             <SelectValue placeholder={`Sélectionner ${label.toLowerCase()}`} />
           </SelectTrigger>
-          <SelectContent>
-            {firstOptions.map(option => (
+          <SelectContent className="max-h-[300px]">
+            {options.map(option => (
               <SelectItem key={option} value={option}>
                 {option}
               </SelectItem>
@@ -77,7 +76,7 @@ export function OptionAttributeSelector({
           </SelectContent>
         </Select>
 
-        {hasMoreOptions && (
+        {showOthersButton && (
           <Button
             type="button"
             variant="outline"

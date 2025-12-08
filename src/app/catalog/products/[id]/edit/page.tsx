@@ -232,12 +232,18 @@ export default function EditProductPage({
                       )}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="code">Réference</Label>
+                      <Label htmlFor="code">
+                        Réference
+                        <span className="text-red-500">*</span>
+                      </Label>
                       <Input
                         id="code"
                         {...register('code')}
                         placeholder="Réference détaillée du produit"
                       />
+                      {errors.code && (
+                        <p className="text-sm text-red-500">{errors.code.message}</p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="upc">UPC</Label>
@@ -407,6 +413,7 @@ export default function EditProductPage({
                       Images du produit (
                       {watchImages.length}
                       )
+                      <span className="text-red-500">*</span>
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="mt-2 rounded-lg border bg-white p-6">
@@ -415,6 +422,9 @@ export default function EditProductPage({
                       onChange={images => setValue('images', images)}
                       disabled={isSubmitting}
                     />
+                    {errors.images && (
+                      <p className="mt-2 text-sm text-red-500">{errors.images.message}</p>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
 

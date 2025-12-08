@@ -209,7 +209,8 @@ export function ProductClassTable({ onDelete }: ProductClassTableProps) {
                               <DropdownMenuItem
                                 onClick={() => handleDelete(getSlugFromUrl(productClass.url), productClass.name)}
                                 className="text-destructive"
-                                disabled={deletingSlug === getSlugFromUrl(productClass.url)}
+                                /* disabled={deletingSlug === getSlugFromUrl(productClass.url)} */
+                                disabled={true}
                               >
                                 {deletingSlug === getSlugFromUrl(productClass.url) ? 'Suppression...' : 'Supprimer'}
                               </DropdownMenuItem>

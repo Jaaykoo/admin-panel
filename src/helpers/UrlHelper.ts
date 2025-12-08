@@ -52,7 +52,7 @@ export function extractProductClassSlugFromUrl(url: string): string | null {
   }
 
   // Pattern pour les URLs de product classes: /api/admin/catalogue/productclasses/{slug}/
-  const match = url.match(/\/productclasses\/([^\/]+)\/?$/);
+  const match = url.match(/\/productclasses\/([^/]+)\/?$/);
 
   if (match && match[1]) {
     return match[1];
@@ -84,6 +84,59 @@ export function extractSlugFromUrl(url: string): string | null {
 }
 
 /**
+ * Helper pour parser une option depuis le format API
+ * Format API: "{'option': 'HP'}" → "HP"
+ * @param optionString - La string d'option depuis l'API
+ * @returns La valeur de l'option extraite
+ */
+export function parseOptionValue(optionString: string): string {
+  if (!optionString || typeof optionString !== 'string') {
+    return optionString;
+  }
+
+  // Nettoyer les espaces
+  const trimmed = optionString.trim();
+
+  // Si c'est au format "{'option': 'valeur'}" ou '{"option": "valeur"}', extraire la valeur
+  // Supporte les guillemets simples et doubles
+  const patterns = [
+    /\{'option':\s*'([^']+)'\}/, // {'option': 'valeur'}
+    /\{"option":\s*"([^"]+)"\}/, // {"option": "valeur"}
+    /['"]option['"]\s*:\s*['"]([^'"]+)['"]/, // Patterns partiels
+  ];
+
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+
+  // Sinon, retourner tel quel (pour les strings simples comme "2.8 pouces")
+  return optionString;
+}
+
+/**
+ * Helper pour normaliser une valeur d'attribut (extraire le slug depuis une URL si nécessaire)
+ * @param value - La valeur brute (peut être une URL ou une valeur simple)
+ * @returns La valeur normalisée (slug ou valeur originale)
+ */
+export function normalizeAttributeValue(value: string): string {
+  if (!value || typeof value !== 'string') {
+    return value;
+  }
+
+  // Si c'est une URL (commence par http:// ou https://), extraire le slug
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    const extracted = extractSlugFromUrl(value) || extractIdFromUrl(value)?.toString();
+    return extracted || value;
+  }
+
+  // Sinon, retourner la valeur telle quelle
+  return value;
+}
+
+/**
  * Helper pour extraire le slug depuis une URL de catégorie
  * @param url - L'URL contenant le slug à extraire (ex: http://localhost:8000/api/admin/catalogue/categories/electronics/)
  * @returns Le slug extrait ou null si non trouvé
@@ -94,7 +147,7 @@ export function extractCategorySlugFromUrl(url: string): string | null {
   }
 
   // Pattern pour les URLs de catégories: /api/admin/catalogue/categories/{slug}/
-  const match = url.match(/\/categories\/([^\/]+)\/?$/);
+  const match = url.match(/\/categories\/([^/]+)\/?$/);
 
   if (match && match[1]) {
     return match[1];

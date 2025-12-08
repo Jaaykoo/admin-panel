@@ -1,3 +1,4 @@
+export { BooleanAttributeSelector } from './BooleanAttributeSelector';
 export { CategoryMultiSelect } from './CategoryMultiSelect';
 export { DynamicAttributesForm } from './DynamicAttributesForm';
 export { FicheTechniqueManager } from './FicheTechniqueManager';
