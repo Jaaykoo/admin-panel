@@ -125,17 +125,6 @@ export async function middleware(request: NextRequest) {
 
     // Normaliser le rôle en majuscules pour la comparaison
     const userRole = String(user.role).toUpperCase();
-
-    // Logs détaillés pour déboguer
-    console.warn('[Proxy] ========================================');
-    console.warn(`[Proxy] 👤 User ID: ${user.id}`);
-    console.warn(`[Proxy] 📧 User email: ${user.email}`);
-    console.warn(`[Proxy] 🎭 User role (original): "${user.role}"`);
-    console.warn(`[Proxy] 🎭 User role (normalized): "${userRole}"`);
-    console.warn(`[Proxy] 🔐 Is Admin? ${userRole === 'ADMIN'}`);
-    console.warn(`[Proxy] 🛣️  Requested path: ${request.nextUrl.pathname}`);
-    console.warn('[Proxy] ========================================');
-
     // Toutes les routes protégées (non-auth) nécessitent le rôle ADMIN
     if (userRole !== 'ADMIN') {
       console.warn(
@@ -185,8 +174,8 @@ function redirectToLogin(
 
   if (clearCookies) {
     // Supprimer les cookies de session
-    response.cookies.delete('sessionid');
-    response.cookies.delete('csrftoken');
+    response.cookies.set('sessionid', '', { maxAge: 0, path: '/' });
+    response.cookies.set('csrftoken', '', { maxAge: 0, path: '/' });
   }
 
   return response;
@@ -211,8 +200,8 @@ function destroySessionAndRedirect(
   const response = NextResponse.redirect(url);
 
   // Supprimer tous les cookies de session
-  response.cookies.delete('sessionid');
-  response.cookies.delete('csrftoken');
+  response.cookies.set('sessionid', '', { maxAge: 0, path: '/' });
+  response.cookies.set('csrftoken', '', { maxAge: 0, path: '/' });
 
   return response;
 }

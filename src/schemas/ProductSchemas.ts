@@ -95,7 +95,7 @@ export const ProductCreateSchema = z.object({
   is_discountable: z.boolean().default(true),
   parent: z.number().optional(),
   categories: z.array(z.string()).default([]),
-  product_class: z.string().optional(),
+  product_class: z.string().nullable().optional(),
   attributes: z.array(ProductAttributeSchema).default([]),
   options: z.array(ProductOptionSchema).optional(),
   recommended_products: z.array(z.string()).optional(),
@@ -103,4 +103,13 @@ export const ProductCreateSchema = z.object({
   images: z.array(ProductImageSchema).min(1, 'Au moins une image est requise'),
   fiche_techniques: z.array(FicheTechniqueSchema).default([]),
 });
+
+// Type inféré pour la création de produit
+export type ProductCreateInput = z.infer<typeof ProductCreateSchema>;
+
+// Schéma pour la mise à jour (tous les champs sont optionnels)
 export const ProductUpdateSchema = ProductCreateSchema.partial();
+
+// Type inféré pour la mise à jour de produit
+export type ProductUpdateInput = z.infer<typeof ProductUpdateSchema>;
+

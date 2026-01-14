@@ -268,8 +268,7 @@ export function ProductClassForm({ initialData, isEditing = false }: ProductClas
                         <div key={field.id} className="rounded-lg border p-4">
                           <div className="mb-4 flex items-center justify-between">
                             <h4 className="font-medium">
-                              Attribut
-                              {index + 1}
+                              {field.name}
                             </h4>
                             <Button
                               type="button"

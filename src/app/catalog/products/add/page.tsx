@@ -1,8 +1,7 @@
 'use client';
 
 import type { ProductClassDetail } from '@/types/ProductClassTypes';
-import type { ProductCreate } from '@/types/ProductTypes';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -31,14 +30,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { MarkdownEditor } from '@/components/ui/markdown-editor';
+import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { extractProductClassSlugFromUrl } from '@/helpers/UrlHelper';
-import { ProductCreateSchema } from '@/schemas/ProductSchemas';
+import { useApiMutation } from '@/hooks/useApiMutation';
+import { zodResolver } from '@/lib/zod-resolver';
+import { type ProductCreateInput, ProductCreateSchema } from '@/schemas/ProductSchemas';
 import { createProduct } from '@/services/ProductService';
 
 export default function AddProductPage() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const [selectedProductClass, setSelectedProductClass] = useState<ProductClassDetail | null>(null);
 
   const {
@@ -46,9 +48,10 @@ export default function AddProductPage() {
     handleSubmit,
     watch,
     setValue,
+    setError,
     formState: { errors },
-  } = useForm<ProductCreate>({
-    resolver: zodResolver(ProductCreateSchema) as any,
+  } = useForm<ProductCreateInput>({
+    resolver: zodResolver(ProductCreateSchema),
     defaultValues: {
       structure: 'standalone',
       is_public: true,
@@ -57,11 +60,24 @@ export default function AddProductPage() {
       attributes: [],
       images: [],
       fiche_techniques: [],
+      product_class: null,
       stockrecords: {
         price_currency: 'XOF',
         price: '',
         num_in_stock: 0,
       },
+    },
+  });
+
+  // Mutation avec gestion automatique des erreurs
+  const { mutate: createProductMutation, isPending: isSubmitting } = useApiMutation({
+    mutationFn: createProduct,
+    setFormError: setError,
+    onSuccess: () => {
+      // Invalider le cache pour rafraîchir la liste des produits
+      queryClient.invalidateQueries({ queryKey: [QUERIES.PRODUCTS_LIST] });
+      toast.success('Produit créé avec succès');
+      router.push('/catalog/products');
     },
   });
 
@@ -80,18 +96,13 @@ export default function AddProductPage() {
     }
   };
 
-  const onSubmit = async (data: ProductCreate) => {
-    setIsSubmitting(true);
-    try {
-      await createProduct(data);
-      toast.success('Produit créé avec succès');
-      router.push('/catalog/products');
-    } catch (error: any) {
-      console.error('Error creating product:', error);
-      toast.error(error.response?.data?.detail || 'Erreur lors de la création du produit');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = (data: ProductCreateInput) => {
+    // Si product_class est vide ou undefined, on envoie null
+    const submitData = {
+      ...data,
+      product_class: data.product_class || null,
+    };
+    createProductMutation(submitData as any);
   };
 
   return (
@@ -194,11 +205,12 @@ export default function AddProductPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      {...register('description')}
-                      rows={4}
-                      placeholder="Description détaillée du produit"
+                    <MarkdownEditor
+                      value={watch('description') || ''}
+                      onChange={value => setValue('description', value)}
+                      minHeight={200}
+                      error={errors.description?.message}
+                      description="Utilisez le format Markdown pour mettre en forme la description"
                     />
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
@@ -264,7 +276,7 @@ export default function AddProductPage() {
               {/* Type de produit et attributs */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Type de produit</CardTitle>
+                  <CardTitle>Type de produit <span className="text-red-500">*</span></CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <ProductClassSelector

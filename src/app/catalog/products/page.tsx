@@ -1,14 +1,100 @@
 'use client';
 
-import { Package, Plus } from 'lucide-react';
+import { Package, Plus, Search, X } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { ProductTable } from '@/components/catalogue/products/ProductTable';
+import { CustomerPagination } from '@/components/customers/tables/customer-pagination';
 import { Header } from '@/components/layouts/header';
 import { MainContent } from '@/components/layouts/main-content';
 import { Sidebar } from '@/components/layouts/sidebar';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useQueryRequest } from '@/hooks/_QueryRequestProvider';
+import {
+  useQueryResponse,
+  useQueryResponseData,
+  useQueryResponseLoading,
+  useQueryResponsePagination,
+} from '@/hooks/catalogues/ProductQueryResponseProvider';
 
 export default function ProductsPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const { state, updateState } = useQueryRequest();
+  const products = useQueryResponseData();
+  const isLoading = useQueryResponseLoading();
+  const paginationData = useQueryResponsePagination();
+  const { refetch } = useQueryResponse();
+
+  // Initialiser
+  useEffect(() => {
+    updateState({
+      offset: 0,
+    });
+  }, []);
+
+  // Recherche en temps réel avec debounce
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      updateState({ search: searchQuery, offset: 0 });
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+    const currentFilter = state.filter || {};
+
+    if (value === 'all') {
+      const { is_public, ...restFilter } = currentFilter as any;
+      updateState({ filter: restFilter, offset: 0 });
+    } else {
+      updateState({
+        filter: {
+          ...currentFilter,
+          is_public: value === 'public',
+        },
+        offset: 0,
+      });
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setStatusFilter('all');
+    updateState({
+      search: '',
+      filter: {},
+      offset: 0,
+    });
+  };
+
+  const handlePageChange = (page: number) => {
+    const newOffset = (page - 1) * (state.limit || 10);
+    updateState({ offset: newOffset });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    updateState({ limit: size as 10 | 20 | 50 | 100, offset: 0 });
+  };
+
+  const totalPages = Math.ceil((paginationData.count || 0) / (state.limit || 10));
+  const currentPage = Math.floor((state.offset || 0) / (state.limit || 10)) + 1;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
@@ -35,8 +121,73 @@ export default function ProductsPage() {
               </Link>
             </div>
 
+            {/* Filters and Search */}
+            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center gap-4">
+                <form onSubmit={handleSearch} className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Input
+                      type="search"
+                      placeholder="Rechercher par titre, code, description..."
+                      className="border-gray-300 pl-10"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </form>
+
+                <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
+                  <SelectTrigger className="w-[180px] border-gray-300">
+                    <SelectValue placeholder="Filtrer par statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tous les statuts</SelectItem>
+                    <SelectItem value="public">Public uniquement</SelectItem>
+                    <SelectItem value="private">Privé uniquement</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {(searchQuery || statusFilter !== 'all') && (
+                  <Button
+                    variant="outline"
+                    onClick={clearFilters}
+                    className="border-gray-300 bg-white shadow-sm"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Réinitialiser
+                  </Button>
+                )}
+              </div>
+            </div>
+
             {/* Table */}
-            <ProductTable />
+            {isLoading
+              ? (
+                  <div className="flex items-center justify-center rounded-lg border border-gray-200 bg-white py-16 shadow-sm">
+                    <div className="text-center">
+                      <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#009ef7] border-t-transparent" />
+                      <p className="mt-4 text-sm text-gray-600">Chargement des produits...</p>
+                    </div>
+                  </div>
+                )
+              : (
+                  <>
+                    <ProductTable />
+
+                    {/* Pagination */}
+                    {products.length > 0 && (
+                      <CustomerPagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        pageSize={state.limit || 10}
+                        totalItems={paginationData.count || 0}
+                        onPageChangeAction={handlePageChange}
+                        onPageSizeChangeAction={handlePageSizeChange}
+                      />
+                    )}
+                  </>
+                )}
           </div>
         </main>
       </MainContent>

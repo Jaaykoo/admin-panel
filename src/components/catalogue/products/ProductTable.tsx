@@ -16,6 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -23,7 +24,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -33,37 +33,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  useQueryRequest,
-  useQueryRequestLoading,
-} from '@/hooks/_QueryRequestProvider';
-import {
   useQueryResponse,
-  useQueryResponseLoading,
   useQueryResponsePagination,
 } from '@/hooks/catalogues/ProductQueryResponseProvider';
 import { deleteProduct } from '@/services/ProductService';
 
 export function ProductTable() {
-  const isLoading = useQueryResponseLoading();
   const { refetch } = useQueryResponse();
-  const { state, updateState } = useQueryRequest();
   const pagination = useQueryResponsePagination();
-  const isRequestLoading = useQueryRequestLoading();
 
-  const [searchTerm, setSearchTerm] = useState('');
   const [productToDelete, setProductToDelete] = useState<ProductList | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const products = pagination.results || [];
-
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    updateState({ search: value, offset: 0 });
-  };
-
-  const handlePageChange = (newOffset: number) => {
-    updateState({ offset: newOffset });
-  };
 
   const handleDelete = async () => {
     if (!productToDelete) {
@@ -84,43 +66,18 @@ export function ProductTable() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#009ef7] border-t-transparent"></div>
-          <p className="mt-2 text-sm text-gray-500">Chargement des produits...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      {/* Barre de recherche */}
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder="Rechercher un produit..."
-          value={searchTerm}
-          onChange={e => handleSearch(e.target.value)}
-          className="max-w-sm"
-        />
-        <p className="text-sm text-gray-500">
-          {pagination.count || 0}
-          {' '}
-          produit(s) au total
-        </p>
-      </div>
-
+    <>
       {/* Table */}
-      <div className="rounded-lg border bg-white">
+      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Image</TableHead>
               <TableHead>Titre</TableHead>
-              <TableHead>reférence</TableHead>
+              <TableHead>Référence</TableHead>
               <TableHead>Prix</TableHead>
+              <TableHead>Statut</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -128,7 +85,7 @@ export function ProductTable() {
             {products.length === 0
               ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       <div className="py-8">
                         <p className="text-sm text-gray-500">Aucun produit trouvé</p>
                       </div>
@@ -163,6 +120,19 @@ export function ProductTable() {
                         {product.price}
                         {' '}
                         FCFA
+                      </TableCell>
+                      <TableCell>
+                        {product.is_public
+                          ? (
+                              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                Public
+                              </Badge>
+                            )
+                          : (
+                              <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+                                Privé
+                              </Badge>
+                            )}
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -201,45 +171,6 @@ export function ProductTable() {
         </Table>
       </div>
 
-      {/* Pagination */}
-      {pagination.count && pagination.count > 0 && (
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={() => {
-              const currentOffset = state.offset || 0;
-              const limit = state.limit || 10;
-              const newOffset = Math.max(0, currentOffset - limit);
-              handlePageChange(newOffset);
-            }}
-            disabled={!pagination.previous || isRequestLoading}
-          >
-            Précédent
-          </Button>
-          <span className="text-sm text-gray-600">
-            Page
-            {' '}
-            {Math.floor((state.offset || 0) / (state.limit || 10)) + 1}
-            {' '}
-            sur
-            {' '}
-            {Math.ceil((pagination.count || 0) / (state.limit || 10))}
-          </span>
-          <Button
-            variant="outline"
-            onClick={() => {
-              const currentOffset = state.offset || 0;
-              const limit = state.limit || 10;
-              const newOffset = currentOffset + limit;
-              handlePageChange(newOffset);
-            }}
-            disabled={!pagination.next || isRequestLoading}
-          >
-            Suivant
-          </Button>
-        </div>
-      )}
-
       {/* Dialog de confirmation de suppression */}
       <AlertDialog open={!!productToDelete} onOpenChange={() => setProductToDelete(null)}>
         <AlertDialogContent>
@@ -263,6 +194,6 @@ export function ProductTable() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 }

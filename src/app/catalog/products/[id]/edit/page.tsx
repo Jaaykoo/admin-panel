@@ -1,9 +1,7 @@
 'use client';
 
 import type { ProductClassDetail } from '@/types/ProductClassTypes';
-import type { ProductUpdate } from '@/types/ProductTypes';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
@@ -32,10 +30,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { MarkdownEditor } from '@/components/ui/markdown-editor';
 import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { extractProductClassSlugFromUrl } from '@/helpers/UrlHelper';
-import { ProductUpdateSchema } from '@/schemas/ProductSchemas';
+import { useApiMutation } from '@/hooks/useApiMutation';
+import { zodResolver } from '@/lib/zod-resolver';
+import { type ProductUpdateInput, ProductUpdateSchema } from '@/schemas/ProductSchemas';
 import { getProductClassBySlug } from '@/services/ProductClassService';
 import { getProductById, updateProduct } from '@/services/ProductService';
 
@@ -46,7 +46,7 @@ export default function EditProductPage({
 }) {
   const resolvedParams = use(params);
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const [selectedProductClass, setSelectedProductClass] = useState<ProductClassDetail | null>(null);
 
   const {
@@ -54,10 +54,24 @@ export default function EditProductPage({
     handleSubmit,
     watch,
     setValue,
+    setError,
     reset,
     formState: { errors },
-  } = useForm<ProductUpdate>({
-    resolver: zodResolver(ProductUpdateSchema) as any,
+  } = useForm<ProductUpdateInput>({
+    resolver: zodResolver(ProductUpdateSchema),
+  });
+
+  // Mutation avec gestion automatique des erreurs
+  const { mutate: updateProductMutation, isPending: isSubmitting } = useApiMutation({
+    mutationFn: (data: ProductUpdateInput) => updateProduct(Number(resolvedParams.id), data as any),
+    setFormError: setError,
+    onSuccess: () => {
+      // Invalider les caches pour rafraîchir les données
+      queryClient.invalidateQueries({ queryKey: [QUERIES.PRODUCTS_LIST] });
+      queryClient.invalidateQueries({ queryKey: [QUERIES.PRODUCT_DETAIL, resolvedParams.id] });
+      toast.success('Produit mis à jour avec succès');
+      router.push(`/catalog/products/${resolvedParams.id}`);
+    },
   });
 
   const watchTitle = watch('title');
@@ -115,25 +129,19 @@ export default function EditProductPage({
   }, [error, router]);
 
   const handleTitleChange = (title: string) => {
-    setValue('title', title);
+    setValue('title', title, { shouldDirty: true });
     if (!watchSlug || watchSlug === slugify(watchTitle)) {
-      setValue('slug', slugify(title));
+      setValue('slug', slugify(title), { shouldDirty: true });
     }
   };
 
-  const onSubmit = async (data: ProductUpdate) => {
-    setIsSubmitting(true);
-    try {
-      await updateProduct(Number(resolvedParams.id), data);
-      toast.success('Produit mis à jour avec succès');
-      router.push(`/catalog/products/${resolvedParams.id}`);
-    } catch (error: any) {
-      console.error('❌ Error updating product:', error);
-      console.error('❌ Error response:', error.response?.data);
-      toast.error(error.response?.data?.detail || 'Erreur lors de la mise à jour du produit');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = (data: ProductUpdateInput) => {
+    // Si product_class est vide ou undefined, on envoie null
+    const submitData = {
+      ...data,
+      product_class: data.product_class || null,
+    };
+    updateProductMutation(submitData);
   };
 
   if (isLoading) {
@@ -256,11 +264,12 @@ export default function EditProductPage({
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      {...register('description')}
-                      rows={4}
-                      placeholder="Description détaillée du produit"
+                    <MarkdownEditor
+                      value={watch('description') || ''}
+                      onChange={value => setValue('description', value, { shouldDirty: true })}
+                      minHeight={200}
+                      error={errors.description?.message}
+                      description="Utilisez le format Markdown pour mettre en forme la description"
                     />
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">

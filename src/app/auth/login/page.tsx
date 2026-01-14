@@ -5,50 +5,52 @@ import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { QUERIES } from '@/helpers/crud-helper/Consts';
 import { get400ErrorMessage } from '@/helpers/ErrorMessageHelper';
 import { login } from '@/services/AuthService';
 
 const loginInputSchema = z.object({
-  email: z.email().min(1, 'Required'),
-  password: z.string().min(5, 'Required'),
+  email: z.string().email('Email invalide').min(1, 'Email requis'),
+  password: z.string().min(5, 'Le mot de passe doit contenir au moins 5 caractères'),
 });
 
 export default function LoginPage() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginInputSchema),
   });
-  const mutation = useMutation(
-    [QUERIES.LOGIN],
-    async (data: z.infer<typeof loginInputSchema>) => {
-      // Call your login API here
-      await login(data.email, data.password);
+
+  const mutation = useMutation({
+    mutationFn: async (data: z.infer<typeof loginInputSchema>) => {
+      return login(data.email, data.password);
     },
-    {
-      onSuccess: () => {
-        // Handle successful login
-        toast.success('Connexion réussie !');
-        router.push('/');
-      },
-      onError: (error) => {
-        // Handle login error
-        get400ErrorMessage(error);
-      },
+    onSuccess: () => {
+      toast.success('Connexion réussie !');
+      // Utiliser un délai court pour s'assurer que les cookies sont bien définis
+      // avant la redirection, puis faire un refresh complet
+      const redirectTo = searchParams.get('redirectTo') || '/';
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 100);
     },
-  );
+    onError: (error) => {
+      get400ErrorMessage(error);
+    },
+  });
+
   const onSubmit = (data: z.infer<typeof loginInputSchema>) => {
-    // Handle login logic here
-    mutation.mutate(data);
+    if (!mutation.isPending) {
+      mutation.mutate(data);
+    }
   };
 
   return (
@@ -115,8 +117,12 @@ export default function LoginPage() {
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
             </div>
           </div>
-          <Button type="submit" className="h-12 w-full bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]">
-            Se connecter
+          <Button
+            type="submit"
+            className="h-12 w-full bg-[#009ef7] text-base font-medium hover:bg-[#0077b6]"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? 'Connexion en cours...' : 'Se connecter'}
           </Button>
         </form>
       </div>

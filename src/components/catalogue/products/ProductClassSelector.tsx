@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 import { getProductClasses } from '@/services/ProductClassService';
 
 type ProductClassSelectorProps = {
-  value?: string;
+  value?: string | null;
   onSelect: (productClass: ProductClassDetail | null) => void;
   disabled?: boolean;
 };

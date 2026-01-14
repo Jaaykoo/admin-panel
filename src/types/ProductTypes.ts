@@ -29,5 +29,6 @@ export type ProductList = {
   price: string;
   code?: string;
   upc?: string;
+  is_public?: boolean;
   images: ProductImage[];
 };
